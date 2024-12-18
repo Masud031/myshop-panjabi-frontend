@@ -8,6 +8,7 @@ import CategoryPage from "../pages/Home/categorypage/CategoryPage";
 import Errorpage from "../components/Errorpage";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import Pages from "../pages/pages";
 
 const router = createBrowserRouter([
     {
@@ -17,6 +18,12 @@ const router = createBrowserRouter([
       children:[
         {path:'/',
         element:<Home/>
+        },
+        {path:'/shop',
+        element:<Shop/>
+        },
+        {path:'/pages',
+        element:<Pages/>
         },
         {path:'/shop',
         element:<Shop/>

@@ -4,9 +4,10 @@ import './index.css'
 import 'remixicon/fonts/remixicon.css'
 // import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
-import router from './routs/router'
+
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+import router from './routs/router'
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
