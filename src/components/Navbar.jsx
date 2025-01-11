@@ -4,14 +4,21 @@ import avatar from '../assets/mypic.png'
 import { useState } from "react";
 import { logout } from "../redux/features/auth/authSlice";
 import { useLogoutUserMutation } from "../redux/features/auth/authapi";
+import CartModal from "../pages/Shop/productdetails/cartModal";
 
 
 const Navbar = () => {
-
+  const products =  useSelector((state) => state.cart.products);
+  const [isCartOpen, setIsCartOpen] = useState(false)
   const {user}=useSelector((state)=>state.auth);
   console.log(user);
   const dispatch = useDispatch();
   const navigate=useNavigate();
+
+   // handle cart toggle
+   const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen)
+}
 
   // 2.dropdown navigation
     
@@ -133,10 +140,12 @@ const adminDropdownMenus = [
           >
             <i className="ri-search-line"></i>
           </Link>
-          <button className="flex items-center gap-1 hover:text-primary transition duration-200">
+          <button
+              onClick={handleCartToggle}
+           className="flex items-center gap-1 hover:text-primary transition duration-200">
             <i className="ri-shopping-bag-line text-lg"></i>
             <sup className="text-xs px-1.5 py-0.5 bg-primary text-white rounded-full">
-              0
+              {products.length}
             </sup>
           </button>
 
@@ -179,6 +188,11 @@ const adminDropdownMenus = [
          
         </div>
       </nav>
+      
+            {/* cart model */}
+            {
+                isCartOpen && <CartModal products={products} isOpen={isCartOpen} onClose={handleCartToggle}/>
+            }
     </header>
   );
 };

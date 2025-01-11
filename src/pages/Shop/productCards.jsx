@@ -1,31 +1,48 @@
-import Ratings from "../../components/Ratings";
 
+import RatingStars from '../../components/RatingStars'
+import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../../redux/features/cart/cartSlice'
 
 // eslint-disable-next-line react/prop-types
 const ProductCards = ({products}) => {
-    console.log(products);
-    return (
-        <div className=" grid grid-cols-3 mx-auto">
-            {
-                // eslint-disable-next-line react/prop-types
-                products.map((product, index) => (
-                    <div key={index} className="product_card ">
-                        
-                        <img src={product?.image} alt={product.name}
-                        className="h-40 w-40 rounded-lg" />
-                        <h3>{product.name}</h3>
-                        <p>{product.price}{product?.oldprice} 
-                        <s>{product?.oldprice}</s>:null</p>
-                        
-                        <Ratings ratings={product?.rating}/>
+  const dispatch = useDispatch()
+    // console.log(products)
+    const hanleAddToCart = (product) => {
+      dispatch(addToCart(product))
+    }
+  return (
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+        {
+          // eslint-disable-next-line react/prop-types
+          products.length > 0 ? ( products.map((product, index) => (
+                <div key={index} className="product__card">
+                <div className="relative">
+                  <Link to={`/shop/${product._id}`}
+                    ><img
+                      src={product?.image}
+                      alt="Casual Pants for Women"
+                      className="max-h-96 md:h-64 w-full object-cover hover:scale-105 transition-all duration-300"
+                  /></Link>
+                  <div className="hover:block absolute top-3 right-3">
+                    <button onClick={() => hanleAddToCart(product)}>
+                        {/* cart icon  */}
+                      <i
+                        className="ri-shopping-cart-2-line bg-primary p-1.5 text-white hover:bg-primary-dark"
+                      ></i>
+                    </button>
+                  </div>
+                </div>
+                <div className="product__card__content">
+                  <h4>{product?.name}</h4>
+                  <p>${product?.price} {product?.oldPrice ? <s>{product?.oldPrice}</s> : null}</p>
+                  <RatingStars rating={product?.rating}/>
+                </div>
+              </div>
+            )) ) : <div>No products found!</div>
+        }
+    </div>
+  )
+}
 
-                        <button>Add to Cart</button>
-                    </div>
-                ))
-            }
-            
-        </div>
-    );
-};
-
-export default ProductCards;
+export default ProductCards

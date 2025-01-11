@@ -3,12 +3,14 @@ import {
   } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/Home/home";
-import Shop from "../pages/Shop/Shop";
 import CategoryPage from "../pages/Home/categorypage/CategoryPage";
 import Errorpage from "../components/Errorpage";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Pages from "../pages/pages";
+import ShopPage from "../pages/Shop/Shop page";
+import SingleProduct from "../pages/Shop/productdetails/singelProducts";
+import PaymentSuccess from "../components/paymentSuccess";
 
 const router = createBrowserRouter([
     {
@@ -20,14 +22,18 @@ const router = createBrowserRouter([
         element:<Home/>
         },
         {path:'/shop',
-        element:<Shop/>
+        element:<ShopPage/>
+        },
+        {path:'/shop/:id',
+        element:<SingleProduct/>
         },
         {path:'/pages',
-        element:<Pages/>
-        },
-        {path:'/shop',
-        element:<Shop/>
-        },
+          element:<Pages/>
+          },
+        {path:'/success',
+          element:<PaymentSuccess/>
+          },
+        
         {path: "/category/:categoryName",
         element:<CategoryPage/>
         },
@@ -44,4 +50,5 @@ const router = createBrowserRouter([
     }
   ]);
   export default router;
+  
   
