@@ -26,20 +26,21 @@ const OrderSummary = () => {
 
         // try {
         //     // Make API request using Axios
-        //     const response = await axios.post(`${getBaseUrl()}/api/orders/create-checkout-session`, body, {
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //     });
-        //     console.log("Order Response:", response.data.url);
-        //     // window.location.replace(response.data);
+            // const response = await axios.post(`${getBaseUrl()}/api/order/create-checkout-session`, body, {
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            // });
+            // console.log(response);
+            // // console.log("Order Response:", response.data.url);
+            // // window.location.replace(response.data);
 
-        //     if (response.data) {
-        //         // Redirect user to SSLCommerz Gateway Page
-        //         window.location.replace(response.data.url);
-        //     } else {
-        //         throw new Error("Failed to initiate SSLCommerz payment");
-        //     }
+            // if (response.data) {
+            //     // Redirect user to SSLCommerz Gateway Page
+            //     window.location.replace(response.data.url);
+            // } else {
+            //     throw new Error("Failed to initiate SSLCommerz payment");
+            // }
 
         //     // Handle success response
         //     if (response.status === 200) {
@@ -53,51 +54,54 @@ const OrderSummary = () => {
         //     alert("Failed to place order. Please try again.");
         // }
       
-        // fetch('http://localhost:5000/api/order/create-checkout-session', { // Correct URL
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // })
-        //     .then((res) => res.json())
-        //     .then((result) => {
-        //         console.log(result);
-        //         window.location.replace(body.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error during fetch:", error);
-        //         alert("Failed to place order. Please try again.");
-        //     });
-        
-        try {
-            const response = await fetch('http://localhost:5000/api/orders/create-checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
+        fetch('http://localhost:5000/api/order/create-checkout-session', { // Correct URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                       window.location.replace(result.url);
+                console.log(result);
+                // window.location.replace(body.data);
+            })
+            .catch((error) => {
+                console.error("Error during fetch:", error);
+                alert("Failed to place order. Please try again.");
             });
+        
+    //     try {
+    //         const response = await fetch('http://localhost:5000/api/orders/create-checkout-session', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(body),
+    //         });
             
-            window.location.replace(body.data);
+    //     //     window.location.replace(body.data);
     
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+    //     //     if (!response.ok) {
+    //     //         throw new Error(`HTTP error! status: ${response.status}`);
+    //     //     }
     
-            const result = await response.json();
-            console.log("Order Response:", result);
+    //     //     const result = await response.json();
+    //     //     console.log("Order Response:", result);
     
-            if (result?.url) {
-                // Redirect the user to SSLCommerz Gateway Page
-                window.location.replace(body.data);
-            } else {
-                throw new Error("Failed to retrieve payment URL");
-            }
-        } catch (error) {
-            console.error("Error placing order:", error);
-            alert("Failed to place order. Please try again.");
-        }
+    //     //     if (result?.url) {
+    //     //         // Redirect the user to SSLCommerz Gateway Page
+    //     //         window.location.replace(body.data);
+    //     //     } else {
+    //     //         throw new Error("Failed to retrieve payment URL");
+    //     //     }
+    //     // } catch (error) {
+    //     //     console.error("Error placing order:", error);
+    //     //     alert("Failed to place order. Please try again.");
+    //     }
+        
+    // }
         
     };
 
