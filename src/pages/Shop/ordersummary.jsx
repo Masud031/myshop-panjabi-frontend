@@ -14,6 +14,8 @@ const OrderSummary = () => {
 
     // Handle order submission
     const handleOrder = async () => {
+    
+        
         const body = {
             ...selectedItems,
             totalPrice: totalPrice,
@@ -23,36 +25,6 @@ const OrderSummary = () => {
             products: products,
         };
         console.log("Request Body:", body);
-
-        // try {
-        //     // Make API request using Axios
-            // const response = await axios.post(`${getBaseUrl()}/api/order/create-checkout-session`, body, {
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            // });
-            // console.log(response);
-            // // console.log("Order Response:", response.data.url);
-            // // window.location.replace(response.data);
-
-            // if (response.data) {
-            //     // Redirect user to SSLCommerz Gateway Page
-            //     window.location.replace(response.data.url);
-            // } else {
-            //     throw new Error("Failed to initiate SSLCommerz payment");
-            // }
-
-        //     // Handle success response
-        //     if (response.status === 200) {
-        //         alert("Order placed successfully!");
-        //     } else {
-        //         throw new Error(`Unexpected response status: ${response.status}`);
-        //     }
-        // } catch (error) {
-        //     // Handle any errors during the request
-        //     console.error("Error placing order:", error);
-        //     alert("Failed to place order. Please try again.");
-        // }
       
         fetch('http://localhost:5000/api/order/create-checkout-session', { // Correct URL
             method: 'POST',
