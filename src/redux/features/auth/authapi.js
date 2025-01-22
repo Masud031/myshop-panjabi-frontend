@@ -8,6 +8,7 @@ const authApi = createApi({
       baseUrl: `${getBaseUrl()}/api/auth`, // Base URL should match backend
       credentials: 'include', // Include credentials for cookies
     }),
+    tagTypes:["users"],
     endpoints:(builder)=>({
         registerUser:builder.mutation({
             query: (newUser) => ({
@@ -60,11 +61,20 @@ const authApi = createApi({
             }),
             refetchOnMount: true,
             invalidatesTags: ["Users"],
-    })
+    }),
+    
 }),
 });
-export const{useLoginUserMutation,useRegisterUserMutation,useLogoutUserMutation}=authApi;
-export default authApi;
+export const {
+    useLoginUserMutation,
+    useRegisterUserMutation,
+    useLogoutUserMutation,
+    useEditProfileMutation, // <-- Add this line to export the hook
+    useGetUsersQuery,
+    useDeleteUserMutation,
+    useUpdateUserRoleMutation,
+} = authApi;
+export { authApi };
 // query: get methods
 // mutation: put, patch, delete,
 

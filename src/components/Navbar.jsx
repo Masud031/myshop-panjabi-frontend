@@ -39,7 +39,7 @@ const adminDropdownMenus = [
     {label: "Dashboard", path: "/dashboard/admin"},
     { label: "Manage Items", path: "/dashboard/manage-products" },
     {label: "All Orders", path: "/dashboard/manage-orders" },
-    { label: "Add Product", path: "/dashboard/add-product" }
+    { label: "Add Products", path: "/dashboard/add-products" }
 ]
 
   //(2) role based dropdown show

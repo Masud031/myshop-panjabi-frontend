@@ -13,7 +13,7 @@ const Register = () => {
     const { register, handleSubmit,  formState: { errors } } = useForm();
  
 
-    const [registerUser, {isLoading}] = useRegisterUserMutation();
+    const [registerUser] = useRegisterUserMutation();
     const navigate =  useNavigate()
 
     const onSubmit = async(data) => {
