@@ -24,6 +24,7 @@ import AddProduct from "../components/DashboarLayouts/adminrouts/admin/product/A
 import ManageProducts from "../components/DashboarLayouts/adminrouts/admin/manageproduct/ManageProducts";
 import UpdateProduct from "../components/DashboarLayouts/adminrouts/admin/manageproduct/UpdateProduct";
 import ManageUsers from "../components/DashboarLayouts/adminrouts/users/ManageUsers";
+import Payment from "../components/Payment";
 
 const router = createBrowserRouter([
   {
@@ -47,10 +48,20 @@ const router = createBrowserRouter([
         path: "/pages",
         element: <Pages/>,
       },
+      // {
+      //   path: "/payment",
+      //   element: <Payment />,
+      // },
+      {
+        path: "/success/",
+        element: <Payment/>,
+      },
       {
         path: "/success",
         element: <PaymentSuccess/>,
+        // loader:()=>fetch("/order.controller.js")
       },
+    
       {
         path: "/category/:categoryName",
         element: <CategoryPage/>,

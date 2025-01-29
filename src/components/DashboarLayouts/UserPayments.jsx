@@ -1,7 +1,9 @@
 
 import { useSelector } from 'react-redux'
+// import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
+import Loading from '../Loading';
 import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
-import Loading from '../loading';
+// import Loading from '../loading';
 
 const UserPayments = () => {
     const {user} = useSelector(state => state.auth);
