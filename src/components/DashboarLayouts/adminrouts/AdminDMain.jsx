@@ -8,7 +8,7 @@ import AdminStatsChart from './admin/AdminStatsChart';
 const AdminDMain = () => {
     const { user } = useSelector(state => state.auth);
 
-    const {data: adminData, isLoading, error} = useGetAdminStatsQuery();
+    const {data: adminData, isLoading, error} = useGetAdminStatsQuery();;
     if (isLoading) return <Loading />
     if (error) return <div>Failed to fetch data</div>
 
@@ -19,6 +19,7 @@ const AdminDMain = () => {
     if(!stats) {
         return <div>No admin stats available</div>
     }
+  
 
     return (
         <div className='p-6'>
@@ -27,11 +28,17 @@ const AdminDMain = () => {
                 <p className='text-gray-500'>Hi, {user?.username}! Welcome to your user dashboard.</p>
             </div>
 
+   
+
+
             <AdminStats stats={stats}/>
 
             <AdminStatsChart stats={stats}/>
 
+     
+
         </div>
+        
     )
 }
 

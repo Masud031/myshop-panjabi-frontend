@@ -1,17 +1,19 @@
 
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useFetchProductbyIdQuery } from '../../../redux/features/products/productsApi';
-import Loading from '../../../components/loading';
-import ReviewsCard from '../../../redux/features/reviews/reviewsCard';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RatingStars from '../../../components/RatingStars';
 import { addToCart } from '../../../redux/features/cart/cartSlice';
+import Loading from '../../../components/Loading';
+import ReviewsCard from '../reviewsCard/reviewCard';
 
 
 
 const SingleProduct = () => {
     const { id } = useParams();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth); // Get user info
     const { data: { data: productDetails } = {}, isLoading, isError } = useFetchProductbyIdQuery(id);
 
     if (isLoading) return <Loading />
@@ -20,9 +22,14 @@ const SingleProduct = () => {
     const { product, reviews } = productDetails || {}
 
     // console.log(products)
-    const hanleAddToCart = (product) => {
-        dispatch(addToCart(product))
-    }
+    const handleAddToCart = (product) => {
+        if (!user) {
+            alert("You must register to purchase a product!");
+            navigate('/register'); // Redirect to register page
+            return;
+        }
+        dispatch(addToCart(product));
+    };
 
     return (
         <>
@@ -72,7 +79,7 @@ const SingleProduct = () => {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                hanleAddToCart(product)
+                                handleAddToCart(product)
                             }}
                             className="mt-6 px-6 py-3 bg-primary text-white rounded-md">
                             Add to Cart
@@ -90,3 +97,4 @@ const SingleProduct = () => {
 }
 
 export default SingleProduct
+

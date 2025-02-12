@@ -54,6 +54,7 @@ const UserProfile = () => {
             profession: formData.profession,
             userId: formData.userId
         }
+        console.log(updatedUser );
 
         try {
             const response = await editProfile({id: user?._id, profileData: updatedUser}).unwrap();

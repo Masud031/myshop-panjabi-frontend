@@ -7,6 +7,7 @@ import { useUpdateOrderStatusMutation } from '../../../../../redux/features/orde
 // eslint-disable-next-line react/prop-types
 const UpdateOrderModal = ({order, isOpen, onClose}) => {
     const [status, setStatus] = useState(order?.status);
+     
 
     const [updateOrderStatus, {isLoading, error}] = useUpdateOrderStatusMutation();
     const handleUpdate =  async () => {

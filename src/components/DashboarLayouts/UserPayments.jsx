@@ -12,9 +12,12 @@ const UserPayments = () => {
     if(error) return <div>Failed to show payments!</div>
     
     const orders = data.data || []
-    console.log(orders)
+    console.log("Orders Data:", orders);
 
-    const totalPayment = orders.reduce((acc, order) => acc + order.amount, 0).toFixed(2);
+
+    const totalPayment = orders.reduce((acc, order) => acc +(Number(order.totalPrice) || 0), 0).toFixed(2);
+
+
 
   return (
     <div className="py-6 px-4">
@@ -28,8 +31,8 @@ const UserPayments = () => {
             <li key={index} className='space-y-2'>
               <h5 className="font-medium text-gray-800 mb-2">Order #{index + 1}</h5>
               <div key={index} className="space-y-2">
-                <p className="text-gray-600">Order Id: {item._id}</p>
-                <p className="text-gray-600">Price: ${item?.amount}</p>
+                <p className="text-gray-600">Order Id: {item.orderId}</p>
+                <p className="text-gray-600">Price: ${item?.totalPrice}</p>
               </div>
               <div className="flex md:flex-row items-center space-x-2">
                 <span className="text-gray-600">Date: {new Date(item.createdAt).toLocaleString()}</span>

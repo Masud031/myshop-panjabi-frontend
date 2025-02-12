@@ -3,6 +3,7 @@
 import { useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutUserMutation } from '../../redux/features/auth/authapi';
+import { logout } from '../../redux/features/auth/authSlice';
 
 const navItems = [
     {path: "/dashboard/", label: "Dashboard"},

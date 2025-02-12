@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReucer from "../redux/features/auth/authSlice";
-// import authApi from "../../src/redux/features/auth/authapi";
+import authReucer from "../redux/features/auth/authSlice"; 
 import { authApi } from "../../src/redux/features/auth/authapi";
 import productsApi from '../redux/features/products/productsApi';
-import reviewsApi from "./features/reviews/reviewsApi";
 import cartReducer from "./features/cart/cartSlice";
 import orderApi from "./features/orders/orderApi";
 import statsApi from "./features/states/statesapi";
+import reviewsApi from "./features/reviews/reviewsApi";
 // import authSlice from "../redux/features/auth/authSlice";
 
 export const store=configureStore({

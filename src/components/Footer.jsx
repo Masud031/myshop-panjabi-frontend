@@ -1,8 +1,6 @@
-import instra_image1 from '../assets/instagram-1.jpg';
+
 import instra_image2 from '../assets/instagram-2.jpg';
-import instra_image3 from '../assets/instagram-3.jpg';
-import instra_image4 from '../assets/instagram-4.jpg';
-import instra_image5 from '../assets/instagram-5.jpg';
+import instra_image5 from '../assets/instagram-5.jpg'; 
 import instra_image6 from '../assets/instagram-6.jpg';
 
 const Footer = () => {
@@ -43,10 +41,10 @@ const Footer = () => {
                 <div className="footer__col">
                     <h4>INSTAGRAM</h4>
                     <div className="instagram__grid">
-                        <img src={instra_image1 } alt="instagram" />
                         <img src={instra_image2 } alt="instagram" />
-                        <img src={instra_image3} alt="instagram" />
-                        <img src={instra_image4}alt="instagram" />
+                        <img src={instra_image2 } alt="instagram" />
+                        <img src={instra_image2} alt="instagram" />
+                        <img src={instra_image5}alt="instagram" />
                         <img src={instra_image5} alt="instagram" />
                         <img src={instra_image6} alt="instagram" />
                     </div>

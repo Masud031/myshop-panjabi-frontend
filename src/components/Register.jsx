@@ -5,14 +5,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { useRegisterUserMutation } from '../redux/features/auth/authapi';
 
-
-
 const Register = () => {
     const [message, setMessage] = useState('');
 
     const { register, handleSubmit,  formState: { errors } } = useForm();
- 
-
     const [registerUser] = useRegisterUserMutation();
     const navigate =  useNavigate()
 
@@ -60,6 +56,4 @@ const Register = () => {
         </section>
     )
 }
-
 export default Register
-

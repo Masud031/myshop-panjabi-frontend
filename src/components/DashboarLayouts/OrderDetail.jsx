@@ -1,11 +1,8 @@
 
 import { useParams } from 'react-router-dom'
-// import { useGetOrdersByIdQuery } from '../../../../redux/features/orders/orderApi';
-// import Loading from '../../../../components/Loading';
-// import TimelineStep from '../../../../components/TimelineStep';
-import { useGetOrdersByIdQuery } from '../../redux/features/orders/orderApi';
-import Loading from '../loading';
 import TimelineStep from '../timeLinesteps';
+import Loading from '../Loading';
+import { useGetOrdersByIdQuery } from '../../redux/features/orders/orderApi';
 
 const steps = [
     {
@@ -41,6 +38,7 @@ const OrderDetail = () => {
     if(error) return <div>Error loading order details</div>
     
     const order =  data?.data || {};
+    console.log(order);
     
     const isCompleted = (status) => {
         const statuses = ['pending', 'processing', 'shipped', 'completed'];

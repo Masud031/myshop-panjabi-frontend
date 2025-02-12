@@ -11,7 +11,7 @@ const Navbar = () => {
   const products =  useSelector((state) => state.cart.products);
   const [isCartOpen, setIsCartOpen] = useState(false)
   const {user}=useSelector((state)=>state.auth);
-  console.log(user);
+  console.log("Redux user:", user);
   const dispatch = useDispatch();
   const navigate=useNavigate();
 
@@ -155,7 +155,7 @@ const adminDropdownMenus = [
                             <>
                                 <img 
                                 onClick={handleDropDownToogle}
-                                 src={user?.profileImage || avatar} alt="" className='size-6 rounded-full cursor-pointer' />
+                                 src={user?.photoURL || avatar} alt="" className='size-6 rounded-full cursor-pointer' />
                                 {
                                     isDropDownOpen && (
                                         <div 

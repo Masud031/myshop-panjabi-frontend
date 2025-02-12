@@ -2,50 +2,40 @@
 
 import { Pie, Line } from "react-chartjs-2";
 import 'chart.js/auto'
+import { useMemo } from "react";
 
 // eslint-disable-next-line react/prop-types
 const AdminStatsChart = ({ stats }) => {
 
-    const pieData = {
+    const pieData = useMemo(() => ({
         labels: ['Total Orders', 'Total Products', 'Total Reviews', 'All Users'],
-        datasets: [
-            {
-                label: 'Admin Stats',
-                data: [
-                    stats?.totalOrders,
-                    stats?.totalProducts,
-                    stats?.totalReviews,
-                    stats?.totalUsers,
-                ],
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                ],
-                borderColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                ],
-                borderWidth: 1,
-                hoverBackgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                ]
-
-            }
-        ]
-    }
+        datasets: [{
+            label: 'Admin Stats',
+            data: [
+                stats?.totalOrders || 0,
+                stats?.totalProducts || 0,
+                stats?.totalReviews || 0,
+                stats?.totalUsers || 0,
+            ],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            borderColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            borderWidth: 1,
+        }]
+    }), [stats]);
 
     // line charts data
+    // const data = new Array(12).fill(0);
+    // stats?.monthlyEarnings.forEach(entry => {
+    //     data[entry.month - 1] = entry.earnings
+    // })
     const data = new Array(12).fill(0);
-    stats?.monthlyEarnings.forEach(entry => {
-        data[entry.month - 1] = entry.earnings
-    })
+stats?.monthlyEarnings?.forEach(entry => {
+    if (entry?.month && entry?.earnings) {
+        data[entry.month - 1] = entry.earnings;
+    }
+});
+
+
 
     const lineData = {
         labels: ["January", "February", "March", "April", "May", "June", "July",
@@ -63,7 +53,7 @@ const AdminStatsChart = ({ stats }) => {
     }
 
     const options = {
-        responsive: true,
+        responsive: true, 
         maintainAspectRatio: false,
     }
     return (

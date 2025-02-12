@@ -1,16 +1,24 @@
 
 import RatingStars from '../../components/RatingStars'
-import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 
 // eslint-disable-next-line react/prop-types
 const ProductCards = ({products}) => {
   const dispatch = useDispatch()
     // console.log(products)
-    const hanleAddToCart = (product) => {
-      dispatch(addToCart(product))
+    const { user } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+
+    const handleAddToCart = (product) => {
+    if (!user) {
+      alert("You must be logged in to add products to the cart!");
+      navigate('/login');
+      return;
     }
+    dispatch(addToCart(product));
+  };
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
         {
@@ -25,7 +33,7 @@ const ProductCards = ({products}) => {
                       className="max-h-96 md:h-64 w-full object-cover hover:scale-105 transition-all duration-300"
                   /></Link>
                   <div className="hover:block absolute top-3 right-3">
-                    <button onClick={() => hanleAddToCart(product)}>
+                    <button onClick={() => handleAddToCart(product)}>
                         {/* cart icon  */}
                       <i
                         className="ri-shopping-cart-2-line bg-primary p-1.5 text-white hover:bg-primary-dark"

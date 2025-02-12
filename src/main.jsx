@@ -8,12 +8,10 @@ import { RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import router from './routs/router'
-import Authprovider from './provider/Authprovider'
+// import Authprovider from './provider/Authprovider'
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-   <Authprovider>
-   <RouterProvider router={router} />
-   </Authprovider>
+    <RouterProvider router={router} />
   </Provider>,
 )

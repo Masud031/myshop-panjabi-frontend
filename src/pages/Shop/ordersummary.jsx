@@ -29,13 +29,9 @@ const OrderSummary = () => {
     };
 
     const handleOrder = async () => {
-        const orderId = `ORD-${Date.now()}`;
-        const transactionId = crypto.randomUUID();
     
         const orderData = {
             ...formData,
-            orderId,
-            transactionId,
             status: "pending",
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -47,6 +43,7 @@ const OrderSummary = () => {
             paymentStatus: "pending",
             paymentMethod: "Cash on Delivery",
             totalPrice,
+            email: user.email, 
             userId: user._id,
     
             products: products.map((item) => ({

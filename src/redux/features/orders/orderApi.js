@@ -27,8 +27,11 @@ const orderApi = createApi({
 
         // Get orders by order ID
         getOrdersById: builder.query({
-            query: (orderId) => `/${orderId}`, // Fixed endpoint path
-            providesTags: ["Order"],
+            query: (orderId) => ({
+                url: `/order/${orderId}`,
+                method: 'GET'
+            }),
+            providesTags: ["Order"]
         }),
 
         // Get all orders (admin only)
@@ -48,6 +51,13 @@ const orderApi = createApi({
             }),
             providesTags: ["Order"],
         }),
+        // getOrderStats: builder.query({
+        //     query: () => ({
+        //         url: '/admin/stats',  // Change this to the correct stats endpoint
+        //         method: 'GET',
+        //     }),
+        //     providesTags: ["Order"],
+        // }),
 
         // Update order status
         updateOrderStatus: builder.mutation({
@@ -65,7 +75,7 @@ const orderApi = createApi({
                 url: `/delete-order/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Order"], // Removed "id" reference
+            invalidatesTags: (result, error, id) => [{type:"Order", id }],// Removed "id" reference
         }),
     }),
 });
@@ -75,6 +85,7 @@ export const {
     useGetOrdersByIdQuery,
     useGetAllOrdersQuery,
     useFetchOrderByTransactionIdQuery,
+    // useGetOrderStatsQuery,
     useUpdateOrderStatusMutation,
     useDeleteOrderbyIdMutation,
     useFetchProductbyIdQuery,

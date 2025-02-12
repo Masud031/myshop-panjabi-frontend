@@ -2,11 +2,13 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
-import Loading from '../loading';
+import Loading from '../Loading';
+
 
 const UserOrders = () => {
     const {user} = useSelector((state) => state.auth);
     const {data, isLoading, error} = useGetOrdersByEmailQuery(user?.email);
+    // const {data, isLoading, error} = useGetOrde;
 
     if(isLoading) return <Loading/>
     if(error) return <div>Something went wrong! Failed to Fetch Your Orders!</div>
@@ -56,39 +58,49 @@ const UserOrders = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders && orders.map((order, index) => (
-                                    <tr key={order._id} className="hover:bg-blueGray-100">
-                                        <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                                            {index + 1}
-                                        </th>
-                                        <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                                          {order?._id}
-                                        </th>
-                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                            {new Date(order?.createdAt).toLocaleDateString()}
-                                        </td>
-                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                            <span className={`p-1 rounded ${order.status === 'completed' ? 'bg-green-100 text-green-700' :
-                                                order.status === 'pending' ? 'bg-red-200 text-red-700' :
-                                                    order.status === 'processing' ? 'bg-blue-200 text-blue-700' :
-                                                        'bg-indigo-100 text-indigo-600'}`}>
-                                                {order?.status}
-                                            </span>
-                                        </td>
-                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                            ${order.amount.toFixed(2)}
-                                        </td>
-                                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap hover:text-primary p-4 text-center">
-                                            <Link to={`/orders/${order._id}`}>View Order</Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
+  {orders.length > 0 ? (
+    orders.map((order, index) => (
+      <tr key={order._id} className="hover:bg-blueGray-100">
+        <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
+          {index + 1}
+        </th>
+        <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
+        {order?.orderId}
+        </th>
+        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          {new Date(order?.createdAt).toLocaleDateString()}
+        </td>
+        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          <span className={`p-1 rounded ${
+            order.status === 'completed' ? 'bg-green-100 text-green-700' :
+            order.status === 'pending' ? 'bg-red-200 text-red-700' :
+            order.status === 'processing' ? 'bg-blue-200 text-blue-700' :
+            'bg-indigo-100 text-indigo-600'}`}>
+            {order?.status}
+          </span>
+        </td>
+        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+          ${order.totalPrice}
+        </td>
+        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap hover:text-primary p-4 text-center">
+          <Link to={`/orders/${order._id}`}>View Order</Link>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="6" className="text-center py-4">
+        No orders found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
                         </table>
                     </div>
                 </div>
             </div>
-
+{/* 
             <footer className="relative pt-8 pb-6 mt-16">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-wrap items-center md:justify-between justify-center">
@@ -99,7 +111,7 @@ const UserOrders = () => {
                         </div>
                     </div>
                 </div>
-            </footer>
+            </footer> */}
         </section>
   )
 }

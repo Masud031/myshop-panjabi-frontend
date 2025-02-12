@@ -2,9 +2,6 @@ import  { useState } from 'react'
 import { useDeleteUserMutation, useGetUsersQuery } from '../../../../redux/features/auth/authapi';
 import Loading from '../../../Loading';
 import UpdateUserModal from './UpdateUserModal';
-// import UpdateUserModal from './UpdateUserModal';
-// import Loading from '../../../loading';
-// import { useDeleteUserMutation, useGetUsersQuery } from '../../../../redux/features/auth/authapi';
 
 const ManageUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);

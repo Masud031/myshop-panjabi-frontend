@@ -2,7 +2,8 @@ import  { useState } from 'react'
 import RatingStars from '../../../components/RatingStars'
 
 import commentorImg from "../../../assets/avatar.png"
-import PostAReview from '../../../redux/features/reviews/postReview';
+import PostAReview from './postAreview';
+// import PostAReview from '../../../redux/features/reviews/postReview';
 
 // eslint-disable-next-line react/prop-types
 const ReviewsCard = ({productReviews}) => {

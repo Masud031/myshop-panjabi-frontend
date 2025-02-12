@@ -22,11 +22,23 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             localStorage.setItem('user', JSON.stringify(state.user) )
         },
+    // reducers: {
+    //     setUser: (state, action) => {
+    //         const userData = action.payload?.user || {}; // Ensure userData is at least an object
+    //         state.user = {
+    //             uid: userData.uid || "",
+    //             name: userData.displayName || "Anonymous",
+    //             email: userData.email || "",
+    //             photoURL: userData.photoURL || "https://i.pravatar.cc/150?img=3" // Default avatar
+    //         };
+    //         localStorage.setItem('user', JSON.stringify(state.user));
+    //     },
         logout: (state) => {
             state.user = null;
-            localStorage.removeItem('user')
+            localStorage.removeItem('user');
         }
     }
+    
 })
 
 export const {setUser, logout} = authSlice.actions;
