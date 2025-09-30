@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import category_1 from '../../assets/category-1.jpg';
+import category_1 from '../../assets/saro4.png';
 import category_2 from '../../assets/category-2.jpg';
 import category_3 from '../../assets/category-3.jpg';
 import category_4 from '../../assets/category-4.jpg';

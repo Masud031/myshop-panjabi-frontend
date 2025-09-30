@@ -1,56 +1,63 @@
 
-import instra_image2 from '../assets/instagram-2.jpg';
-import instra_image5 from '../assets/instagram-5.jpg'; 
-import instra_image6 from '../assets/instagram-6.jpg';
 
-const Footer = () => {
-    return (
-        <>
-            <footer className="section__container footer__container">
-                <div className="footer__col">
-                    <h4>CONTACT INFO</h4>
-                    <p>
-                        <span><i className="ri-map-pin-2-fill"></i></span>
-                        123, London Bridge Street, London
-                    </p>
-                    <p>
-                        <span><i className="ri-mail-fill"></i></span>
-                        support@Lebaba.com
-                    </p>
-                    <p>
-                        <span><i className="ri-phone-fill"></i></span>
-                        (+012) 3456 789
-                    </p>
-                </div>
-                <div className="footer__col">
-                    <h4>COMPANY</h4>
-                    <a href="#">Home</a>
-                    <a href="#">About Us</a>
-                    <a href="#">Work With Us</a>
-                    <a href="#">Our Blog</a>
-                    <a href="#">Terms &amp; Conditions</a>
-                </div>
-                <div className="footer__col">
-                    <h4>USEFUL LINK</h4>
-                    <a href="#">Help</a>
-                    <a href="#">Track My Order</a>
-                    <a href="#">Men</a>
-                    <a href="#">Women</a>
-                    <a href="#">Dresses</a>
-                </div>
-                <div className="footer__col">
-                    <h4>INSTAGRAM</h4>
-                    <div className="instagram__grid">
-                        <img src={instra_image2 } alt="instagram" />
-                        <img src={instra_image2 } alt="instagram" />
-                        <img src={instra_image2} alt="instagram" />
-                        <img src={instra_image5}alt="instagram" />
-                        <img src={instra_image5} alt="instagram" />
-                        <img src={instra_image6} alt="instagram" />
-                    </div>
-                </div>
-            </footer>
-        </>
-    );
-};
-export default Footer;
+export default function SimpleFooter() {
+  return (
+    <footer className="bg-black text-white max-h-20">
+      <div className="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Left: small brand or text */}
+        <div className="text-sm">© {new Date().getFullYear()} Your Company</div>
+
+        {/* Right: social icons */}
+        <div className="flex items-center gap-4">
+          <a
+            href="https://www.facebook.com/"
+            aria-label="Facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-full p-1 hover:opacity-80 transition-opacity"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="#1877F2" aria-hidden>
+              <path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8.09v-2.9h2.35V9.41c0-2.32 1.38-3.6 3.5-3.6.44 0 .9.03 1.34.06v1.55h-.99c-1.02 0-1.22.49-1.22 1.2v1.58h2.45l-.39 2.9h-2.06V22C18.34 21.2 22 17.06 22 12.07z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.youtube.com/"
+            aria-label="YouTube"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-full p-1 hover:opacity-80 transition-opacity"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="#FF0000" aria-hidden>
+              <path d="M23.5 6.2s-.2-1.7-.8-2.4c-.8-.9-1.7-.9-2.1-1-2.9-.2-7.2-.2-7.2-.2s-4.3 0-7.2.2c-.4 0-1.3.1-2.1 1C.7 4.5.5 6.2.5 6.2S.3 8 .3 9.8v.4C.3 12.6.5 14.4.5 14.4s.2 1.7.8 2.4c.8.9 1.9.9 2.4 1 1.7.2 7.2.2 7.2.2s4.3 0 7.2-.2c.4 0 1.3-.1 2.1-1 .6-.6.8-2.4.8-2.4s.2-1.8.2-3.6v-.4c0-1.8-.2-3.6-.2-3.6zM9.8 15.6V8.4l6.4 3.6-6.4 3.6z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://wa.me/"
+            aria-label="WhatsApp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-full p-1 hover:opacity-80 transition-opacity"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="#25D366" aria-hidden>
+              <path d="M20.52 3.48A11.93 11.93 0 0012 0C5.37 0 .02 5.35.02 12c0 2.11.56 4.18 1.62 6.01L0 24l6.17-1.59c1.73.95 3.7 1.43 5.83 1.43 6.63 0 12-5.35 12-11.98 0-3.2-1.25-6.2-3.48-8.38zM12 21.6c-1.86 0-3.67-.5-5.24-1.45l-.37-.22-3.66.94.93-3.57-.24-.38A9.6 9.6 0 012.4 12c0-5.31 4.33-9.64 9.6-9.64 2.57 0 4.98.99 6.8 2.8a9.57 9.57 0 012.8 6.84c0 5.32-4.33 9.65-9.6 9.65zM17.2 14.2c-.3-.15-1.76-.87-2.03-.97-.27-.1-.46-.15-.66.15-.2.3-.78.97-.96 1.17-.17.2-.34.22-.64.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.78-1.68-2.08-.17-.3-.02-.46.13-.6.13-.12.3-.33.45-.5.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.07-.15-.66-1.6-.9-2.2-.24-.58-.49-.5-.66-.5-.17 0-.37-.02-.57-.02-.2 0-.52.07-.8.35-.27.28-1.05 1.03-1.05 2.5 0 1.47 1.08 2.9 1.23 3.1.15.2 2.12 3.36 5.13 4.7 3.01 1.36 3.01.91 3.56.86.56-.05 1.82-.74 2.07-1.46.25-.72.25-1.34.17-1.47-.07-.13-.26-.2-.56-.35z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.instagram.com/"
+            aria-label="Instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white rounded-full p-1 hover:opacity-80 transition-opacity"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="#E4405F" aria-hidden>
+              <path d="M12 2.2c3.2 0 3.584.012 4.85.07 1.17.055 1.97.24 2.43.4.6.22 1.03.49 1.48.94.45.44.72.88.94 1.48.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.012 3.583-.07 4.85c-.055 1.17-.24 1.97-.4 2.43-.22.6-.49 1.03-.94 1.48-.44.45-.88.72-1.48.94-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.583-.012-4.85-.07c-1.17-.055-1.97-.24-2.43-.4-.6-.22-1.03-.49-1.48-.94-.45-.44-.72-.88-.94-1.48-.16-.46-.35-1.26-.4-2.43C2.212 15.583 2.2 15.2 2.2 12s.012-3.583.07-4.85c.055-1.17.24-1.97.4-2.43.22-.6.49-1.03.94-1.48.44-.45.88-.72 1.48-.94.46-.16 1.26-.35 2.43-.4C8.417 2.212 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.512.01-4.75.068-1.03.048-1.59.218-1.96.363-.5.2-.86.44-1.24.82-.38.38-.62.74-.82 1.24-.145.37-.315.93-.363 1.96C2.01 8.488 2 8.86 2 12c0 3.14.01 3.512.068 4.75.048 1.03.218 1.59.363 1.96.2.5.44.86.82 1.24.38.38.74.62 1.24.82.37.145.93.315 1.96.363C8.488 21.99 8.86 22 12 22c3.14 0 3.512-.01 4.75-.068 1.03-.048 1.59-.218 1.96-.363.5-.2.86-.44 1.24-.82.38-.38.62-.74.82-1.24.145-.37.315-.93.363-1.96.058-1.238.068-1.61.068-4.75s-.01-3.512-.068-4.75c-.048-1.03-.218-1.59-.363-1.96-.2-.5-.44-.86-.82-1.24-.38-.38-.74-.62-1.24-.82-.37-.145-.93-.315-1.96-.363C15.512 4.01 15.14 4 12 4zm0 3.6a4.4 4.4 0 110 8.8 4.4 4.4 0 010-8.8zm0 1.8a2.6 2.6 0 100 5.2 2.6 2.6 0 000-5.2zm4.9-3.7a1.02 1.02 0 11-2.04 0 1.02 1.02 0 012.04 0z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}

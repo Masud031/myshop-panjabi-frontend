@@ -1,39 +1,56 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
-import products from '../../assets/product.json';
 import ProductCards from '../Shop/productCards';
+import { useFetchTrendingProductsQuery } from '../../redux/features/products/productsApi';
 
 const TrandProducts = () => {
-    const[visibleProduct, setVisibleProduct]=useState(8);
+  const { data = [], isLoading, error } = useFetchTrendingProductsQuery();
+  const [visibleProduct, setVisibleProduct] = useState(8);
+  const [search, setSearch] = useState("");
 
-const handleLoadmore = () => {
-    setVisibleProduct(preCount=>preCount+4);
- 
-}
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>failed to load trending products</p>;
 
-    return (
-        <section className='section__container product__container'>
-            <h2 className='section__header'>Trandind Products </h2>
-            <p className='section__subheader'>Discover the hotest picks,Elevent
-                 your Style with joy </p>
-                 {/* products cards  */}
-           <div className='mt-8'>
-           <ProductCards products={products.slice(0,visibleProduct)}/>
+  // ✅ filter based on search
+  const filteredProducts = data.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-           </div>
-            {/* load more btn */}
-            <div className='product__btn'>
-                {
-                    visibleProduct < products.length && (
-                        <button onClick={handleLoadmore} className='btn'>Load More</button>
-                    )
-                }
+  const handleLoadmore = () => {
+    setVisibleProduct((prev) => prev + 8);
+  };
 
-            </div>
+  return (
+    <section className="section__container product__container">
+      <h2 className="section__header">Trending Products</h2>
+      <p className="section__subheader">
+        Discover the hottest picks, elevate your style with joy
+      </p>
 
+      {/* ✅ Search Bar */}
+      <input
+        type="text"
+        placeholder="Search trending products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full p-2 border rounded-md my-4"
+      />
 
+      {/* ✅ Show only filtered + paginated API products */}
+      <div className="mt-8">
+        <ProductCards products={filteredProducts.slice(0, visibleProduct)} />
+      </div>
 
-        </section>
-    );
+      {/* ✅ Load more button */}
+      <div className="product__btn">
+        {visibleProduct < filteredProducts.length && (
+          <button onClick={handleLoadmore} className="btn">
+            Load More
+          </button>
+        )}
+      </div>
+    </section>
+  );
 };
 
 export default TrandProducts;

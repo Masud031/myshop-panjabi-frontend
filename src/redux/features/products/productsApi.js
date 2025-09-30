@@ -29,6 +29,10 @@ const productsApi = createApi({
             query: (id) => `/${id}`,
             providesTags: (result, error, id) => [{type:"Products", id }]
         }),
+        fetchTrendingProducts: builder.query({
+        query: () => `/trending`,
+         providesTags: ["Products"],
+        }),
         AddProduct: builder.mutation({
             query: (newProduct) => ({
                 url: "/create-product", 
@@ -46,6 +50,16 @@ const productsApi = createApi({
             }),
             invalidatesTags: ["Products"]
         }),
+       reduceStock: builder.mutation({
+    query: ({ id, quantityOrdered,selectedSize }) => ({
+        url: `/reduce-stock/${id}`,
+        method: 'PATCH',
+        body: { quantityOrdered,selectedSize },
+    }),
+    invalidatesTags: (result, error, { id }) => [{ type: "Products", id }] // ✅ This is the key
+}),
+
+
         deleteProduct: builder.mutation({
             query: (id) => ({
                 url: `/${id}`,
@@ -60,6 +74,8 @@ export const {
 useFetchAllProdutsQuery, 
 useFetchProductbyIdQuery,
 useAddProductMutation,
-useUpdateProductMutation, 
-useDeleteProductMutation } = productsApi;
+useUpdateProductMutation,
+useReduceStockMutation,
+useDeleteProductMutation,
+useFetchTrendingProductsQuery } = productsApi;
 export default productsApi

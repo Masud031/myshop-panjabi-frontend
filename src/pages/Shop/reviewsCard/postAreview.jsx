@@ -11,6 +11,7 @@ const PostAReview = ({ isModalOpen, handleClose}) => {
     const {user} = useSelector((state) => state.auth);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
+     const [postAReview] = usePostAReviewMutation();
   
     const {refetch} = useFetchProductbyIdQuery(id, {
         skip: !id
@@ -20,7 +21,7 @@ const PostAReview = ({ isModalOpen, handleClose}) => {
         setRating(value);
     }
 
-    const [postAReview] = usePostAReviewMutation();
+   
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {

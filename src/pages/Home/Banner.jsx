@@ -1,4 +1,4 @@
-import header__image  from '../../assets/hero.png';
+import header__image  from '../../assets/saro1.png';
 
 const Banner = () => {
     return (

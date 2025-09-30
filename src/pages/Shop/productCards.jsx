@@ -6,7 +6,7 @@ import { addToCart } from '../../redux/features/cart/cartSlice'
 
 // eslint-disable-next-line react/prop-types
 const ProductCards = ({products}) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
     // console.log(products)
     const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ const ProductCards = ({products}) => {
     dispatch(addToCart(product));
   };
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+    <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
         {
           // eslint-disable-next-line react/prop-types
           products.length > 0 ? ( products.map((product, index) => (
@@ -44,6 +44,21 @@ const ProductCards = ({products}) => {
                 <div className="product__card__content">
                   <h4>{product?.name}</h4>
                   <p>${product?.price} {product?.oldPrice ? <s>{product?.oldPrice}</s> : null}</p>
+
+
+                {product?.stock && typeof product.stock === 'object' && Object.keys(product.stock).length > 0 && (
+                  <ul className="text-sm text-gray-600">
+                   {Object.entries(product.stock)
+                      // eslint-disable-next-line no-unused-vars
+                      .filter(([_, qty]) => qty > 0)
+                      .map(([size, qty]) => (
+                        <li key={size}>Size {size}: {qty} pcs</li>
+                    ))}
+
+                  </ul>
+                )}
+
+
                   <RatingStars rating={product?.rating}/>
                 </div>
               </div>

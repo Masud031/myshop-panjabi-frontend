@@ -1,6 +1,6 @@
-import card_1 from '../../assets/card-1.png'
-import card_2 from '../../assets/card-2.png'
-import card_3 from '../../assets/card-3.png'
+import card_1 from '../../assets/saro4.png'
+import card_2 from '../../assets/saro1.png'
+import card_3 from '../../assets/saro2.png'
 
 
 const Trands = () => {

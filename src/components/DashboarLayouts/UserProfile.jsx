@@ -71,7 +71,11 @@ const UserProfile = () => {
         <div className='container mx-auto p-6'>
             <div>
                 <div className='flex items-center mb-4'>
-                    <img src={formData.profileImage || avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" />
+                    {/* <img src={formData.profileImage || avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" /> */}
+                    <img src={formData.profileImage !== '' ? formData.profileImage : avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" />
+                    {/* <img src={formData.profileImage?.trim() ? formData.profileImage : avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" /> */}
+
+
                     <div className='ml-6 space-y-1'>
                         <h2 className='text-2xl font-bold'>Username: {formData.username || "N/A"} </h2>
                         <p className="text-gray-700">User Bio: {formData?.bio || "N/A"} </p>

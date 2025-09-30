@@ -1,11 +1,15 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../../src/redux/features/cart/cartSlice";
+import { useReduceStockMutation } from "../../../src/redux/features/products/productsApi";
+
 
 const OrderSummary = () => {
     const dispatch = useDispatch();
+    const [reduceStock] = useReduceStockMutation();
+
     const { products, totalPrice } = useSelector((state) => state.cart);
     const { user } = useSelector((state) => state.auth);
 
@@ -16,7 +20,7 @@ const OrderSummary = () => {
         district: "",
         zipCode: "",
         phone: "",
-        email: "",
+       
     });
 
     const handleClearCart = () => {
@@ -28,63 +32,66 @@ const OrderSummary = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleOrder = async () => {
-    
-        const orderData = {
-            ...formData,
-            status: "pending",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            deliveryStatus: "pending",
-            deliveryAddress: `${formData.address}, ${formData.district}, ${formData.zipCode}`,
-            deliveryPhone: formData.phone,
-            deliveryEmail: formData.email,
-            deliveryMethod: "Standard",
-            paymentStatus: "pending",
-            paymentMethod: "Cash on Delivery",
-            totalPrice,
-            email: user.email, 
-            userId: user._id,
-    
-            products: products.map((item) => ({
-                productId: item._id,
-                quantity: item.quantity,
-                name: item.name,
-                category: item.category,
-                color: item.color,
-                price: item.price,
-                image: item.image,
-                totalPrice: item.price * item.quantity, 
-            })),
-        };
-    
-        try {
-            const response = await fetch("http://localhost:5000/api/order/order", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(orderData),
-            });
-    
-            const result = await response.json();
-    
-            if (!response.ok) {
-                throw new Error(result.message || "Failed to place order");
-            }
-    
-            console.log("Order Response:", result);
-            // alert(`Order placed successfully! Order ID: ${result.orderId}`);
-            alert(`Order placed successfully!`);
-            setIsModalOpen(false);
-            handleClearCart();
-    
-        } catch (error) {
-            console.error("Error during order submission:", error);
-            alert("Failed to place order. Please try again.");
-        }
+   const handleOrder = async () => {
+    const orderData = {
+        ...formData,
+        // deliveryAddress: `${formData.address}, ${formData.district}, ${formData.zipCode}`,
+        // deliveryPhone: formData.phone,
+        deliveryMethod: "Standard",
+        paymentMethod: "Cash on Delivery",
+        totalPrice,
+        userId: user._id,
+        products: products.map((item) => ({
+            productId: item._id,
+            quantity: item.quantity,
+            size: item.size,
+            selectedSize: item.selectedSize, 
+            name: item.name,
+            category: item.category,
+            color: item.color,
+            price: item.price,
+            image: item.image,
+            totalPrice: item.price * item.quantity,
+        })),
     };
+
+    try {
+        const response = await fetch("http://localhost:5000/api/order/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(orderData),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error("Order API error:", result);
+            throw new Error(result.message || "Failed to place order");
+        }
+
+        //  Reduce stock for each ordered product
+        await Promise.all(
+            products.map((item) =>
+            reduceStock({ id: item._id,
+            quantityOrdered: item.quantity,
+            selectedSize: item.selectedSize,}).unwrap()
+            )
+        );
+
+        console.log("Order Response:", result);
+        alert(`Order placed successfully!`);
+        setIsModalOpen(false);
+        handleClearCart();
+
+    } catch (error) {
+        console.error("Error during order submission:", error);
+        alert("Failed to place order. Please try again.");
+    }
+};
+
     
 
     return (
@@ -157,14 +164,7 @@ const OrderSummary = () => {
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded-md"
                         />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border rounded-md"
-                        />
+                       
                         <div className="flex justify-between">
                             <button
                                 onClick={() => setIsModalOpen(false)}

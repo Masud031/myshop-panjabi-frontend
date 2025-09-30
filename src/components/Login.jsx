@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form"
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/features/auth/authSlice';
 import { useLoginUserMutation } from '../redux/features/auth/authapi';
-
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithPopup, updateProfile } from "firebase/auth";
 import app from "../pages/Home/firebase/firebase.init";
 
 const Login = () => {
@@ -20,18 +19,33 @@ const Login = () => {
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+
     // ✅ Email & Password Login Function
     const onSubmit = async (data) => {
         try {
             const response = await loginUser(data).unwrap();
             const { token, user } = response;
+
+            const formattedUser = {
+                email: user.email,
+                username: user.username,
+                role: user.role,
+                _id: user._id,
+                profileImage: user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png", // default or from backend if available
+            };
             
             localStorage.setItem('authToken', token);
-            dispatch(setUser({ user }));
+            // dispatch(setUser({ user }));
+            dispatch(setUser({ user: formattedUser }));
+            // dispatch(setUser(user));
             alert("Login successful!");
             navigate('/');
-        } catch (error) {
-            setMessage("Please provide a valid email and password!");
+        } catch (err) {
+            if (err?.data?.message) {
+                setMessage(err.data.message);
+            } else {
+                setMessage("Please provide a valid email and password!");
+            }
         }
     };
 
@@ -40,51 +54,83 @@ const Login = () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
+
     
-            // Prepare user data for the backend
+            await updateProfile(user, {
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            });
+    
             const userData = {
                 username: user.displayName,
                 email: user.email,
-                provider: "google", // Indicate the provider
+                provider: "google",
+                profileImage: user.photoURL,
             };
     
-            // First, check if the user exists
-            let response = await fetch("http://localhost:5000/api/auth/register", {
+            // Try to register user
+            const registerResponse = await fetch("http://localhost:5000/api/auth/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData),
             });
+            console.log("Registering user with:", userData);
     
             let data;
-            if (response.ok) {
-                data = await response.json();
+    
+            if (registerResponse.ok) {
+                data = await registerResponse.json();
             } else {
-                // If the user already exists, attempt login instead
-                response = await fetch("http://localhost:5000/api/auth/login", {
+                // If user already exists, fetch user data directly (e.g., a special Google login endpoint or get user by email)
+                const loginResponse = await fetch("http://localhost:5000/api/auth/google-login", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email: user.email, password: "default" }), // Default password for Google users
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: user.email }),
                 });
     
-                if (!response.ok) {
-                    throw new Error("Failed to log in the existing user.");
+                if (!loginResponse.ok) {
+                    const errorData = await loginResponse.json();
+                    throw new Error(errorData.message || "Google login failed.");
                 }
     
-                data = await response.json();
+                data = await loginResponse.json();
             }
     
-            // Dispatch user data to Redux store
-            dispatch(setUser({ user: data.user }));
+            const formattedUser = {
+                email: data.user.email,
+                username: data.user.username,
+                role: data.user.role,
+                _id: data.user._id,
+                profileImage: data.user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png",
+            };
+    
+            dispatch(setUser({ user: formattedUser }));
+            localStorage.setItem('authToken', data.token);
     
             alert("Google Sign-in successful!");
             navigate("/");
+    
         } catch (error) {
             console.error("Google signin error:", error);
-            alert("Google signin failed! Please try again.");
+            alert(error.message || "Google Signin failed!");
+        }
+    };
+    
+    
+
+
+    //forgot password//
+    const handleForgotPassword = async () => {
+        const email = prompt("Please enter your email for password reset:");
+    
+        if (email) {
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Password reset link sent to your email!");
+            } catch (error) {
+                console.error("Error resetting password:", error.message);
+                alert("Failed to send password reset email.");
+            }
         }
     };
     
@@ -113,6 +159,16 @@ const Login = () => {
                         Login
                     </button>
                 </form>
+                <div className='text-center my-2'>
+                <button
+                 type="button"
+                 onClick={handleForgotPassword}
+                 className='text-blue-600 hover:underline'
+                 >
+                 Forgot Password?
+                 </button>
+                </div>
+
 
                 <div className='my-5 italic text-sm text-center'>
                     Dont have an account? <Link to="/register" className='text-red-700 px-1 underline cursor-pointer'>Register</Link> here.

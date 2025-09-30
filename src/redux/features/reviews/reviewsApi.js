@@ -29,7 +29,7 @@ const reviewsApi = createApi({
             }),
             providesTags: (result) =>
                 result ? [{ type: "Reviews", id: result[0]?.email }] : [],
-            // refetchOnMountOrArgChange: true, // Force refetch when the component mounts
+            refetchOnMountOrArgChange: true, // Force refetch when the component mounts
         }),
         
     })

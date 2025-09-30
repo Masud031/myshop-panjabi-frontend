@@ -28,7 +28,7 @@ const Blogs = () => {
             className="blog__card cursor-pointer hover:scale-105 transition-all duration-200"
           >
             <img
-              src="https://images.unsplash.com/photo-1700159017572-de76bb0c5719?q=80&amp;w=2072&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://i.ibb.co.com/351Vsq1X/images.jpg"
               alt="Unveiling the Hottest Beachwear Trends"
             />
             <div className="blog__card__content">
@@ -41,7 +41,7 @@ const Blogs = () => {
             className="blog__card cursor-pointer hover:scale-105 transition-all duration-200"
           >
             <img
-              src="https://plus.unsplash.com/premium_photo-1682142715511-27bfbfdc044f?q=80&amp;w=2069&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://i.ibb.co.com/3YVmZsn4/images-3.jpg"
               alt="Navigating the World of Women's Tailoring"
             />
             <div className="blog__card__content">
@@ -54,7 +54,7 @@ const Blogs = () => {
             className="blog__card cursor-pointer hover:scale-105 transition-all duration-200"
           >
             <img
-              src="https://plus.unsplash.com/premium_photo-1713720663924-4e3fe8f20f79?q=80&amp;w=1948&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://i.ibb.co.com/351Vsq1X/images.jpg"
               alt="The World's Best Fashion Fair 2025"
             />
             <div className="blog__card__content">

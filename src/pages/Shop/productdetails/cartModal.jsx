@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const CartModal = ({ products,isOpen, onClose }) => {
 
+    // const cartItems = useSelector(state => state.cart.cartItems);
     const dispatch = useDispatch();
 
     const handleUpdateQuantity = (type, id) => {
@@ -36,17 +37,25 @@ style={{ transition: 'opacity 300ms' }}
                 <i className="ri-xrp-fill bg-black p-1 text-white"></i>
             </button>
         </div>
+      
+
         <div className="cart-items">
+       
             {
                 // eslint-disable-next-line react/prop-types
                 products.length === 0 ? (<p>Your cart is empty.</p>) : (products.map((product, index) => (
+                    
                     <div key={index} className="flex flex-col md:flex-row md:items-center md:justify-between shadow-md md:p-5 p-2 mb-4">
+                       {/*  */}
                         <div className='flex items-center'>
                             <span className='mr-4 px-1 bg-primary text-white rounded-full'>0{index + 1}</span>
                             <img src={product?.image} alt="image" className="size-12 object-cover mr-4" />
                             <div>
                                 <h5 className="text-lg font-medium">{product?.name}</h5>
                                 <p className="text-gray-600 text-sm">Tk:{product?.price}</p>
+                                {product?.selectedSize && (
+                            <p className="text-gray-600 text-sm mt-4">Size: {product.selectedSize}</p>
+                                )}
                             </div>
                         </div>
 
@@ -71,12 +80,13 @@ style={{ transition: 'opacity 300ms' }}
                                     className="text-red-500 hover:text-red-700 mr-4">Remove</button>
                             </div>
                         </div>
-
-
+                      
                     </div>
                 )))
             }
+       
         </div>
+        
         {
             // eslint-disable-next-line react/prop-types
             products.length > 0 && <OrderSummary />
@@ -90,5 +100,4 @@ style={{ transition: 'opacity 300ms' }}
 }
 
 export default CartModal
-
 

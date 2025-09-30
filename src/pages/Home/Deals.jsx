@@ -1,4 +1,4 @@
-import deals from '../../assets/deals.png';
+import deals from '../../assets/saro4.png';
 
 const Deals = () => {
     return (

@@ -155,7 +155,7 @@ const adminDropdownMenus = [
                             <>
                                 <img 
                                 onClick={handleDropDownToogle}
-                                 src={user?.photoURL || avatar} alt="" className='size-6 rounded-full cursor-pointer' />
+                                src={user?.profileImage || avatar} alt="" className='size-6 rounded-full cursor-pointer' />
                                 {
                                     isDropDownOpen && (
                                         <div 
