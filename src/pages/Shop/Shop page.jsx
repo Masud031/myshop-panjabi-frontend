@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import ProductCards from '../../../src/pages/Shop/productCards';
-import { useFetchAllProdutsQuery } from '../../redux/features/products/productsApi'
+
 // import { current } from '@reduxjs/toolkit'
 import ShopFiltering from '../../../src/pages/Shop/shopFiltering';
-import Loading from '../../components/Loading'
+
+import { useSearchParams } from 'react-router-dom';
+import Loading from '../../components/loading';
+import { useGetAllProductsQuery } from '../../redux/features/products/productsApi';
 
 const filters = 
   {
@@ -19,6 +22,8 @@ const filters =
 
 
 const ShopPage = () => {
+   const [searchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
   const [currentPage, setCurrentPage] = useState(1)
   const [filtersState, setFiltersState] = useState({
     category: 'all',
@@ -31,13 +36,14 @@ const ShopPage = () => {
 
   const [productsPerPage] = useState(8)
  
-  const {data: productsData = {}, isLoading} = useFetchAllProdutsQuery({
+  const {data: productsData = {}, isLoading} = useGetAllProductsQuery({
     category: category !== 'all' ? category : '',
     color: color !== 'all' ? color : '',
     minPrice: isNaN(minPrice) ? '' : minPrice,
     maxPrice: isNaN(maxPrice) ? '' : maxPrice,
     page: currentPage,
-    limit: productsPerPage
+    limit: productsPerPage,
+     search: query,
   });
   
 

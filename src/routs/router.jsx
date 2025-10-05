@@ -24,6 +24,7 @@ import ManageUsers from "../components/DashboarLayouts/adminrouts/users/ManageUs
 import SingleProduct from "../pages/Shop/productdetails/singelProducts";
 import ManageOrders from "../components/DashboarLayouts/adminrouts/admin/orders/ManageOrders";
 import OrderDetail from "../components/DashboarLayouts/OrderDetail";
+import SearchResults from "../pages/SearchResults";
 
 
 const router = createBrowserRouter([
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "/category/:categoryName",
         element: <CategoryPage/>,
+      },
+      {
+        path: "/search",
+        element: <SearchResults/>,
       },
       {
         path: "/login",

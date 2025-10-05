@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReucer from "../redux/features/auth/authSlice"; 
+import authReducer from "../redux/features/auth/authSlice"; 
 import { authApi } from "../../src/redux/features/auth/authapi";
 import productsApi from '../redux/features/products/productsApi';
 import cartReducer from "./features/cart/cartSlice";
@@ -12,7 +12,7 @@ export const store=configureStore({
     reducer: {
         // Define your reducers here
         [authApi.reducerPath]:authApi.reducer,
-        auth: authReucer,
+        auth: authReducer,
         [productsApi.reducerPath]:productsApi.reducer,
         [reviewsApi.reducerPath]:reviewsApi.reducer,
         cart:cartReducer,

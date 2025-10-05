@@ -3,8 +3,9 @@ import { useState } from 'react'
 // import {useDeleteProductMutation, useFetchAllProdutsQuery } from '../../../../redux/features/products/productsApi';
 // import Loading from '../../../../components/Loading';
 import { Link } from 'react-router-dom';
-import { useDeleteProductMutation, useFetchAllProdutsQuery } from '../../../../../redux/features/products/productsApi';
-import Loading from '../../../../Loading';
+import { useDeleteProductMutation, useGetAllProductsQuery,  } from '../../../../../redux/features/products/productsApi';
+import Loading from '../../../../loading';
+
 
 const ManageProducts = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -12,7 +13,7 @@ const ManageProducts = () => {
 
     const [deleteProduct] = useDeleteProductMutation()
 
-    const {data: productsData = {}, error, isLoading, refetch} = useFetchAllProdutsQuery({
+    const {data: productsData = {}, error, isLoading, refetch} = useGetAllProductsQuery({
         category : '',
         color : '',
         minPrice:'' ,

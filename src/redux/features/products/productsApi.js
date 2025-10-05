@@ -11,20 +11,25 @@ const productsApi = createApi({
     }),
     tagTypes: ["Products"],
     endpoints: (builder) =>({
-        fetchAllProduts:  builder.query({
-            query:({category, color, minPrice, maxPrice, page=1, limit=10}) =>{
-                const queryParams = new URLSearchParams({
-                    category: category || '',
-                    color: color || '',
-                    minPrice: minPrice || 0,
-                    maxPrice: maxPrice || '',
-                    page: page.toString(),
-                    limit: limit.toString()
-                })
-               return `/?${queryParams}`
-            },
-            providesTags: ["Products"]
-        }),
+   getAllProducts: builder.query({
+      query: ({ category, color, minPrice, maxPrice, page, limit, search } = {}) => {
+        const params = new URLSearchParams();
+
+        if (category && category !== "all") params.append("category", category);
+        if (color && color !== "all") params.append("color", color);
+        if (minPrice) params.append("minPrice", minPrice);
+        if (maxPrice) params.append("maxPrice", maxPrice);
+        if (page) params.append("page", page);
+        if (limit) params.append("limit", limit);
+        if (search) params.append("search", search);
+
+        return {
+          url: `/?${params.toString()}`, // ✅ must return object
+        };
+      },
+      providesTags: ["Products"],
+    }),
+
         fetchProductbyId: builder.query({
             query: (id) => `/${id}`,
             providesTags: (result, error, id) => [{type:"Products", id }]
@@ -33,6 +38,12 @@ const productsApi = createApi({
         query: () => `/trending`,
          providesTags: ["Products"],
         }),
+
+        searchProducts: builder.query({
+         query: (query) => `/search?query=${query}`, 
+         providesTags: ["Products"],
+        }),
+
         AddProduct: builder.mutation({
             query: (newProduct) => ({
                 url: "/create-product", 
@@ -71,11 +82,13 @@ const productsApi = createApi({
 })
 
 export const { 
-useFetchAllProdutsQuery, 
+useGetAllProductsQuery,
 useFetchProductbyIdQuery,
 useAddProductMutation,
 useUpdateProductMutation,
 useReduceStockMutation,
 useDeleteProductMutation,
-useFetchTrendingProductsQuery } = productsApi;
+useFetchTrendingProductsQuery,
+ useSearchProductsQuery
+  } = productsApi;
 export default productsApi
