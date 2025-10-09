@@ -16,6 +16,7 @@ const statsApi = createApi({
             }),
             providesTags: ["Stats"]
         }),
+        
         getAdminStats: builder.query({
             query: () => ({
                 url: `/admin-stats`,
@@ -23,6 +24,7 @@ const statsApi = createApi({
             }),
             providesTags: ["Stats"]
         }),
+        
     })
 })
 

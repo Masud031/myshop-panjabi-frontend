@@ -1,13 +1,13 @@
 
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
+import { useGetOrdersByUserIdQuery } from '../../redux/features/orders/orderApi';
 import Loading from '../Loading';
 
 
 const UserOrders = () => {
     const {user} = useSelector((state) => state.auth);
-    const {data, isLoading, error} = useGetOrdersByEmailQuery(user?.email);
+    const {data, isLoading, error} = useGetOrdersByUserIdQuery(user?._id);
     // const {data, isLoading, error} = useGetOrde;
 
     if(isLoading) return <Loading/>

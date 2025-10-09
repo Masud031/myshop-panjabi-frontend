@@ -16,13 +16,10 @@ const orderApi = createApi({
             providesTags: (result, error, id) => [{ type: "Products", id }],
         }),
 
-        // Get orders by email
-        getOrdersByEmail: builder.query({
-            query: (email) => ({
-                url: `/${email}`,
-                method: 'GET',
-            }),
-            providesTags: ["Order"],
+        // Get orders by email//for userpaymnets
+      getOrdersByEmail: builder.query({
+         query: (email) => `user/email/${encodeURIComponent(email)}`,
+         providesTags: ["Order"],
         }),
 
         // Get orders by order ID
@@ -33,6 +30,7 @@ const orderApi = createApi({
             }),
             providesTags: ["Order"]
         }),
+        
 
         // Get all orders (admin only)
         getAllOrders: builder.query({
@@ -68,6 +66,12 @@ const orderApi = createApi({
             }),
             invalidatesTags: ["Order"],
         }),
+        // get order by userID
+        getOrdersByUserId: builder.query({
+         query: (userId) => `user/id/${userId}`,
+        providesTags: ["Order"],
+        }),
+
 
         // Delete order
         deleteOrderbyId: builder.mutation({
@@ -81,7 +85,7 @@ const orderApi = createApi({
 });
 
 export const {
-    useGetOrdersByEmailQuery,
+     useGetOrdersByEmailQuery,
     useGetOrdersByIdQuery,
     useGetAllOrdersQuery,
     useFetchOrderByTransactionIdQuery,
@@ -89,6 +93,7 @@ export const {
     useUpdateOrderStatusMutation,
     useDeleteOrderbyIdMutation,
     useFetchProductbyIdQuery,
+    useGetOrdersByUserIdQuery
 } = orderApi;
 
 export default orderApi;

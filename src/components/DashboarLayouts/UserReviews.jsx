@@ -16,11 +16,16 @@ const UserReviews = () => {
   console.log("Fetched reviews:", data);
   console.log("User ID:", user?._id);
 
+  if (!user?._id) {
+  return <div className="text-center mt-10">Loading your profile...</div>;
+}
+
   if (isLoading) return <Loading />;
   if (error) return <div>Failed to show Reviews!</div>;
 
   // const reviews = Array.isArray(data?.data) ? data.data : [];
-  const reviews = data.data || [];
+  // const reviews = data.data || [];
+   const reviews = Array.isArray(data?.data) ? data.data : [];
   console.log(reviews);
 
   const handleCardClick = () => {
@@ -31,8 +36,8 @@ const UserReviews = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Your Given Reviews</h1>
 
-      {reviews.length === 0 && !isLoading && !error && (
-        <p className="text-center text-gray-500">You havent reviewed any products yet.</p>
+      {reviews.length === 0 && (
+        <p className="text-center text-gray-500 italic">You havent reviewed any products yet.</p>
       )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

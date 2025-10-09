@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import avatar from "../assets/mypic.png";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { logout } from "../redux/features/auth/authSlice";
 import { useLogoutUserMutation } from "../redux/features/auth/authapi";
 import CartModal from "../pages/Shop/productdetails/cartModal";
@@ -10,13 +10,31 @@ import { useSearchProductsQuery } from "../redux/features/products/productsApi";
 const Navbar = () => {
   const products = useSelector((state) => state.cart.products);
   const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
+
 
   
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [query, setQuery] = useState("");
+  // dropdop codes on profile icon//
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target)
+    ) {
+      setIsDropDownOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
+// dropdop codes end//
   const [searchFocused, setSearchFocused] = useState(false);
 
   const { data, isFetching } = useSearchProductsQuery(query, {
@@ -167,72 +185,83 @@ console.log(searchResults);
             </sup>
           </button>
 
-          {user ? (
-            <>
-              <img
-                onClick={handleDropDownToggle}
-                src={user?.profileImage || avatar}
-                alt="user"
-                className="w-6 h-6 md:w-7 md:h-7 rounded-full cursor-pointer"
-              />
-              {isDropDownOpen && (
-                <div className="absolute right-0 mt-10 p-4 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  <ul className="font-medium space-y-3 text-sm">
-                    {dropDownMenus.map((menu, index) => (
-                      <li key={index}>
-                        <Link
-                          onClick={() => setIsDropDownOpen(false)}
-                          to={menu.path}
-                          className="block hover:text-primary"
-                        >
-                          {menu.label}
-                        </Link>
-                      </li>
-                    ))}
-                    <li>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left hover:text-primary"
-                      >
-                        Logout
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </>
-          ) : (
-            <Link to="/login">
-              <i className="ri-user-line text-lg md:text-xl"></i>
-            </Link>
-          )}
+   {user ? (
+  <div className="relative">
+    <img
+      onClick={handleDropDownToggle}
+      src={user?.profileImage || avatar}
+      alt="user"
+      className="w-6 h-6 md:w-7 md:h-7 rounded-full cursor-pointer"
+    />
+
+    {isDropDownOpen && (
+      <div
+        ref={dropdownRef}  // ✅ Attach ref here
+        className="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-y-auto max-h-48"
+        style={{ transformOrigin: "top right" }}
+      >
+        <ul className="font-medium text-sm p-1 space-y-1">
+          {dropDownMenus.map((menu, index) => (
+            <li key={index}>
+              <Link
+                onClick={() => setIsDropDownOpen(false)}
+                to={menu.path}
+                className="block px-2 py-1 rounded leading-tight hover:bg-gray-100 hover:text-primary transition"
+              >
+                {menu.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-2 py-1 rounded leading-tight hover:bg-gray-100 hover:text-primary transition"
+            >
+              Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    )}
+  </div>
+) : (
+  <Link to="/login">
+    <i className="ri-user-line text-lg md:text-xl"></i>
+  </Link>
+)}
+
+
         </div>
       </div>
 
       {/* Navigation Links */}
-      <div className="border-t border-gray-200 shadow-sm">
-        <ul className="flex justify-center gap-4 sm:gap-6 text-gray-600 text-sm sm:text-base font-medium py-2">
-          {[
-            { label: "Home", path: "/" },
-            { label: "Shop", path: "/shop" },
-            { label: "Pages", path: "/pages" },
-            { label: "Contact", path: "/contact" },
-          ].map((item, index) => (
-            <li key={index}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-primary border-b-2 border-primary pb-1"
-                    : "hover:text-primary hover:border-b-2 hover:border-primary pb-1"
-                }
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
+     {/* Navigation Links */}
+{["/", "/shop", "/pages", "/contact"].includes(location.pathname) && (
+  <div className="border-t border-gray-200 shadow-sm">
+    <ul className="flex justify-center gap-4 sm:gap-6 text-gray-600 text-sm sm:text-base font-medium py-2">
+      {[
+        { label: "Home", path: "/" },
+        { label: "Shop", path: "/shop" },
+        { label: "Pages", path: "/pages" },
+        { label: "Contact", path: "/contact" },
+      ].map((item, index) => (
+        <li key={index}>
+          <NavLink
+            to={item.path}
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary border-b-2 border-primary pb-1"
+                : "hover:text-primary hover:border-b-2 hover:border-primary pb-1"
+            }
+          >
+            {item.label}
+          </NavLink>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
 
       {/* Cart Modal */}
       {isCartOpen && (

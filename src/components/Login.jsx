@@ -10,7 +10,7 @@ import app from "../pages/Home/firebase/firebase.init";
 
 const Login = () => {
     const [message, setMessage] = useState('');
-    const { register, handleSubmit, formState: { errors }, } = useForm();
+    const { register, handleSubmit, formState: { errors },reset } = useForm();
 
     const [loginUser, { isLoading, error }] = useLoginUserMutation();
     const navigate = useNavigate();
@@ -23,6 +23,7 @@ const Login = () => {
     // ✅ Email & Password Login Function
     const onSubmit = async (data) => {
         try {
+            reset();
             const response = await loginUser(data).unwrap();
             const { token, user } = response;
 
@@ -46,6 +47,7 @@ const Login = () => {
             } else {
                 setMessage("Please provide a valid email and password!");
             }
+             reset({ email: "", password: "" }); // reset form fields
         }
     };
 
@@ -67,34 +69,43 @@ const Login = () => {
                 provider: "google",
                 profileImage: user.photoURL,
             };
+             console.log("➡️ Sending Google Login:", userData);
     
             // Try to register user
-            const registerResponse = await fetch("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData),
-            });
-            console.log("Registering user with:", userData);
-    
-            let data;
-    
-            if (registerResponse.ok) {
-                data = await registerResponse.json();
-            } else {
+           
+            
                 // If user already exists, fetch user data directly (e.g., a special Google login endpoint or get user by email)
-                const loginResponse = await fetch("http://localhost:5000/api/auth/google-login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: user.email }),
-                });
+               // login response
+   const res = await fetch("http://localhost:5000/api/auth/google-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // for cookies
+       body: JSON.stringify({
+    username: "Test User",
+    email: "test@example.com",
+    provider: "google",
+    profileImage: "https://test.jpg"
+  })
+    });
+    console.log("📤 Sending body to backend:", JSON.stringify(userData));
+
+const data = await res.json();
+console.log("Google login response:", data);
+
+   if (!res.ok) {
+      throw new Error(data.message || "Google login failed");
+    }
+
     
-                if (!loginResponse.ok) {
-                    const errorData = await loginResponse.json();
-                    throw new Error(errorData.message || "Google login failed.");
-                }
+                // if (!loginResponse.ok) {
+                //     const errorData = await loginResponse.json();
+                //     throw new Error(errorData.message || "Google login failed.");
+                // }
     
-                data = await loginResponse.json();
-            }
+                // data = await loginResponse.json();
+            
     
             const formattedUser = {
                 email: data.user.email,
@@ -145,12 +156,18 @@ const Login = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-3 max-w-sm mx-auto pt-6'>
                     <input
                         {...register("email", { required: true })}
-                        type="email" placeholder='Email' className='w-full bg-gray-100 focus:outline-none px-5 py-3' />
+                        type="email" placeholder='Email' className='w-full bg-gray-100 focus:outline-none px-5 py-3'
+                        onChange={(e) => {
+                    setMessage(""); // clear previous error
+                     }} />
                     {errors.email && <p className='text-red-500'>Email is required</p>}
 
                     <input
                         {...register("password", { required: true })}
-                        type="password" placeholder='Password' className='w-full bg-gray-100 focus:outline-none px-5 py-3' />
+                        type="password" placeholder='Password' className='w-full bg-gray-100 focus:outline-none px-5 py-3'
+                        onChange={(e) => {
+                    setMessage(""); // clear previous error
+                         }} />
                     {errors.password && <p className='text-red-500'>Password is required</p>}
 
                     {message && <p className='text-red-500'>{message}</p>}

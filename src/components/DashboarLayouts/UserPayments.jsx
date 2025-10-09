@@ -8,10 +8,13 @@ import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
 const UserPayments = () => {
     const {user} = useSelector(state => state.auth);
     const {data, isLoading, error} = useGetOrdersByEmailQuery(user?.email);
+    console.log("User Email:", user?.email);
     if(isLoading) return <Loading/>;
     if(error) return <div>Failed to show payments!</div>
     
-    const orders = data.data || []
+    // const orders = data.data || []
+    const orders = Array.isArray(data?.data) ? data.data : []
+
     console.log("Orders Data:", orders);
 
 
