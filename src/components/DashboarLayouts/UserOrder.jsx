@@ -8,12 +8,15 @@ import Loading from '../Loading';
 const UserOrders = () => {
     const {user} = useSelector((state) => state.auth);
     const {data, isLoading, error} = useGetOrdersByUserIdQuery(user?._id);
+        console.log("Logged in user:", user);
+console.log("user._id:", user?._id);
     // const {data, isLoading, error} = useGetOrde;
 
     if(isLoading) return <Loading/>
     if(error) return <div>Something went wrong! Failed to Fetch Your Orders!</div>
     const orders = data.data || [];
     console.log(orders)
+
   return (
     <section className="py-1 bg-blueGray-50">
             <div className="w-full mb-12 xl:mb-0 px-4 mx-auto">

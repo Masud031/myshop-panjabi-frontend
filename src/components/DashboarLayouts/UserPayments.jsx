@@ -1,24 +1,29 @@
 
 import { useSelector } from 'react-redux'
-// import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
 import Loading from '../Loading';
 import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
-// import Loading from '../loading';
+
 
 const UserPayments = () => {
     const {user} = useSelector(state => state.auth);
-    const {data, isLoading, error} = useGetOrdersByEmailQuery(user?.email);
-    console.log("User Email:", user?.email);
+// const identifier = user?.email || user?.mobile; // Use whichever is available
+const { data, isLoading, error } = useGetOrdersByEmailQuery(user?._id);
+    console.log("User Email:", user?._id);
+
     if(isLoading) return <Loading/>;
     if(error) return <div>Failed to show payments!</div>
     
-    // const orders = data.data || []
-    const orders = Array.isArray(data?.data) ? data.data : []
+
+    
+ 
+    const orders = Array.isArray(data?.data) ? data.data : [];
+const totalPayment = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0).toFixed(2);
+
 
     console.log("Orders Data:", orders);
 
 
-    const totalPayment = orders.reduce((acc, order) => acc +(Number(order.totalPrice) || 0), 0).toFixed(2);
+    // const totalPayment = orders.reduce((acc, order) => acc +(Number(order.totalPrice) || 0), 0).toFixed(2);
 
 
 

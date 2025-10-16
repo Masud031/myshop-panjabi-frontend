@@ -10,9 +10,7 @@ const UserReviews = () => {
   
   // Use the `skip` option to prevent the query from running
     // if `user` or `user._id` is falsy.
-    const { data, isLoading, error } = useGetReviewByUserIdQuery(user?._id, {
-        skip: !user?._id,
-    });
+    const { data, isLoading, error } = useGetReviewByUserIdQuery(user?._id);
   console.log("Fetched reviews:", data);
   console.log("User ID:", user?._id);
 

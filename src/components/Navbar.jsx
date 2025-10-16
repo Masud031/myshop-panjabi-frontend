@@ -13,8 +13,6 @@ const Navbar = () => {
   const location = useLocation();
 
 
-  
-
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [query, setQuery] = useState("");
   // dropdop codes on profile icon//

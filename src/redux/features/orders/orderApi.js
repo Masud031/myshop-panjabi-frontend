@@ -18,7 +18,8 @@ const orderApi = createApi({
 
         // Get orders by email//for userpaymnets
       getOrdersByEmail: builder.query({
-         query: (email) => `user/email/${encodeURIComponent(email)}`,
+        //  query: (identifier) => `user/email/${encodeURIComponent(identifier)}`,
+         query: (id) => `user/email/${encodeURIComponent(id)}`,
          providesTags: ["Order"],
         }),
 

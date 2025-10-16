@@ -22,32 +22,53 @@ const Login = () => {
 
     // ✅ Email & Password Login Function
     const onSubmit = async (data) => {
+         const { emailOrMobile, password } = data;
+         // Validate that emailOrMobile is either valid email or mobile
+    const isEmail = /\S+@\S+\.\S+/.test(emailOrMobile);
+    const isMobile = /^[0-9]{10,15}$/.test(emailOrMobile);
+
+      if (!isEmail && !isMobile) {
+      setMessage("Please enter a valid email or mobile number!");
+      return;
+    }
+
+     const payload = {
+      password,
+      ...(isEmail ? { email: emailOrMobile } : { mobile: emailOrMobile }),
+    };
         try {
             reset();
-            const response = await loginUser(data).unwrap();
+            const response = await loginUser(payload).unwrap();
+            // const token = response?.token;
+            //  const user = response?.user;
             const { token, user } = response;
+
+            if (!token || !user) {
+             throw new Error("Invalid server response");
+             }
 
             const formattedUser = {
                 email: user.email,
+                mobile: user.mobile,
                 username: user.username,
                 role: user.role,
                 _id: user._id,
                 profileImage: user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png", // default or from backend if available
             };
+          
             
-            localStorage.setItem('authToken', token);
-            // dispatch(setUser({ user }));
-            dispatch(setUser({ user: formattedUser }));
-            // dispatch(setUser(user));
+           localStorage.setItem('authToken', token);
+            dispatch(setUser( formattedUser));
+
             alert("Login successful!");
             navigate('/');
         } catch (err) {
             if (err?.data?.message) {
                 setMessage(err.data.message);
             } else {
-                setMessage("Please provide a valid email and password!");
+                setMessage("Invalid email/mobile or password!");
             }
-             reset({ email: "", password: "" }); // reset form fields
+            reset({ emailOrMobile: "", password: "" }); // reset form fields
         }
     };
 
@@ -70,11 +91,8 @@ const Login = () => {
                 profileImage: user.photoURL,
             };
              console.log("➡️ Sending Google Login:", userData);
-    
-            // Try to register user
            
-            
-                // If user already exists, fetch user data directly (e.g., a special Google login endpoint or get user by email)
+        
                // login response
    const res = await fetch("http://localhost:5000/api/auth/google-login", {
       method: "POST",
@@ -82,12 +100,7 @@ const Login = () => {
         "Content-Type": "application/json",
       },
       credentials: "include", // for cookies
-       body: JSON.stringify({
-    username: "Test User",
-    email: "test@example.com",
-    provider: "google",
-    profileImage: "https://test.jpg"
-  })
+       body: JSON.stringify(userData),
     });
     console.log("📤 Sending body to backend:", JSON.stringify(userData));
 
@@ -97,14 +110,6 @@ console.log("Google login response:", data);
    if (!res.ok) {
       throw new Error(data.message || "Google login failed");
     }
-
-    
-                // if (!loginResponse.ok) {
-                //     const errorData = await loginResponse.json();
-                //     throw new Error(errorData.message || "Google login failed.");
-                // }
-    
-                // data = await loginResponse.json();
             
     
             const formattedUser = {
@@ -114,8 +119,10 @@ console.log("Google login response:", data);
                 _id: data.user._id,
                 profileImage: data.user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png",
             };
+            console.log("Google login response:", data);
+
     
-            dispatch(setUser({ user: formattedUser }));
+            dispatch(setUser( formattedUser )); 
             localStorage.setItem('authToken', data.token);
     
             alert("Google Sign-in successful!");
@@ -152,16 +159,18 @@ console.log("Google login response:", data);
             <div className='shadow bg-white p-8 max-w-sm mx-auto'>
                 <h2 className='text-2xl font-semibold pt-5'>Please Login!</h2>
 
-                {/* Email & Password Login Form */}
+                {/* Email or Mobile & Password Login Form */}
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-3 max-w-sm mx-auto pt-6'>
-                    <input
-                        {...register("email", { required: true })}
-                        type="email" placeholder='Email' className='w-full bg-gray-100 focus:outline-none px-5 py-3'
-                        onChange={(e) => {
-                    setMessage(""); // clear previous error
-                     }} />
-                    {errors.email && <p className='text-red-500'>Email is required</p>}
+                     <input
+            {...register("emailOrMobile", { required: true })}
+            type="text"
+            placeholder="Email or Mobile number"
+            className="w-full bg-gray-100 focus:outline-none px-5 py-3 rounded-md"
+            onChange={() => setMessage("")}
+          />
+                    {errors.email && <p className='text-red-500'>Email or Mobile number is required</p>}
 
+                     
                     <input
                         {...register("password", { required: true })}
                         type="password" placeholder='Password' className='w-full bg-gray-100 focus:outline-none px-5 py-3'
@@ -176,6 +185,8 @@ console.log("Google login response:", data);
                         Login
                     </button>
                 </form>
+
+                 {/* Forgot Password */}
                 <div className='text-center my-2'>
                 <button
                  type="button"
@@ -186,7 +197,7 @@ console.log("Google login response:", data);
                  </button>
                 </div>
 
-
+                {/* Register Link */}
                 <div className='my-5 italic text-sm text-center'>
                     Dont have an account? <Link to="/register" className='text-red-700 px-1 underline cursor-pointer'>Register</Link> here.
                 </div>

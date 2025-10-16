@@ -14,11 +14,11 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const UserDMain = () => {
     const { user } = useSelector(state => state.auth);
 
-    const skip = !user?.email;
-const { data: UserData, isLoading, error } = useGetUserStatsQuery(user?.email, { skip });
+  //  const identifier = user?.email || user?.mobile;
+  const skip = !user?._id;
+const { data: UserData, isLoading, error } = useGetUserStatsQuery(user?._id,{skip});
      console.log("User Object:", user); // Check what the user object looks like
    
-
    
        if (isLoading) return <Loading />
     if (error) return <div>Failed to fetch data</div>
