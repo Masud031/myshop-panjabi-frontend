@@ -1,8 +1,9 @@
 /* eslint-disable no-extra-boolean-cast */
-import Loading from '../Loading';
+
 import { useGetReviewByUserIdQuery } from '../../redux/features/reviews/reviewsApi'
 import { useSelector, } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../loading';
 
 const UserReviews = () => {
   const { user } = useSelector(state => state.auth);

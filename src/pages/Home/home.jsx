@@ -1,3 +1,4 @@
+import CategoriesBar from "../../components/CategoriesBar";
 import Blogs from "../Blog/Blogs";
 import Banner from "./Banner";
 import Category from "./Category";
@@ -9,7 +10,10 @@ import Trands from "./trands";
 
 const Home = () => {
     return (
-        <>
+        <> 
+            <div className="mt-28">
+            <CategoriesBar />
+            </div>
             <Banner/>
             <Category/>
             <Trands/>

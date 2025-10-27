@@ -55,7 +55,7 @@ const productsApi = createApi({
         }),
         updateProduct: builder.mutation({
             query: ({id, ...rest}) => ({
-                url: `/update-product/${id}`,
+                url: `/update-products/${id}`,
                 method: "PATCH",
                 body: rest,
             }),
@@ -77,7 +77,46 @@ const productsApi = createApi({
                 method: "DELETE",
             }),
             invalidatesTags: (result, error, id) => [{type:"Products", id }]
-        })
+        }),
+         // ✅ add filters endpoint HERE properly
+   getAllFilters: builder.query({
+  query: (category = 'all') => `/filters/${category}`,
+}),
+
+// subcategory filters //
+getAllFilterProducts: builder.query({
+  query: (filters = {}) => {
+    const params = new URLSearchParams();
+
+    if (filters.category && filters.category !== "all") {
+      params.append("category", filters.category);
+    }
+
+    if (filters.size?.length) params.append("size", filters.size.join(","));
+    if (filters.color?.length) params.append("color", filters.color.join(","));
+    if (filters.style?.length) params.append("style", filters.style.join(","));
+
+    // ✅ Match backend: priceMin & priceMax
+    if (filters.price) {
+      if (filters.price.min !== undefined && filters.price.min !== null)
+        params.append("priceMin", filters.price.min);
+      if (filters.price.max !== undefined && filters.price.max !== null)
+        params.append("priceMax", filters.price.max);
+    }
+
+    if (filters.page) params.append("page", filters.page);
+    if (filters.limit) params.append("limit", filters.limit);
+
+    return `/filter?${params.toString()}`;
+  },
+  providesTags: ["Products"],
+}),
+
+
+
+
+
+
     })
 })
 
@@ -89,6 +128,8 @@ useUpdateProductMutation,
 useReduceStockMutation,
 useDeleteProductMutation,
 useFetchTrendingProductsQuery,
- useSearchProductsQuery
+ useSearchProductsQuery,
+  useGetAllFiltersQuery,
+  useGetAllFilterProductsQuery
   } = productsApi;
 export default productsApi

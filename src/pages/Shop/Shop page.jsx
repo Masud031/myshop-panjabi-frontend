@@ -1,126 +1,92 @@
-import { useState } from 'react'
-import ProductCards from '../../../src/pages/Shop/productCards';
+import { useState } from "react";
+import ProductCards from "../../../src/pages/Shop/productCards";
+import ShopFiltering from "../../../src/pages/Shop/shopFiltering";
+import Loading from "../../components/loading";
+import {
+  useGetAllProductsQuery,
+  useGetAllFiltersQuery,
+} from "../../redux/features/products/productsApi";
 
-// import { current } from '@reduxjs/toolkit'
-import ShopFiltering from '../../../src/pages/Shop/shopFiltering';
-
-import { useSearchParams } from 'react-router-dom';
-import Loading from '../../components/loading';
-import { useGetAllProductsQuery } from '../../redux/features/products/productsApi';
-
-const filters = 
-  {
-    categories: ["all", "accessories", "dress", "jewellery", "cosmetics"],
-    colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
-    priceRanges: [
-      {label: "Under $50", min: 0, max: 50},
-      {label: "$50 - $100", min: 50, max: 100},
-      {label: "$100 - $200", min: 100, max: 200},
-      {label: "$200 and above", min: 200, max: Infinity},
-    ]
-  }
-
-
-const ShopPage = () => {
-   const [searchParams] = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const [currentPage, setCurrentPage] = useState(1)
+export default function ShopPage() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [filtersState, setFiltersState] = useState({
-    category: 'all',
-    color: 'all',
-    priceRange: ''
+    category: "all",
+    color: "all",
+    priceRange: "",
   });
 
-  const {category, color, priceRange} = filtersState;
-  const [minPrice, maxPrice] = priceRange.split('-').map(Number)
+  const { category, color, priceRange } = filtersState;
+  const [minPrice, maxPrice] = priceRange.split("-").map(Number);
 
-  const [productsPerPage] = useState(8)
- 
-  const {data: productsData = {}, isLoading} = useGetAllProductsQuery({
-    category: category !== 'all' ? category : '',
-    color: color !== 'all' ? color : '',
-    minPrice: isNaN(minPrice) ? '' : minPrice,
-    maxPrice: isNaN(maxPrice) ? '' : maxPrice,
+  const queryParams = {
+    category: category !== "all" ? category : "",
+    color: color !== "all" ? color : "",
+    minPrice: isNaN(minPrice) ? "" : minPrice,
+    maxPrice: isNaN(maxPrice) ? "" : maxPrice,
     page: currentPage,
-    limit: productsPerPage,
-     search: query,
-  });
-  
+    limit: 8,
+  };
 
-  if (isLoading) return <Loading/>;
-  // const {products, totalPages, totalProducts} = productsData?.data || {};
-  const {products = [], totalPages = 0, totalProducts = 0} = productsData?.data || {};
+  // ✅ Fetch all products
+  const { data: productsData = {}, isLoading: isProductsLoading } =
+    useGetAllProductsQuery(queryParams);
+    console.log( "quary param",queryParams);
 
-  // console.log(products);
-  const handlePageChange = (pageNumber) => {
-    if(pageNumber > 0 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber)
-    }
-  }
+  // ✅ Fetch filters for ALL categories
+  const { data: filtersData = {}, isLoading: isFiltersLoading } =
+    useGetAllFiltersQuery("all");
 
-  const clearFilters = () => {
-    setFiltersState({
-      category: 'all',
-      color: 'all',
-      priceRange: ''
-    })
-  }
+    console.log("filter qury",filtersData);
 
+  if (isProductsLoading || isFiltersLoading) return <Loading />;
 
-  const startProduct = (currentPage - 1) * productsPerPage + 1;
-  const endProduct = startProduct + products.length - 1;
+  const backendFilters = filtersData?.data || {};
+  const filters = {
+    categories: ["all", ...(backendFilters.categories || [])],
+    colors: ["all", ...(backendFilters.colors || [])],
+    priceRanges: backendFilters.priceRanges || [],
+  };
+
+  const products = productsData?.data?.products || [];
+  const totalPages = productsData?.data?.totalPages || 0;
 
   return (
-    <>
-      <section className='section__container rounded bg-primary-light'>
-        <h2 className='section__header'>Shop Page</h2>
-        <p className='section__subheader'>Discover the Hottest Picks: Elevate Your Style with Our Curated Collection of Trending Womens Fashion Products.</p>
-      </section>
+    <section className="section__container">
+      <h2 className="section__header">Shop All Products</h2>
 
-      <section className='section__container'>
-        <div className='flex flex-col md:flex-row md:gap-12 gap-8'>
-          {/* categories */}
-          <ShopFiltering 
+      <div className="flex flex-col md:flex-row gap-8">
+        <ShopFiltering
           filters={filters}
           filtersState={filtersState}
           setFiltersState={setFiltersState}
-          clearFilters={clearFilters}
-          />
+          clearFilters={() =>
+            setFiltersState({ category: "all", color: "all", priceRange: "" })
+          }
+        />
 
-          {/* products grid */}
-          <div>
-            <h3 className='text-xl font-medium mb-4'>Showing {startProduct} to {endProduct} of {totalProducts} products</h3>
-            <ProductCards products={products}/>
+        <div className="flex-1">
+          <ProductCards products={products} />
 
-            {/* pagingation */}
-
-            {
-              products.length > 0 &&  <div className='mt-6 flex justify-center space-x-2'>
-              <button 
-               disabled= {currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-              className='px-4 py-2 bg-gray-200 text-gray-700 rounded-md'>Previous</button>
-              {
-                [...Array(totalPages)].map((_, index) => (
-                  <button 
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`px-4 py-2 rounded-md ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 '}`}
-                  key={index}>{index + 1}</button>
-
-                ))
-              }
-              <button 
-              disabled= {currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}
-              className='px-4 py-2 bg-gray-200 text-gray-700 rounded-md'>Next</button>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-6 flex justify-center space-x-2">
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
             </div>
-            }
-            
-          </div>
+          )}
         </div>
-      </section>
-    </>
-  )
+      </div>
+    </section>
+  );
 }
-
-export default ShopPage

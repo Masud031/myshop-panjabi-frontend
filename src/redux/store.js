@@ -6,6 +6,7 @@ import cartReducer from "./features/cart/cartSlice";
 import orderApi from "./features/orders/orderApi";
 import statsApi from "./features/states/statesapi";
 import reviewsApi from "./features/reviews/reviewsApi";
+import categoriesApi from "./features/categoriesApi";
 // import authSlice from "../redux/features/auth/authSlice";
 
 export const store=configureStore({
@@ -18,11 +19,12 @@ export const store=configureStore({
         cart:cartReducer,
         [orderApi.reducerPath]:orderApi.reducer,
         [statsApi.reducerPath]:statsApi.reducer,
+        [categoriesApi.reducerPath]: categoriesApi.reducer,
 
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(authApi.middleware,productsApi.middleware,
-            reviewsApi.middleware,orderApi.middleware,statsApi.middleware
+            reviewsApi.middleware,orderApi.middleware,statsApi.middleware,categoriesApi.middleware
         )
 })
 

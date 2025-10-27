@@ -5,17 +5,17 @@ import Footer from "./components/Footer";
 
 
 
+
 function App() {
 
 
   return (
     <>
     <Navbar/>
-    <main className="min-h-screen">
-      <Outlet/>
+   <main className="min-h-screen">
+     <Outlet/>
     </main>
-      
-      <Footer/>
+    <Footer/>
     </>
   )
 }

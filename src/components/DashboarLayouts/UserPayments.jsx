@@ -1,7 +1,7 @@
 
 import { useSelector } from 'react-redux'
-import Loading from '../Loading';
 import { useGetOrdersByEmailQuery } from '../../redux/features/orders/orderApi';
+import Loading from '../loading';
 
 
 const UserPayments = () => {
@@ -13,9 +13,6 @@ const { data, isLoading, error } = useGetOrdersByEmailQuery(user?._id);
     if(isLoading) return <Loading/>;
     if(error) return <div>Failed to show payments!</div>
     
-
-    
- 
     const orders = Array.isArray(data?.data) ? data.data : [];
 const totalPayment = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0).toFixed(2);
 

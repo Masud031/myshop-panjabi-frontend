@@ -50,14 +50,10 @@ const router = createBrowserRouter([
         element: <Pages/>,
       },
    
-      // {
-      //   path: "/success/",
-      //   element: <Payment/>,
-      // },
       {
         path: "/success",
         element: <PaymentSuccess/>,
-        // loader:()=>fetch("/order.controller.js")
+
       },
     
       {

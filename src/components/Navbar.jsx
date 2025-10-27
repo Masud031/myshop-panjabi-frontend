@@ -10,6 +10,7 @@ import { useSearchProductsQuery } from "../redux/features/products/productsApi";
 const Navbar = () => {
   const products = useSelector((state) => state.cart.products);
   const { user } = useSelector((state) => state.auth);
+  console.log(user);
   const location = useLocation();
 
 
@@ -40,8 +41,9 @@ const Navbar = () => {
    refetchOnMountOrArgChange: true,   
 });
 
-const searchResults = data?.data?.products || []; 
-console.log(searchResults);
+const searchResults = data?.data?.products || [];
+console.log(searchResults );
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -186,11 +188,17 @@ console.log(searchResults);
    {user ? (
   <div className="relative">
     <img
-      onClick={handleDropDownToggle}
-      src={user?.profileImage || avatar}
-      alt="user"
-      className="w-6 h-6 md:w-7 md:h-7 rounded-full cursor-pointer"
-    />
+  onClick={handleDropDownToggle}
+  src={
+    user?.profileImage && user.profileImage.trim() !== ""
+      ? user.profileImage
+      : avatar
+  }
+  alt="User Avatar"
+  referrerPolicy="no-referrer"  // 👈 crucial for Google-hosted images
+  className="w-6 h-6 md:w-7 md:h-7 rounded-full object-cover cursor-pointer border border-gray-200"
+/>
+
 
     {isDropDownOpen && (
       <div

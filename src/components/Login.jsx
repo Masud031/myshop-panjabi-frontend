@@ -1,6 +1,7 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/features/auth/authSlice';
@@ -15,6 +16,9 @@ const Login = () => {
     const [loginUser, { isLoading, error }] = useLoginUserMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const location = useLocation(); // 👈 get previous route info
+    const from = location.state?.from || '/'; 
 
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
@@ -39,13 +43,26 @@ const Login = () => {
         try {
             reset();
             const response = await loginUser(payload).unwrap();
-            // const token = response?.token;
-            //  const user = response?.user;
             const { token, user } = response;
 
             if (!token || !user) {
              throw new Error("Invalid server response");
              }
+
+            // ✅ Normalize profile image
+               let profileImage = user.profileImage?.trim();
+   
+   if (!profileImage || profileImage === "" || profileImage === "undefined") {
+    profileImage = "https://i.ibb.co/2kR9YxW/avatar.png";
+} 
+// 2. KEEP the Google suffix logic, as it modifies a *valid* Google URL for better display
+else if (
+    profileImage.includes("googleusercontent") &&
+    !profileImage.includes("=")
+) {
+    // Append quality suffix for Google links
+    profileImage += "=s96-c";
+}
 
             const formattedUser = {
                 email: user.email,
@@ -53,15 +70,16 @@ const Login = () => {
                 username: user.username,
                 role: user.role,
                 _id: user._id,
-                profileImage: user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png", // default or from backend if available
+                profileImage, 
             };
           
             
            localStorage.setItem('authToken', token);
             dispatch(setUser( formattedUser));
-
             alert("Login successful!");
-            navigate('/');
+              // 👇 Redirect logic
+          navigate(from, { replace: true });
+
         } catch (err) {
             if (err?.data?.message) {
                 setMessage(err.data.message);
@@ -126,7 +144,7 @@ console.log("Google login response:", data);
             localStorage.setItem('authToken', data.token);
     
             alert("Google Sign-in successful!");
-            navigate("/");
+             navigate(from, { replace: true });
     
         } catch (error) {
             console.error("Google signin error:", error);
@@ -199,7 +217,14 @@ console.log("Google login response:", data);
 
                 {/* Register Link */}
                 <div className='my-5 italic text-sm text-center'>
-                    Dont have an account? <Link to="/register" className='text-red-700 px-1 underline cursor-pointer'>Register</Link> here.
+                Don't have an account?{' '}
+                <Link 
+                 to="/register" 
+                state={{ from: location.state?.from }} // ✅ Preserve the original route
+                className='text-red-700 px-1 underline cursor-pointer'
+                 >
+                 Register here.
+                 </Link> 
                 </div>
 
                 {/* Google Sign-In Button */}

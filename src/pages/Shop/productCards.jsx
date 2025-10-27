@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import RatingStars from '../../components/RatingStars'
 import { Link, useNavigate } from 'react-router-dom'
@@ -43,23 +44,23 @@ const ProductCards = ({products}) => {
                 </div>
                 <div className="product__card__content">
                   <h4>{product?.name}</h4>
-                  <p>${product?.price} {product?.oldPrice ? <s>{product?.oldPrice}</s> : null}</p>
+                  <p>Tk:{product?.price} {product?.oldPrice ? <s>{product?.oldPrice}</s> : null}</p>
 
 
-                {product?.stock && typeof product.stock === 'object' && Object.keys(product.stock).length > 0 && (
-                  <ul className="text-sm text-gray-600">
-                   {Object.entries(product.stock)
-                      // eslint-disable-next-line no-unused-vars
-                      .filter(([_, qty]) => qty > 0)
-                      .map(([size, qty]) => (
-                        <li key={size}>Size {size}: {qty} pcs</li>
-                    ))}
+               {/* Hidden stock info (functional, not visible) */}
+<div style={{ display: 'none' }}>
+  {product?.stock && typeof product.stock === 'object' && Object.keys(product.stock).length > 0 && (
+    <ul>
+      {Object.entries(product.stock)
+        .filter(([_, qty]) => qty > 0)
+        .map(([size, qty]) => (
+          <li key={size}>{size}:{qty}</li>
+        ))}
+    </ul>
+  )}
+</div>
 
-                  </ul>
-                )}
-
-
-                  <RatingStars rating={product?.rating}/>
+       <RatingStars rating={product?.rating}/>
                 </div>
               </div>
             )) ) : <div>No products found!</div>

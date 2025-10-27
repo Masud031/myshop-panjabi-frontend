@@ -1,35 +1,87 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import products from '../../../assets/product.json';
-import ProductCards from '../../../pages/Shop/productCards'; // Adjust the path as per your file structure
+import { useGetAllFilterProductsQuery } from "../../../redux/features/products/productsApi";
+import SubcategoryFilter from "../SubcategoryFilter";
+import Loading from "../../../components/loading";
+import ProductCards from "../../Shop/productCards";
+import { useState, useMemo } from "react";
 
-const CategoryPage = () => {
+export default function CategoryPage() {
   const { categoryName } = useParams();
-  const [filteredProducts, setFilteredProducts] = useState([]);
 
-  useEffect(() => {
-    const filtered = products.filter(
-      (product) => product.category.toLowerCase() === categoryName.toLowerCase()
-    );
-    setFilteredProducts(filtered);
-  }, [categoryName]);
+  const [filters, setFiltersState] = useState({
+    size: [],
+    color: [],
+    style: [],
+    price: null,
+  });
 
-  console.log(filteredProducts);
+  // 🧮 useMemo ensures query object is stable between renders
+  const filtersQuery = useMemo(
+    () => ({
+      category: categoryName,
+      size: filters.size,
+      color: filters.color,
+      style: filters.style,
+      price: filters.price,
+      page: 1,
+      limit: 8,
+    }),
+    [categoryName, filters]
+  );
+
+  // 🔁 Auto re-fetches whenever filtersQuery changes
+  const { data, isLoading } = useGetAllFilterProductsQuery(filtersQuery);
+
+  const products = data?.data || [];
+
+  // Handle filter selection
+  const handleFilterChange = (key, value) => {
+    setFiltersState((prev) => {
+      if (key === "price")
+        return { ...prev, price: prev.price?.label === value.label ? null : value };
+
+      const current = prev[key];
+      const exists = current.includes(value);
+      const updated = exists ? current.filter((v) => v !== value) : [...current, value];
+      return { ...prev, [key]: updated };
+    });
+  };
+
+  // Reset all filters at once (optional)
+  const clearAllFilters = () => {
+    setFiltersState({ size: [], color: [], style: [], price: null });
+  };
+
+  if (isLoading) return <Loading />;
 
   return (
-    <>
-      <section className="section__container bg-primary-light">
-        <h2 className="section__header capitalize">{categoryName}</h2>
-        <p className="section__subheader">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.!
-        </p>
-      </section>
-      {/* Products cards */}
-      <div className="section__container">
-        <ProductCards products={filteredProducts} />
+    <div className="section__container">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold capitalize">Shop {categoryName}</h1>
+        <button
+          onClick={clearAllFilters}
+          className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded-full"
+        >
+          Clear All
+        </button>
       </div>
-    </>
-  );
-};
 
-export default CategoryPage;
+      <SubcategoryFilter
+        category={categoryName}
+        onFilterChange={handleFilterChange}
+        activeFilters={filters}
+        setFilters={setFiltersState}
+      />
+
+      <div className="mt-6">
+        {products.length > 0 ? (
+          <ProductCards products={products} />
+        ) : (
+          <p className="text-center text-gray-500 mt-10">
+            No products found for selected filters.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,19 +1,20 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react'
-// import {useDeleteProductMutation, useFetchAllProdutsQuery } from '../../../../redux/features/products/productsApi';
-// import Loading from '../../../../components/Loading';
 import { Link } from 'react-router-dom';
 import { useDeleteProductMutation, useGetAllProductsQuery,  } from '../../../../../redux/features/products/productsApi';
 import Loading from '../../../../loading';
+import ProductSizesMiniTable from './ProductSizesMiniTable';
 
 
 const ManageProducts = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(12);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [deleteProduct] = useDeleteProductMutation()
 
     const {data: productsData = {}, error, isLoading, refetch} = useGetAllProductsQuery({
+        search: searchQuery,
         category : '',
         color : '',
         minPrice:'' ,
@@ -25,6 +26,8 @@ const ManageProducts = () => {
       if(isLoading) return <Loading/>
 
       const {products, totalProducts, totalPages} = productsData?.data  || {};
+
+
 
     const handleDelete =  async (id) => {
         try {
@@ -57,6 +60,16 @@ const ManageProducts = () => {
                                 All Products
                             </h3>
                         </div>
+                         {/* 🔹 Search Bar */}
+              <div className="flex-1 mt-4 md:mt-0">
+                <input
+                  type="text"
+                  placeholder="Search by product name or code..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full md:w-1/2 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
+              </div>
                         <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
                             <Link to="/shop">
                                 <button
@@ -73,25 +86,33 @@ const ManageProducts = () => {
 
                 <div className="block w-full overflow-x-auto">
                     <table className="items-center bg-transparent w-full border-collapse ">
-                        <thead>
-                            <tr>
-                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                    No.
-                                </th>
-                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                    Product name
-                                </th>
-                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                    Publishing date
-                                </th>
-                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                    Edit or manage
-                                </th>
-                                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                    Delete
-                                </th>
-                            </tr>
-                        </thead>
+                <thead>
+                <tr>
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    No.
+                    </th>
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    Product name
+                    </th>
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    Publishing date
+                    </th>
+
+                    {/* ✅ Add this Sizes column */}
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    Sizes
+                    </th>
+
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    Edit or manage
+                    </th>
+                    <th className="px-6 bg-blueGray-50 text-blueGray-500 py-3 text-xs uppercase font-semibold text-left">
+                    Delete
+                    </th>
+                </tr>
+                </thead>
+
+
 
                         <tbody>
                             {
@@ -103,13 +124,20 @@ const ManageProducts = () => {
                                         </th>
                                         <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 cursor-pointer hover:text-primary">
                                             <Link to={`/shop/${product?._id}`}>{product?.name}</Link>
+                                              <p className="text-blue-500 text-xs mt-1">
+                                              Code: {product.productCode}
+                                            </p>
                                         </th>
 
                                         <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                             {new Date(product?.createdAt).toLocaleDateString()}
                                         </td>
+                                        {/* ✅ New small size table column */}
+                                    <td className="border-t-0 px-3 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-2">
+                                        <ProductSizesMiniTable sizes={product?.stock} />
+                                    </td>
                                         <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                            <Link to={`/dashboard/update-product/${product?._id}`} className="hover:text-blue-700">
+                                            <Link to={`/dashboard/update-products/${product?._id}`} className="hover:text-blue-700">
                                                 <span className="flex gap-1 items-center justify-center">
                                                     Edit</span>
                                             </Link>

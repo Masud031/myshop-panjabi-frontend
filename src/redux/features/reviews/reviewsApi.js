@@ -24,12 +24,10 @@ const reviewsApi = createApi({
             })
         }),
         getReviewByUserId: builder.query({
-            query: (userId) => ({
-                url: `/${userId}`,
+            query: (id) => ({
+                url: `/${id}`,
             }),
-            providesTags: (result) =>
-                result ? [{ type: "Reviews", id: result[0]?.email }] : [],
-            refetchOnMountOrArgChange: true, // Force refetch when the component mounts
+           providesTags: ["Reviews"], 
         }),
         
     })
