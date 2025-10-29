@@ -24,7 +24,7 @@ export default function CategoryPage() {
       style: filters.style,
       price: filters.price,
       page: 1,
-      limit: 8,
+      limit: 24,
     }),
     [categoryName, filters]
   );
@@ -74,14 +74,33 @@ export default function CategoryPage() {
       />
 
       <div className="mt-6">
-        {products.length > 0 ? (
-          <ProductCards products={products} />
-        ) : (
-          <p className="text-center text-gray-500 mt-10">
-            No products found for selected filters.
-          </p>
-        )}
-      </div>
+  {products.length > 0 ? (
+    <>
+      <ProductCards products={products} />
+
+      {data?.data?.hasMore && (
+        <div className="text-center mt-8">
+          <button
+            onClick={() =>
+              setFiltersState((prev) => ({
+                ...prev,
+                page: (prev.page || 1) + 1,
+              }))
+            }
+            className="bg-primary hover:bg-blue-700 text-white px-6 py-2 rounded-full transition"
+          >
+            Show More
+          </button>
+        </div>
+      )}
+    </>
+  ) : (
+    <p className="text-center text-gray-500 mt-10">
+      No products found for selected filters.
+    </p>
+  )}
+</div>
+
     </div>
   );
 }

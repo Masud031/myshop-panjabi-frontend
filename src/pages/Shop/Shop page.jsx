@@ -24,7 +24,7 @@ export default function ShopPage() {
     minPrice: isNaN(minPrice) ? "" : minPrice,
     maxPrice: isNaN(maxPrice) ? "" : maxPrice,
     page: currentPage,
-    limit: 8,
+    limit: 24,
   };
 
   // ✅ Fetch all products
