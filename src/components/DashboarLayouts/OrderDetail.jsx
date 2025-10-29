@@ -1,8 +1,9 @@
 
 import { useParams } from 'react-router-dom'
 import TimelineStep from '../timeLinesteps';
-import Loading from '../Loading';
+
 import { useGetOrdersByIdQuery } from '../../redux/features/orders/orderApi';
+import Loading from '../loading';
 
 const steps = [
     {

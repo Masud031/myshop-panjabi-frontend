@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -26,7 +26,6 @@ const colors = [
   { label: "Green", value: "green" },
 ];
 
-// 🟢 Subcategories specific to Panjabi
 const panjabiSubcategories = [
   { label: "By Size", value: "by-size" },
   { label: "By Color", value: "by-color" },
@@ -39,34 +38,37 @@ const generateProductCode = () => {
   return `PRD-${randomNum}`;
 };
 
-const AddProduct = () => {
+export default function AddProduct() {
   const { user } = useSelector((state) => state.auth);
   const [addProduct, { isLoading }] = useAddProductMutation();
+  const uploadRef = useRef(null); // ✅ correct ref hook for UploadImage
 
-  const [product, setProduct] = useState({
+  const initialState = {
     name: "",
     productCode: "",
     category: "",
-    subcategory: "", // 🟢 new
+    subcategory: "",
     description: "",
     price: "",
+    oldPrice: "",
     color: "",
     stock: {},
-  });
+    discountPercent: 0,
+  };
 
+  const [product, setProduct] = useState(initialState);
   const [sizeInput, setSizeInput] = useState("");
   const [qtyInput, setQtyInput] = useState("");
   const [image, setImage] = useState("");
 
   const calculateDiscount = (oldP, newP) => {
     if (!oldP || !newP || Number(oldP) <= 0) return 0;
-    const discount = ((oldP - newP) / oldP) * 100;
-    return Math.round(discount);
+    return Math.round(((oldP - newP) / oldP) * 100);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let updated = { ...product, [name]: value };
+    const updated = { ...product, [name]: value };
 
     if (name === "oldPrice" || name === "price") {
       const oldP = name === "oldPrice" ? value : updated.oldPrice;
@@ -92,19 +94,28 @@ const AddProduct = () => {
     setQtyInput("");
   };
 
+  const handleRemoveSize = (size) => {
+    const updatedStock = { ...product.stock };
+    delete updatedStock[size];
+    setProduct((prev) => ({ ...prev, stock: updatedStock }));
+  };
+
+  // ✅ Clear all fields (including image)
+  const handleClearForm = () => {
+    setProduct(initialState);
+    setImage("");
+    setSizeInput("");
+    setQtyInput("");
+
+    // ✅ Clear UploadImage input
+    if (uploadRef.current) {
+      uploadRef.current.clearFile();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const {
-      name,
-      productCode,
-      category,
-      subcategory,
-      price,
-      color,
-      description,
-      stock,
-    } = product;
+    const { name, category, price, color, description, stock } = product;
 
     if (
       !name ||
@@ -119,7 +130,8 @@ const AddProduct = () => {
       return;
     }
 
-    const finalProductCode = productCode?.trim() || generateProductCode();
+    const finalProductCode =
+      product.productCode?.trim() || generateProductCode();
 
     try {
       await addProduct({
@@ -130,21 +142,7 @@ const AddProduct = () => {
       }).unwrap();
 
       alert(`✅ Product added successfully! Code: ${finalProductCode}`);
-
-      setProduct({
-        name: "",
-        productCode: "",
-        category: "",
-        subcategory: "",
-        description: "",
-        price: "",
-        color: "",
-        stock: {},
-        discountPercent: 0,
-      });
-      setImage("");
-      setSizeInput("");
-      setQtyInput("");
+      handleClearForm();
     } catch (err) {
       console.error("Failed to add product:", err);
     }
@@ -155,7 +153,7 @@ const AddProduct = () => {
       <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 🟢 Product Name & Code */}
+        {/* Product Name & Code */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextInput
             type="text"
@@ -165,7 +163,6 @@ const AddProduct = () => {
             value={product.name}
             onChange={handleChange}
           />
-
           <TextInput
             type="text"
             label="Product Code (optional)"
@@ -176,7 +173,7 @@ const AddProduct = () => {
           />
         </div>
 
-        {/* 🟢 Category Selection */}
+        {/* Category */}
         <SelectInput
           label="Category"
           name="category"
@@ -185,7 +182,6 @@ const AddProduct = () => {
           options={categories}
         />
 
-        {/* 🟢 Subcategory only if category === 'Panjabi' */}
         {product.category === "panjabi" && (
           <SelectInput
             label="Subcategory (Optional)"
@@ -208,16 +204,8 @@ const AddProduct = () => {
           options={colors}
         />
 
-        {/* 🟢 Old & New Price */}
+        {/* Price Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <TextInput
-            type="number"
-            label="Old Price"
-            name="oldPrice"
-            placeholder="e.g., 1500"
-            value={product.oldPrice}
-            onChange={handleChange}
-          />
           <TextInput
             type="number"
             label="New Price"
@@ -226,26 +214,33 @@ const AddProduct = () => {
             value={product.price}
             onChange={handleChange}
           />
+          <TextInput
+            type="number"
+            label="Old Price"
+            name="oldPrice"
+            placeholder="e.g., 1500"
+            value={product.oldPrice}
+            onChange={handleChange}
+          />
         </div>
 
-        {/* Discount Display */}
+        {/* Discount */}
         {product.oldPrice && product.price && (
           <p className="text-sm text-green-600 font-semibold">
             Discount: {product.discountPercent || 0}% OFF
           </p>
         )}
 
-        {/* Size / Quantity Input */}
+        {/* Size & Quantity */}
         <div className="flex flex-wrap items-end gap-4">
           <TextInput
-            type="number"
+            type="text"
             label="Size"
             name="sizeInput"
             placeholder="e.g., 40"
             value={sizeInput}
             onChange={(e) => setSizeInput(e.target.value)}
           />
-
           <TextInput
             type="number"
             label="Qty"
@@ -254,40 +249,52 @@ const AddProduct = () => {
             value={qtyInput}
             onChange={(e) => setQtyInput(e.target.value)}
           />
-
           <button
             type="button"
             onClick={handleAddSizeQty}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
           >
             Add
           </button>
         </div>
 
         {/* Added Sizes */}
-        {Object.entries(product.stock).length > 0 && (
+        {Object.keys(product.stock).length > 0 && (
           <div>
             <h4 className="font-semibold mt-4 mb-2">Added Sizes:</h4>
             <ul className="list-disc pl-6">
               {Object.entries(product.stock).map(([size, qty]) => (
-                <li key={size}>
-                  Size {size}: {qty} pcs
+                <li
+                  key={size}
+                  className="flex items-center justify-between mb-1"
+                >
+                  <span>
+                    Size {size}: {qty} pcs
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSize(size)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition"
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        {/* Image Upload */}
+        {/* ✅ Image Upload */}
         <UploadImage
           label="Image"
           name="image"
           id="image"
           placeholder="Upload image"
           setImage={setImage}
+          ref={uploadRef} // ✅ works fine now
         />
 
-        {/* Description */}
+        {/* ✅ Description */}
         <div>
           <label
             htmlFor="description"
@@ -301,17 +308,29 @@ const AddProduct = () => {
             rows="6"
             value={product.description}
             onChange={handleChange}
-            className="add-product-InputCSS"
+            className="add-product-InputCSS w-full border rounded-md px-3 py-2 focus:ring focus:ring-blue-200"
           />
         </div>
 
-        {/* Submit */}
-        <button type="submit" className="add-product-btn" disabled={isLoading}>
-          {isLoading ? "Adding..." : "Add Product"}
-        </button>
+        {/* ✅ Buttons */}
+        <div className="flex justify-between mt-8">
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition"
+            disabled={isLoading}
+          >
+            {isLoading ? "Adding..." : "Add Product"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleClearForm}
+            className="bg-primary hover:bg-blue-700 text-white px-6 py-2 rounded transition"
+          >
+            Clear
+          </button>
+        </div>
       </form>
     </div>
   );
-};
-
-export default AddProduct;
+}

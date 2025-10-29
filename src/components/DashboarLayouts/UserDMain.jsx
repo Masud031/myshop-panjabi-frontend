@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux';
 // eslint-disable-next-line no-unused-vars
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, plugins } from 'chart.js';
 // import UserStats from './useStates';
-import Loading from '../Loading';
+
 import { useGetUserStatsQuery } from '../../redux/features/states/statesapi';
 import UserStats from './userStates';
+import Loading from '../loading';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
