@@ -1,3 +1,140 @@
+/* =======================================
+   🧩 Tailwind Layers (must come FIRST)
+   ======================================= */
 @tailwind base;
+
+/* =======================================
+   🌈 Global Theme Variables & Base Styles
+   ======================================= */
+@layer base {
+  /* 🎨 Colors & Fonts */
+  :root {
+    --primary-color: #ed3849;
+    --primary-color-dark: #d23141;
+    --primary-color-light: #f4e5ec;
+    --text-dark: #000000; /* pure black text */
+    --text-light: #64748b;
+    --extra-light: #f8fafc;
+    --white: #ffffff;
+
+    --header-font: "Cairo", sans-serif;
+    --body-font: "Cairo", sans-serif;
+  }
+
+  /* 🧍‍♂️ Base Font Setup */
+  body,
+  p,
+  span,
+  a,
+  li,
+  button,
+  input,
+  textarea {
+    font-family: var(--body-font, "Cairo", sans-serif);
+  }
+
+  body {
+    @apply font-body text-text-dark bg-white;
+  }
+
+  /* 🖋 Paragraphs — true black */
+p {
+  font-family: var(--body-font, "Cairo", sans-serif) !important;
+  color: #000000 !important;
+  @apply font-body;
+}
+
+
+  /* 🧠 Headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--header-font, "Cairo", sans-serif);
+    letter-spacing: 0.5px;
+    color: var(--text-dark);
+  }
+
+  /* 🧱 Resets */
+  * {
+    @apply p-0 m-0 box-border;
+  }
+
+  img {
+    @apply w-full block;
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  /* 🧩 Section Container */
+  .section__container {
+    max-width: var(--max-width-1400);
+    margin: auto;
+    padding: 5rem 1rem;
+  }
+
+  .section__header {
+    @apply text-center text-2xl font-heading font-extrabold text-text-dark mb-4;
+  }
+
+  .section__subheader {
+    max-width: 500px;
+    margin: auto;
+    color: var(--text-light);
+    text-align: center;
+  }
+
+  /* 🔘 Buttons */
+  .btn {
+    @apply inline-block px-6 py-3 text-white bg-[var(--primary-color)] rounded-md text-base font-medium transition;
+  }
+
+  .btn:hover {
+    background-color: var(--primary-color-dark);
+  }
+
+  /* 🧭 Navbar Links */
+  nav,
+  .nav__links,
+  .nav__links a {
+    font-family: var(--body-font);
+  }
+
+  /* 🖼 Header Section */
+  .header__container {
+    min-height: 650px;
+    background-color: var(--primary-color-light);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .header__content h4 {
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+
+  .header__content h1 {
+    font-size: 5rem;
+    font-family: var(--header-font);
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+
+  .header__content p {
+    color: var(--text-light);
+  }
+}
+
+/* =======================================
+   🧩 Tailwind Components & Utilities
+   ======================================= */
 @tailwind components;
 @tailwind utilities;

@@ -11,7 +11,7 @@ import Trands from "./trands";
 const Home = () => {
     return (
         <> 
-            <div className="mt-28">
+            <div className="mt-24">
             <CategoriesBar />
             </div>
             <Banner/>

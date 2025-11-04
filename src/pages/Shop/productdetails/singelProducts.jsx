@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useFetchProductbyIdQuery } from '../../../redux/features/products/productsApi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,8 @@ import { addToCart } from '../../../redux/features/cart/cartSlice';
 import RatingStars from '../../../components/RatingStars';
 import ReviewsCard from '../reviewsCard/reviewCard';
 import Loading from '../../../components/loading';
+import { preloadShopPage } from '../../../routs/router';
+
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -23,6 +25,7 @@ const SingleProduct = () => {
     isError,
   } = useFetchProductbyIdQuery(id);
 
+
   if (isLoading) return <Loading />;
   if (isError)
     return (
@@ -36,6 +39,9 @@ const SingleProduct = () => {
     ([, qty]) => qty > 0
   );
 
+
+
+
   const handleAddToCart = () => {
     if (!user) {
       alert('You must register to purchase a product!');
@@ -47,6 +53,8 @@ const SingleProduct = () => {
       alert('Please select a size!');
       return;
     }
+
+  
 
     dispatch(addToCart({ ...product, selectedSize }));
   };
@@ -64,13 +72,21 @@ const SingleProduct = () => {
       <section className="section__container rounded bg-primary-light">
         <h2 className="section__header">Single Product Page</h2>
         <div className="section__subheader space-x-2">
-          <Link to="/" className="hover:text-primary">
+          <Link 
+          to="/" 
+          className="hover:text-primary"
+          onMouseEnter={preloadShopPage} 
+          >
             home
           </Link>
           <i className="ri-arrow-right-s-line" />
-          <Link to="/shop" className="hover:text-primary">
-            shop
-          </Link>
+       <Link
+        to="/shop"
+        className="hover:text-primary"
+        onMouseEnter={preloadShopPage} // preload the ShopPage chunk
+      >
+        shop
+      </Link>
           <i className="ri-arrow-right-s-line" />
           <span className="hover:text-primary">{product?.name}</span>
         </div>

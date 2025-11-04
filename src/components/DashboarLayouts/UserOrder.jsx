@@ -2,7 +2,8 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { useGetOrdersByUserIdQuery } from '../../redux/features/orders/orderApi';
-import Loading from '../Loading';
+import Loading from '../loading';
+
 
 
 const UserOrders = () => {

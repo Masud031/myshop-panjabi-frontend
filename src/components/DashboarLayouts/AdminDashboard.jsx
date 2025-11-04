@@ -4,6 +4,7 @@ import { useLogoutUserMutation } from '../../../src/redux/features/auth/authapi'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/features/auth/authSlice'
 
+
 const navItems = [
     {path: "/dashboard/admin", label: "Dashboard"},
     {path: "/dashboard/add-products", label: "Add Products"},

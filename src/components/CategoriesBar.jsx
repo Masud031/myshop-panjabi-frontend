@@ -33,7 +33,8 @@ export default function CategoriesBar() {
   if (isError) return <p className="text-center text-red-500 py-3">Failed to load categories</p>;
 
   return (
-    <div className="relative bg-white border-b shadow-sm py-3 select-none">
+    <div className="relative border-b shadow-sm py-3 select-none bg-gradient-to-r from-red-800 to-yellow-400  ">
+
       {/* Left Scroll Button */}
       <button
         onClick={() => scroll("left")}
@@ -51,7 +52,7 @@ export default function CategoriesBar() {
           <button
             key={index}
             onClick={() => handleCategoryClick(cat)}
-            className="flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-indigo-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md capitalize"
+            className="flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-[var(--primary-color-dark)] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md capitalize"
           >
             <span>{cat}</span>
           </button>

@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/Home/home";
-import CategoryPage from "../pages/Home/categorypage/CategoryPage";
+// import CategoryPage from "../pages/Home/categorypage/CategoryPage";
 import Errorpage from "../components/Errorpage";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Pages from "../pages/pages";
-import ShopPage from "../pages/Shop/Shop page";
+// import ShopPage from "../pages/Shop/Shop page";
 import PaymentSuccess from "../components/paymentSuccess";
 import DashboardLayout from "../components/DashboarLayouts/DashboarLayout";
 import UserDMain from "../components/DashboarLayouts/UserDMain";
@@ -21,10 +21,22 @@ import AddProduct from "../components/DashboarLayouts/adminrouts/admin/product/A
 import ManageProducts from "../components/DashboarLayouts/adminrouts/admin/manageproduct/ManageProducts";
 import UpdateProduct from "../components/DashboarLayouts/adminrouts/admin/manageproduct/UpdateProduct";
 import ManageUsers from "../components/DashboarLayouts/adminrouts/users/ManageUsers";
-import SingleProduct from "../pages/Shop/productdetails/singelProducts";
+// import SingleProduct from "../pages/Shop/productdetails/singelProducts";
 import ManageOrders from "../components/DashboarLayouts/adminrouts/admin/orders/ManageOrders";
 import OrderDetail from "../components/DashboarLayouts/OrderDetail";
 import SearchResults from "../pages/SearchResults";
+import InvoicePage from "../components/DashboarLayouts/adminrouts/admin/orders/InvoicePage";
+import { lazy, Suspense } from "react";
+import Loading from "../components/loading";
+
+// lazy loder//
+const ShopPage = lazy(() => import("../pages/Shop/Shop page"));
+const SingleProduct = lazy(() => import("../pages/Shop/productdetails/singelProducts"));
+const CategoryPage = lazy(() => import("../pages/Home/categorypage/CategoryPage"))
+// preload.js
+export const preloadShopPage = () => import("../pages/Shop/Shop page");
+export const preloadSingleProduct = () => import("../pages/Shop/productdetails/singelProducts");
+export const preloadCategoryPage = () => import("../components/CategoriesBar");
 
 
 const router = createBrowserRouter([
@@ -33,17 +45,26 @@ const router = createBrowserRouter([
     element: <App/>,
     errorElement: <Errorpage/>,
     children: [
+      
       {
         path: "/",
         element: <Home/>,
       },
       {
         path: "/shop",
-        element: <ShopPage/>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ShopPage />
+          </Suspense>
+        ),
       },
       {
         path: "/shop/:id",
-        element: <SingleProduct/>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <SingleProduct />
+          </Suspense>
+        ),
       },
       {
         path: "/pages",
@@ -58,7 +79,11 @@ const router = createBrowserRouter([
     
       {
         path: "/category/:categoryName",
-        element: <CategoryPage/>,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <CategoryPage />
+          </Suspense>
+        ),
       },
       {
         path: "/search",
@@ -127,6 +152,10 @@ const router = createBrowserRouter([
           {
             path: "users",
             element:<PrivateRoute role="admin"><ManageUsers/></PrivateRoute>
+          },
+          {
+            path: "/dashboard/invoice/:orderId",
+            element:<PrivateRoute role="admin"><InvoicePage/></PrivateRoute>
           }
 
         ],

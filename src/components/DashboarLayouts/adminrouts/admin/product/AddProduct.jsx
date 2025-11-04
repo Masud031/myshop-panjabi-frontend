@@ -252,7 +252,7 @@ export default function AddProduct() {
           <button
             type="button"
             onClick={handleAddSizeQty}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
+            className="bg-blue-500 hover:bg-primary-color-dark text-white px-4 py-2 rounded transition"
           >
             Add
           </button>
@@ -325,7 +325,7 @@ export default function AddProduct() {
           <button
             type="button"
             onClick={handleClearForm}
-            className="bg-primary hover:bg-blue-700 text-white px-6 py-2 rounded transition"
+            className="bg-primary hover:bg-primary-color-dark text-white px-6 py-2 rounded transition"
           >
             Clear
           </button>

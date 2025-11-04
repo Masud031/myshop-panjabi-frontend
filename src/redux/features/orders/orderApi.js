@@ -50,13 +50,7 @@ const orderApi = createApi({
             }),
             providesTags: ["Order"],
         }),
-        // getOrderStats: builder.query({
-        //     query: () => ({
-        //         url: '/admin/stats',  // Change this to the correct stats endpoint
-        //         method: 'GET',
-        //     }),
-        //     providesTags: ["Order"],
-        // }),
+   
 
         // Update order status
         updateOrderStatus: builder.mutation({

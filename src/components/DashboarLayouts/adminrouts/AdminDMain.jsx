@@ -1,9 +1,10 @@
 
 import { useSelector } from 'react-redux';
 import { useGetAdminStatsQuery } from '../../../redux/features/states/statesapi';
-import Loading from '../../Loading';
+
 import AdminStats from './admin/AdminStats';
 import AdminStatsChart from './admin/AdminStatsChart';
+import Loading from '../../loading';
 
 const AdminDMain = () => {
     const { user } = useSelector(state => state.auth);
@@ -27,9 +28,6 @@ const AdminDMain = () => {
                 <h1 className='text-2xl font-semibold mb-4'>Admin Dashboard</h1>
                 <p className='text-gray-500'>Hi, {user?.username}! Welcome to your user dashboard.</p>
             </div>
-
-   
-
 
             <AdminStats stats={stats}/>
 

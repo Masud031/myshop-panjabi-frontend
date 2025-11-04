@@ -42,7 +42,7 @@ const Navbar = () => {
 });
 
 const searchResults = data?.data?.products || [];
-console.log(searchResults );
+// console.log(searchResults );
 
 
   const dispatch = useDispatch();
@@ -87,7 +87,8 @@ console.log(searchResults );
     { label: "Add Products", path: "/dashboard/add-products" },
   ];
 
-  const dropDownMenus =
+
+   const dropDownMenus =
     user?.role === "admin" ? [...adminDropdownMenus] : [...userDropdownMenus];
 
   return (
@@ -244,7 +245,7 @@ console.log(searchResults );
      {/* Navigation Links */}
 {["/", "/shop", "/pages", "/contact"].includes(location.pathname) && (
   <div className="border-t border-gray-200 shadow-sm">
-    <ul className="flex justify-center gap-4 sm:gap-6 text-gray-600 text-sm sm:text-base font-medium py-2">
+     <ul className="flex justify-center gap-4 sm:gap-6 text-black text-sm sm:text-base font-body font-medium py-2">
       {[
         { label: "Home", path: "/" },
         { label: "Shop", path: "/shop" },

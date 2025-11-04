@@ -87,7 +87,7 @@ export default function CategoryPage() {
                 page: (prev.page || 1) + 1,
               }))
             }
-            className="bg-primary hover:bg-blue-700 text-white px-6 py-2 rounded-full transition"
+            className="bg-primary hover:bg-primary-color-dark text-white px-6 py-2 rounded-full transition"
           >
             Show More
           </button>
