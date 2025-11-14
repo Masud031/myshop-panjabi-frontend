@@ -1,17 +1,15 @@
 // import {  } from 'react'
 import './index.css'
 import { createRoot } from 'react-dom/client'
-import 'remixicon/fonts/remixicon.css'
-// import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import router from './routs/router'
 import { useEffect } from 'react'
-import { initFacebookPixel } from '../../backend/src/lib/facebookPixel'
+
 import "./i18n";
-// import Authprovider from './provider/Authprovider'
+import { initFacebookPixel } from './facebook/facebookPixel'
 
 
 // Simple wrapper to init the pixel once
