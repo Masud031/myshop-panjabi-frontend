@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import avatar from "../assets/mypic.png";
@@ -6,6 +7,9 @@ import { logout } from "../redux/features/auth/authSlice";
 import { useLogoutUserMutation } from "../redux/features/auth/authapi";
 import CartModal from "../pages/Shop/productdetails/cartModal";
 import { useSearchProductsQuery } from "../redux/features/products/productsApi";
+import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
+
 
 const Navbar = () => {
   const products = useSelector((state) => state.cart.products);
@@ -13,13 +17,13 @@ const Navbar = () => {
   console.log(user);
   const location = useLocation();
 
-
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [query, setQuery] = useState("");
   // dropdop codes on profile icon//
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
+   const { t } = useTranslation();
   useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -73,6 +77,8 @@ const searchResults = data?.data?.products || [];
     }
   };
 
+  
+
   const userDropdownMenus = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Profile", path: "/dashboard/profile" },
@@ -92,9 +98,9 @@ const searchResults = data?.data?.products || [];
     user?.role === "admin" ? [...adminDropdownMenus] : [...userDropdownMenus];
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow z-50">
+    <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50">
       {/* Top Line */}
-      <div className="flex items-center justify-between px-4 lg:px-8 py-2 border-b border-gray-200 shadow-sm">
+      <div className="flex items-center justify-between px-4 lg:px-8 py-1 border-b border-gray-100">
         {/* Logo */}
         <div className="text-lg md:text-xl font-bold text-primary whitespace-nowrap">
           <Link to="/">
@@ -106,7 +112,7 @@ const searchResults = data?.data?.products || [];
         <div className="flex-1 max-w-lg mx-4 relative">
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center w-full bg-gray-100 rounded-full px-2 py-1.5"
+            className="flex items-center w-full bg-gray-100 rounded-full px-2 py-1"
           >
             <input
               type="text"
@@ -115,7 +121,7 @@ const searchResults = data?.data?.products || [];
                 setQuery(e.target.value);
                 setShowDropdown(true);
               }}
-              placeholder="Search for products..."
+              placeholder={t("search_placeholder")}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
               className="flex-1 bg-transparent outline-none px-2 text-sm md:text-base"
@@ -134,7 +140,7 @@ const searchResults = data?.data?.products || [];
 {showDropdown && (searchFocused || isFetching) && query.trim() !== "" && (
   <div className="absolute left-0 w-full mt-1 bg-white border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
     {isFetching ? (
-      <div className="px-3 py-2 text-sm text-gray-500">Searching...</div>
+      <div className="px-3 py-2 text-sm text-gray-500">{t("searching")}</div>
     ) : searchResults?.length > 0 ? (
       <>
         {searchResults.slice(0, 5).map((product) => ( // ✅ Show first 5
@@ -164,27 +170,30 @@ const searchResults = data?.data?.products || [];
             setShowDropdown(false);
           }}
         >
-          View all results →
+          {t("view_all_results")}
         </div>
       </>
     ) : (
-      <div className="px-3 py-2 text-sm text-gray-500">No products found.</div>
+      <div className="px-3 py-2 text-sm text-gray-500"> {t("no_products")}</div>
     )}
   </div>
 )}
         </div>
 
-        {/* Cart + Profile */}
+        {/* Cart + Profile +Language Selector*/}
         <div className="flex items-center gap-3 text-gray-700 pr-2 sm:pr-4 relative">
-          <button
-            onClick={handleCartToggle}
-            className="flex items-center gap-0.5 hover:text-primary text-sm md:text-base"
-          >
-            <i className="ri-shopping-bag-line"></i>
-            <sup className="text-xs px-1 bg-primary text-white rounded-full">
-              {products.length}
-            </sup>
-          </button>
+          <LanguageSelector />
+ <button
+  onClick={() => navigate("/cart")}
+  className="flex items-center gap-0.5 hover:text-primary text-sm md:text-base"
+>
+  <i className="ri-shopping-bag-line"></i>
+  <sup className="text-xs px-1 bg-primary text-white rounded-full">
+    {products.length}
+  </sup>
+</button>
+
+
 
    {user ? (
   <div className="relative">
@@ -197,7 +206,7 @@ const searchResults = data?.data?.products || [];
   }
   alt="User Avatar"
   referrerPolicy="no-referrer"  // 👈 crucial for Google-hosted images
-  className="w-6 h-6 md:w-7 md:h-7 rounded-full object-cover cursor-pointer border border-gray-200"
+  className="w-6 h-6 rounded-full object-cover cursor-pointer border border-gray-200"
 />
 
 
@@ -224,7 +233,7 @@ const searchResults = data?.data?.products || [];
               onClick={handleLogout}
               className="w-full text-left px-2 py-1 rounded leading-tight hover:bg-gray-100 hover:text-primary transition"
             >
-              Logout
+                 {t("logout")}
             </button>
           </li>
         </ul>
@@ -243,14 +252,17 @@ const searchResults = data?.data?.products || [];
 
       {/* Navigation Links */}
      {/* Navigation Links */}
+     
+     
 {["/", "/shop", "/pages", "/contact"].includes(location.pathname) && (
-  <div className="border-t border-gray-200 shadow-sm">
-     <ul className="flex justify-center gap-4 sm:gap-6 text-black text-sm sm:text-base font-body font-medium py-2">
+  <div className="border-t border-gray-100 ">
+    
+     <ul className="flex justify-center gap-5 text-black text-sm font-medium py-1.5">
       {[
-        { label: "Home", path: "/" },
-        { label: "Shop", path: "/shop" },
-        { label: "Pages", path: "/pages" },
-        { label: "Contact", path: "/contact" },
+        { label: t("home"), path: "/" },
+            { label: t("shop"), path: "/shop" },
+            { label: t("pages"), path: "/pages" },
+            { label: t("contact"), path: "/contact" },
       ].map((item, index) => (
         <li key={index}>
           <NavLink
@@ -262,12 +274,16 @@ const searchResults = data?.data?.products || [];
             }
           >
             {item.label}
+            
           </NavLink>
         </li>
       ))}
+      
     </ul>
   </div>
 )}
+
+
 
 
       {/* Cart Modal */}

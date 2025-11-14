@@ -18,6 +18,8 @@ const ManageOrders = () => {
   const [itemsPerPage, setItemsPerPage] = useState(20);
 
   const { data, isLoading, error, refetch } = useGetAllOrdersQuery();
+ 
+
   const [deleteOrderbyId] = useDeleteOrderbyIdMutation();
 
   if (isLoading) return <Loading />;
@@ -131,6 +133,7 @@ const ManageOrders = () => {
               <th className="py-1 px-2 border-b text-left">Phone</th>
               <th className="py-1 px-2 border-b text-left">Status</th>
               <th className="py-1 px-2 border-b text-left">Date</th>
+              <th className="py-1 px-2 border-b text-left">Products</th>
               <th className="py-1 px-2 border-b text-left">Actions</th>
             </tr>
           </thead>
@@ -160,6 +163,26 @@ const ManageOrders = () => {
                 <td className="py-1 px-2 border-b text-xs">
                   {new Date(order.updatedAt).toLocaleDateString()}
                 </td>
+
+                {/* 🔹 Products Column */}
+                <td className="py-1 px-2 border-b">
+                  {order.products && order.products.length > 0 ? (
+                    order.products.map((prd) => (
+                      <Link
+                        key={prd._id}
+                        to={`/shop/${prd._id}`} // link to product page
+                        className="text-blue-500 hover:underline text-xs block"
+                        title={`Quantity: ${prd.quantity}`}
+                      >
+                        {prd.productCode} ({prd.quantity})
+                      </Link>
+                    ))
+                  ) : (
+                    <span className="text-gray-400 text-xs">No products</span>
+                  )}
+                </td>
+
+                {/* 🔹 Actions */}
                 <td className="py-1 px-2 border-b flex items-center space-x-1 sm:space-x-2">
                   <Link
                     to={`/orders/${order._id}`}
@@ -175,7 +198,7 @@ const ManageOrders = () => {
                     Edit
                   </button>
 
-                      <Link
+                  <Link
                     to={`/dashboard/invoice/${order._id}`}
                     className="text-blue-600 hover:underline"
                   >

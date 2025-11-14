@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useFetchProductbyIdQuery } from '../../../redux/features/products/productsApi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,8 +7,8 @@ import { addToCart } from '../../../redux/features/cart/cartSlice';
 import RatingStars from '../../../components/RatingStars';
 import ReviewsCard from '../reviewsCard/reviewCard';
 import Loading from '../../../components/loading';
-import { preloadShopPage } from '../../../routs/router';
-
+import { useTranslation } from 'react-i18next';
+import ProductZoom from './ProductZoom';
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -18,13 +18,13 @@ const SingleProduct = () => {
   const location = useLocation();
   const from = location.state?.from || '/';
   const [selectedSize, setSelectedSize] = useState(null);
+    const { t } = useTranslation(); 
 
   const {
     data: { data: productDetails } = {},
     isLoading,
     isError,
   } = useFetchProductbyIdQuery(id);
-
 
   if (isLoading) return <Loading />;
   if (isError)
@@ -39,9 +39,6 @@ const SingleProduct = () => {
     ([, qty]) => qty > 0
   );
 
-
-
-
   const handleAddToCart = () => {
     if (!user) {
       alert('You must register to purchase a product!');
@@ -53,8 +50,6 @@ const SingleProduct = () => {
       alert('Please select a size!');
       return;
     }
-
-  
 
     dispatch(addToCart({ ...product, selectedSize }));
   };
@@ -72,37 +67,34 @@ const SingleProduct = () => {
       <section className="section__container rounded bg-primary-light">
         <h2 className="section__header">Single Product Page</h2>
         <div className="section__subheader space-x-2">
-          <Link 
-          to="/" 
-          className="hover:text-primary"
-          onMouseEnter={preloadShopPage} 
-          >
-            home
-          </Link>
-          <i className="ri-arrow-right-s-line" />
-       <Link
-        to="/shop"
-        className="hover:text-primary"
-        onMouseEnter={preloadShopPage} // preload the ShopPage chunk
-      >
-        shop
-      </Link>
-          <i className="ri-arrow-right-s-line" />
-          <span className="hover:text-primary">{product?.name}</span>
-        </div>
+  <Link to="/" className="hover:text-primary">
+    {t("home")}
+  </Link>
+  <i className="ri-arrow-right-s-line" />
+  <Link to="/shop" className="hover:text-primary">
+    {t("shop")}
+  </Link>
+  <i className="ri-arrow-right-s-line" />
+  {product?.category ? (
+    <Link
+      to={`/category/${product.category}`}
+      className="hover:text-primary capitalize"
+    >
+      {product?.name}
+    </Link>
+  ) : (
+    <span className="hover:text-primary">{product?.name}</span>
+  )}
+</div>
       </section>
 
       {/* Product Container */}
       <section className="section__container mt-8">
         <div className="flex flex-col items-center md:flex-row gap-8">
           {/* Product Image */}
-          <div className="w-full md:w-1/2">
-            <img
-              src={product?.image}
-              alt={product?.name || 'product image'}
-              className="rounded-md w-full h-auto"
-            />
-          </div>
+         <div className="w-full md:w-1/2">
+  <ProductZoom image={product?.image} />
+</div>
 
           {/* Product Details */}
           <div className="w-full md:w-1/2">
@@ -111,7 +103,7 @@ const SingleProduct = () => {
 
             {/* ✅ Product Code */}
             <p className="text-gray-600 mb-4">
-              <strong>Product Code:</strong> {product?.productCode}
+              <strong>{t("product_code")}:</strong> {product?.productCode}
             </p>
 
            {/* ✅ Price section with optional old price & discount */}

@@ -131,6 +131,38 @@ p {
   .header__content p {
     color: var(--text-light);
   }
+
+/* ensure the enlarged container can overflow and be visible */
+.custom-enlarged-container {
+  z-index: 9999 !important;
+  pointer-events: none; /* avoids blocking clicks in some layouts; remove if you need clicks inside zoom */
+}
+
+/* center the hint "+" icon */
+.react-image-magnify-hint {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* sometimes library places the enlarged container inside a parent with overflow hidden;
+   ensure parent wrappers allow overflow when needed */
+.product-zoom-wrapper {
+  overflow: visible !important;
+}
+
+/* optional: reduce default magnifier box shadow or styling */
+.react-image-magnify-enlarged-image-container {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+  border-radius: 8px !important;
+}
+.hover-zoom-wrapper {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+
 }
 
 /* =======================================

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
@@ -5,15 +6,9 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import UploadImage from "./UploadImage";
 import { useAddProductMutation } from "../../../../../redux/features/products/productsApi";
+import { useTranslation } from "react-i18next";
 
-const categories = [
-  { label: "Select Category", value: "" },
-  { label: "Panjabi", value: "panjabi" },
-  { label: "Accessories", value: "accessories" },
-  { label: "Dress", value: "dress" },
-  { label: "Jewellery", value: "jewellery" },
-  { label: "Cosmetics", value: "cosmetics" },
-];
+
 
 const colors = [
   { label: "Select Color", value: "" },
@@ -42,6 +37,19 @@ export default function AddProduct() {
   const { user } = useSelector((state) => state.auth);
   const [addProduct, { isLoading }] = useAddProductMutation();
   const uploadRef = useRef(null); // ✅ correct ref hook for UploadImage
+  const { t } = useTranslation();
+
+  const categories = [
+  { label: t("select_category"), value: "" },
+  { label: t("panjabi"), value: "panjabi" },
+  { label: t("kids_panjabi"), value: "kids-panjabi" },
+  { label: t("accessories"), value: "accessories" },
+  { label: t("dress"), value: "dress" },
+  { label: t("sheroany"), value: "sheroany" },
+  { label: t("cosmetics"), value: "cosmetics" },
+  { label: t("Trending"), value: "trending" },
+  { label: t("big_size"), value: "big-size" },
+];
 
   const initialState = {
     name: "",

@@ -10,6 +10,7 @@ import { store } from './redux/store'
 import router from './routs/router'
 import { useEffect } from 'react'
 import { initFacebookPixel } from '../../backend/src/lib/facebookPixel'
+import "./i18n";
 // import Authprovider from './provider/Authprovider'
 
 

@@ -8,13 +8,11 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
 
   const { sizes = [], colors = [], styles = [], priceRanges = [] } = data?.data || {};
 
-  // ✅ Handles all filter changes (price, color, size, style)
   const handleFilterChange = (key, value) => {
     setFilters((prev) => {
       const updated = { ...prev };
 
       if (key === "price") {
-        // Price is an object { label, min, max }
         updated.price =
           prev.price?.label === value.label ? null : { label: value.label, min: value.min, max: value.max };
       } else {
@@ -26,23 +24,29 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
         }
         updated[key] = [...current];
       }
-
       return updated;
     });
   };
 
-  // ✅ Clear one specific filter group
   const handleClear = (key) => {
     setFilters((prev) => ({ ...prev, [key]: key === "price" ? null : [] }));
   };
 
-  // ✅ Reusable filter UI box
+  // ✅ Reusable Filter Card
   const FilterBox = ({ title, items, filterKey }) => (
-    <div className="bg-white border rounded-2xl shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition">
+    <div
+      className="
+        bg-white border rounded-xl shadow-sm p-4 
+        flex flex-col justify-between 
+        hover:shadow-md transition-all duration-300
+        sm:min-h-[180px] 
+      "
+    >
       <div>
-        <h3 className="text-lg font-semibold mb-3">{title}</h3>
+        <h3 className="text-base md:text-lg font-semibold mb-3">{title}</h3>
 
-        <div className="flex flex-wrap gap-2">
+        {/* 🔹 Scrollable area for many buttons (mobile friendly) */}
+        <div className="flex flex-wrap gap-2 max-h-[150px] overflow-y-auto">
           {items.map((item, i) => {
             const isActive =
               filterKey === "price"
@@ -57,11 +61,12 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
                     ? handleFilterChange("price", item)
                     : handleFilterChange(filterKey, item)
                 }
-                className={`px-3 py-1.5 rounded-full border text-sm capitalize transition-all ${
-                  isActive
-                    ? "bg-black text-white border-black shadow"
-                    : "bg-gray-100 hover:bg-gray-200 border-gray-300"
-                }`}
+                className={`px-3 py-1.5 rounded-full border text-xs md:text-sm capitalize whitespace-nowrap transition-all 
+                  ${
+                    isActive
+                      ? "bg-black text-white border-black shadow-sm"
+                      : "bg-gray-100 hover:bg-gray-200 border-gray-300"
+                  }`}
               >
                 {item.label || item}
               </button>
@@ -70,11 +75,15 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
         </div>
       </div>
 
-      {/* Clear button at bottom-right */}
+      {/* Clear button */}
       <div className="mt-4 flex justify-end">
         <button
           onClick={() => handleClear(filterKey)}
-          className="px-4 py-2 rounded-full bg-primary text-white text-sm hover:bg-primary-color-dark transition"
+          className="
+            px-3 py-1.5 rounded-full bg-gradient-to-r from-[#b91c1c] to-[#f59e0b] 
+            text-white text-xs md:text-sm 
+            hover:opacity-90 transition-all
+          "
         >
           Clear
         </button>
@@ -82,9 +91,14 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
     </div>
   );
 
-  // ✅ Layout grid for all filter types
+  // ✅ Layout Grid (responsive)
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section
+      className="
+        grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6
+        mt-6
+      "
+    >
       {sizes.length > 0 && <FilterBox title="Size" items={sizes} filterKey="size" />}
       {colors.length > 0 && <FilterBox title="Color" items={colors} filterKey="color" />}
       {styles.length > 0 && <FilterBox title="Style" items={styles} filterKey="style" />}

@@ -21,22 +21,24 @@ import AddProduct from "../components/DashboarLayouts/adminrouts/admin/product/A
 import ManageProducts from "../components/DashboarLayouts/adminrouts/admin/manageproduct/ManageProducts";
 import UpdateProduct from "../components/DashboarLayouts/adminrouts/admin/manageproduct/UpdateProduct";
 import ManageUsers from "../components/DashboarLayouts/adminrouts/users/ManageUsers";
-// import SingleProduct from "../pages/Shop/productdetails/singelProducts";
+import SingleProduct from "../pages/Shop/productdetails/singelProducts";
 import ManageOrders from "../components/DashboarLayouts/adminrouts/admin/orders/ManageOrders";
 import OrderDetail from "../components/DashboarLayouts/OrderDetail";
 import SearchResults from "../pages/SearchResults";
 import InvoicePage from "../components/DashboarLayouts/adminrouts/admin/orders/InvoicePage";
-import { lazy, Suspense } from "react";
-import Loading from "../components/loading";
+// import { lazy, Suspense } from "react";
+
+import ShopPage from "../pages/Shop/Shop page";
+import CategoryPage from "../pages/Home/categorypage/CategoryPage";
+import CartPage from "../pages/Shop/CartPage";
+import ManageBanner from "../components/DashboarLayouts/adminrouts/Banner/ManageBanner";
 
 // lazy loder//
-const ShopPage = lazy(() => import("../pages/Shop/Shop page"));
-const SingleProduct = lazy(() => import("../pages/Shop/productdetails/singelProducts"));
-const CategoryPage = lazy(() => import("../pages/Home/categorypage/CategoryPage"))
+// const ShopPage = lazy(() => import("../pages/Shop/Shop page"));
+
+// const CategoryPage = lazy(() => import("../pages/Home/categorypage/CategoryPage"))
 // preload.js
-export const preloadShopPage = () => import("../pages/Shop/Shop page");
-export const preloadSingleProduct = () => import("../pages/Shop/productdetails/singelProducts");
-export const preloadCategoryPage = () => import("../components/CategoriesBar");
+
 
 
 const router = createBrowserRouter([
@@ -52,20 +54,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/shop",
-        element: (
-          <Suspense fallback={<Loading />}>
+        element: 
+          // <Suspense fallback={<Loading />}>
             <ShopPage />
-          </Suspense>
-        ),
+          // </Suspense>
+        
       },
       {
         path: "/shop/:id",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <SingleProduct />
-          </Suspense>
-        ),
+        element:<SingleProduct />
       },
+      {
+        path: "/cart",
+        element:<CartPage />
+      },
+      
       {
         path: "/pages",
         element: <Pages/>,
@@ -76,14 +79,9 @@ const router = createBrowserRouter([
         element: <PaymentSuccess/>,
 
       },
-    
       {
         path: "/category/:categoryName",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <CategoryPage />
-          </Suspense>
-        ),
+        element:<CategoryPage />
       },
       {
         path: "/search",
@@ -101,6 +99,10 @@ const router = createBrowserRouter([
         path: "orders/:orderId",
         element: <OrderDetail/>,
       },
+      {
+  path: "/test-banner",
+  element: <ManageBanner />
+},
       {
         path: "/dashboard",
     
@@ -152,6 +154,10 @@ const router = createBrowserRouter([
           {
             path: "users",
             element:<PrivateRoute role="admin"><ManageUsers/></PrivateRoute>
+          },
+          { 
+            path: "manage-banner",
+            element:<PrivateRoute role="admin"><ManageBanner/></PrivateRoute>
           },
           {
             path: "/dashboard/invoice/:orderId",

@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import { removeFromCart, updateQuantity } from "../../../redux/features/cart/cartSlice";
 import OrderSummary from "../../Shop/ordersummary";
 import { useDispatch } from 'react-redux'
@@ -7,6 +8,7 @@ const CartModal = ({ products,isOpen, onClose }) => {
 
     // const cartItems = useSelector(state => state.cart.cartItems);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleUpdateQuantity = (type, id) => {
         const payload = { type, id }
@@ -17,6 +19,21 @@ const CartModal = ({ products,isOpen, onClose }) => {
         e.preventDefault()
         dispatch(removeFromCart({id}))
     }
+
+      const handleClose = () => {
+    // close modal (if used as modal)
+    if (onClose) onClose();
+
+    // navigate to previous page or fallback route
+    if (window.history.length > 1) {
+      navigate(-1); // go back
+    } else {
+      navigate("/shop"); // or any default route
+    }
+  };
+
+
+
     return (
         <>
          <div
@@ -32,7 +49,7 @@ style={{ transition: 'opacity 300ms' }}
         <div className="flex justify-between items-center mb-4">
             <h4 className="text-xl font-semibold">Your Cart</h4>
             <button
-                onClick={() => onClose()}
+                onClick={() => handleClose ()}
                 className="text-gray-600 hover:text-gray-900">
                 <i className="ri-xrp-fill bg-black p-1 text-white"></i>
             </button>

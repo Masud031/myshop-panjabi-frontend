@@ -1,12 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { useParams } from "react-router-dom";
 import { useGetAllFilterProductsQuery } from "../../../redux/features/products/productsApi";
 import SubcategoryFilter from "../SubcategoryFilter";
 import Loading from "../../../components/loading";
 import ProductCards from "../../Shop/productCards";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+
 
 export default function CategoryPage() {
   const { categoryName } = useParams();
+   const { t } = useTranslation();
+  
 
   const [filters, setFiltersState] = useState({
     size: [],
@@ -72,6 +77,8 @@ export default function CategoryPage() {
         activeFilters={filters}
         setFilters={setFiltersState}
       />
+
+   
 
       <div className="mt-6">
   {products.length > 0 ? (
