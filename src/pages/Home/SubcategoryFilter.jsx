@@ -1,13 +1,25 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import Loading from "../../components/loading";
 import { useGetAllFiltersQuery } from "../../redux/features/products/productsApi";
 
-const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
+export default function SubcategoryFilter({ category, activeFilters, setFilters }) {
   const { data, isLoading } = useGetAllFiltersQuery(category);
+
+  const [openMobile, setOpenMobile] = useState({
+    size: false,
+    color: false,
+    style: false,
+    price: false,
+  });
+
   if (isLoading) return <Loading />;
 
   const { sizes = [], colors = [], styles = [], priceRanges = [] } = data?.data || {};
 
+  // ------------------------------------------------
+  // Handle filter update
+  // ------------------------------------------------
   const handleFilterChange = (key, value) => {
     setFilters((prev) => {
       const updated = { ...prev };
@@ -17,13 +29,10 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
           prev.price?.label === value.label ? null : { label: value.label, min: value.min, max: value.max };
       } else {
         const current = new Set(prev[key] || []);
-        if (current.has(value)) {
-          current.delete(value);
-        } else {
-          current.add(value);
-        }
+        current.has(value) ? current.delete(value) : current.add(value);
         updated[key] = [...current];
       }
+
       return updated;
     });
   };
@@ -32,21 +41,76 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
     setFilters((prev) => ({ ...prev, [key]: key === "price" ? null : [] }));
   };
 
-  // ✅ Reusable Filter Card
+  // ------------------------------------------------
+  // Reusable Desktop Filter Card
+  // ------------------------------------------------
   const FilterBox = ({ title, items, filterKey }) => (
-    <div
-      className="
-        bg-white border rounded-xl shadow-sm p-4 
-        flex flex-col justify-between 
-        hover:shadow-md transition-all duration-300
-        sm:min-h-[180px] 
-      "
-    >
-      <div>
-        <h3 className="text-base md:text-lg font-semibold mb-3">{title}</h3>
+    <div className="bg-white border rounded-xl shadow-sm p-4 hover:shadow-md transition-all">
+      <h3 className="text-lg font-semibold mb-3">{title}</h3>
+      <div className="flex flex-wrap gap-2 max-h-[140px] overflow-y-auto">
+        {items.map((item, i) => {
+          const isActive =
+            filterKey === "price"
+              ? activeFilters.price?.label === item.label
+              : activeFilters[filterKey]?.includes(item);
 
-        {/* 🔹 Scrollable area for many buttons (mobile friendly) */}
-        <div className="flex flex-wrap gap-2 max-h-[150px] overflow-y-auto">
+          return (
+           <button
+  key={i}
+  onClick={() =>
+    filterKey === "price"
+      ? handleFilterChange("price", item)
+      : handleFilterChange(filterKey, item)
+  }
+  className={`px-3 py-1.5 rounded-full border text-xs md:text-sm capitalize whitespace-nowrap transition-all 
+    ${
+      isActive
+        ? `
+          bg-gradient-to-r from-[#b91c1c] to-[#f59e0b] 
+          text-white border-transparent shadow-md scale-[1.05]
+        `
+        : `
+          bg-gray-100 hover:bg-gray-200 border-gray-300
+        `
+    }
+  `}
+>
+  {item.label || item}
+</button>
+
+          );
+        })}
+      </div>
+
+      {/* Clear button */}
+      <div className="mt-3 text-right">
+        <button
+          onClick={() => handleClear(filterKey)}
+          className="px-3 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-yellow-400 text-white text-sm"
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+  );
+
+  // ------------------------------------------------
+  // Reusable Mobile Accordion
+  // ------------------------------------------------
+  const MobileAccordion = ({ title, items, filterKey }) => (
+    <div className="border rounded-xl p-3 bg-gray-50">
+      <button
+        onClick={() =>
+          setOpenMobile((prev) => ({ ...prev, [filterKey]: !prev[filterKey] }))
+        }
+        className="w-full flex justify-between items-center text-left font-semibold text-gray-800"
+      >
+        {title}
+        <span>{openMobile[filterKey] ? "▲" : "▼"}</span>
+      </button>
+
+      {openMobile[filterKey] && (
+        <div className="mt-3 flex flex-wrap gap-2">
           {items.map((item, i) => {
             const isActive =
               filterKey === "price"
@@ -61,50 +125,55 @@ const SubcategoryFilter = ({ category, activeFilters, setFilters }) => {
                     ? handleFilterChange("price", item)
                     : handleFilterChange(filterKey, item)
                 }
-                className={`px-3 py-1.5 rounded-full border text-xs md:text-sm capitalize whitespace-nowrap transition-all 
+                className={`px-3 py-1.5 rounded-full border text-sm capitalize
                   ${
                     isActive
-                      ? "bg-black text-white border-black shadow-sm"
-                      : "bg-gray-100 hover:bg-gray-200 border-gray-300"
+                      ? "bg-black text-white border-black"
+                      : "bg-white border-gray-300"
                   }`}
               >
                 {item.label || item}
               </button>
             );
           })}
-        </div>
-      </div>
 
-      {/* Clear button */}
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={() => handleClear(filterKey)}
-          className="
-            px-3 py-1.5 rounded-full bg-gradient-to-r from-[#b91c1c] to-[#f59e0b] 
-            text-white text-xs md:text-sm 
-            hover:opacity-90 transition-all
-          "
-        >
-          Clear
-        </button>
-      </div>
+          {/* Clear */}
+          <button
+            onClick={() => handleClear(filterKey)}
+            className="mt-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-yellow-400 text-white text-sm"
+          >
+            Clear
+          </button>
+        </div>
+      )}
     </div>
   );
 
-  // ✅ Layout Grid (responsive)
   return (
-    <section
-      className="
-        grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6
-        mt-6
-      "
-    >
-      {sizes.length > 0 && <FilterBox title="Size" items={sizes} filterKey="size" />}
-      {colors.length > 0 && <FilterBox title="Color" items={colors} filterKey="color" />}
-      {styles.length > 0 && <FilterBox title="Style" items={styles} filterKey="style" />}
-      {priceRanges.length > 0 && <FilterBox title="Price" items={priceRanges} filterKey="price" />}
-    </section>
-  );
-};
+    <>
+      {/* ----------------------------------------- */}
+      {/* Mobile View */}
+      {/* ----------------------------------------- */}
+      <div className="md:hidden space-y-4 mt-4">
+        {sizes.length > 0 && <MobileAccordion title="Size" items={sizes} filterKey="size" />}
+        {colors.length > 0 && <MobileAccordion title="Color" items={colors} filterKey="color" />}
+        {styles.length > 0 && <MobileAccordion title="Style" items={styles} filterKey="style" />}
+        {priceRanges.length > 0 && (
+          <MobileAccordion title="Price" items={priceRanges} filterKey="price" />
+        )}
+      </div>
 
-export default SubcategoryFilter;
+      {/* ----------------------------------------- */}
+      {/* Desktop View */}
+      {/* ----------------------------------------- */}
+      <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        {sizes.length > 0 && <FilterBox title="Size" items={sizes} filterKey="size" />}
+        {colors.length > 0 && <FilterBox title="Color" items={colors} filterKey="color" />}
+        {styles.length > 0 && <FilterBox title="Style" items={styles} filterKey="style" />}
+        {priceRanges.length > 0 && (
+          <FilterBox title="Price" items={priceRanges} filterKey="price" />
+        )}
+      </div>
+    </>
+  );
+}

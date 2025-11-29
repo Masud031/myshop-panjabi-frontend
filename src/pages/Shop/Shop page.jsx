@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import ProductCards from "../../../src/pages/Shop/productCards";
 import ShopFiltering from "../../../src/pages/Shop/shopFiltering";
+import MobileShopFiltering from "../../../src/pages/Shop/MobileShopFiltering";
 import Loading from "../../components/loading";
 import {
   useGetAllProductsQuery,
@@ -13,14 +15,16 @@ export default function ShopPage() {
     category: "all",
     color: "all",
     priceRange: "",
+    size: "",
   });
 
-  const { category, color, priceRange } = filtersState;
+  const { category, color, priceRange, size } = filtersState;
   const [minPrice, maxPrice] = priceRange.split("-").map(Number);
 
   const queryParams = {
     category: category !== "all" ? category : "",
     color: color !== "all" ? color : "",
+    size: size || "",
     minPrice: isNaN(minPrice) ? "" : minPrice,
     maxPrice: isNaN(maxPrice) ? "" : maxPrice,
     page: currentPage,
@@ -30,13 +34,10 @@ export default function ShopPage() {
   // ✅ Fetch all products
   const { data: productsData = {}, isLoading: isProductsLoading } =
     useGetAllProductsQuery(queryParams);
-    console.log( "quary param",queryParams);
 
   // ✅ Fetch filters for ALL categories
   const { data: filtersData = {}, isLoading: isFiltersLoading } =
     useGetAllFiltersQuery("all");
-
-    console.log("filter qury",filtersData);
 
   if (isProductsLoading || isFiltersLoading) return <Loading />;
 
@@ -45,6 +46,20 @@ export default function ShopPage() {
     categories: ["all", ...(backendFilters.categories || [])],
     colors: ["all", ...(backendFilters.colors || [])],
     priceRanges: backendFilters.priceRanges || [],
+    sizes: backendFilters.sizes || [],
+  };
+
+  // Prepare sizesMap for mobile filtering
+  const categorySizeMap = {
+    "kids-panjabi": [20, 22, 24, 26, 28, 30, 32, 34, 36],
+    "panjabi": [38, 40, 42, 44, 46, "s","m","L","xl","xxl","xxxl"],
+    "big-size": [46, 48, 50],
+    "sheroany": [38,40,42,44,46],
+    "trending": [38,40,42,44,46],
+    "payjama": [38,40,42,44],
+    "koti": [36,38,40,42,44,46],
+     "kids-sheroany": [24,26,28,30,32,34,36],
+   
   };
 
   const products = productsData?.data?.products || [];
@@ -55,15 +70,31 @@ export default function ShopPage() {
       <h2 className="section__header">Shop All Products</h2>
 
       <div className="flex flex-col md:flex-row gap-8">
-        <ShopFiltering
-          filters={filters}
-          filtersState={filtersState}
-          setFiltersState={setFiltersState}
-          clearFilters={() =>
-            setFiltersState({ category: "all", color: "all", priceRange: "" })
-          }
-        />
+        {/* Desktop Filters */}
+        <div className="hidden md:flex">
+          <ShopFiltering
+            filters={filters}
+            filtersState={filtersState}
+            setFiltersState={setFiltersState}
+            clearFilters={() =>
+              setFiltersState({ category: "all", color: "all", priceRange: "", size: "" })
+            }
+          />
+        </div>
 
+        {/* Mobile Filters */}
+        <div className="md:hidden">
+          <MobileShopFiltering
+            filters={{
+              ...filters,
+              sizesMap: categorySizeMap, // pass category sizes map
+            }}
+            filtersState={filtersState}
+            setFiltersState={setFiltersState}
+          />
+        </div>
+
+        {/* Products */}
         <div className="flex-1">
           <ProductCards products={products} />
 

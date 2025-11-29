@@ -1,73 +1,75 @@
 /* eslint-disable no-unused-vars */
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAllFiltersQuery } from "../redux/features/products/productsApi";
 import Loading from "./loading";
 import { useTranslation } from "react-i18next";
-
+import { ChevronDown } from "lucide-react";
 
 export default function CategoriesBar() {
-  const scrollRef = useRef(null);
   const navigate = useNavigate();
-   const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
-  // Fetch categories from backend (using your hook)
-  const { data, isLoading, isError } = useGetAllFiltersQuery( );
+  const [showMore, setShowMore] = useState(false);
 
-  // Get categories array safely
+  const { data, isLoading, isError } = useGetAllFiltersQuery();
   const categories = data?.data?.categories || [];
+
+  const mainCategories = categories.slice(0, 4);
+  const moreCategories = categories.slice(4);
 
   const handleCategoryClick = (categoryName) => {
     navigate(`/category/${encodeURIComponent(categoryName.toLowerCase())}`);
-  };
-
-  const scroll = (direction) => {
-    if (!scrollRef.current) return;
-    const amount = 250;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
-    });
+    setShowMore(false);
   };
 
   if (isLoading) return <Loading />;
-  if (isError) return <p className="text-center text-red-500 py-3">Failed to load categories</p>;
+  if (isError)
+    return <p className="text-center text-red-500 py-3">Failed to load categories</p>;
 
   return (
-    <div className="relative border-b shadow-sm py-2 select-none bg-gradient-to-r from-red-800 to-yellow-400  ">
+    <div className="relative py-2 px-3 flex items-center gap-2 bg-gradient-to-r from-red-800 to-yellow-400 select-none">
 
-      {/* Left Scroll Button */}
-      <button
-        onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 bg-white border rounded-full shadow w-8 h-8 flex items-center justify-center hover:bg-gray-100 z-10"
-      >
-        <ChevronLeft size={18} />
-      </button>
-
-      {/* Categories Container */}
-      <div
-        ref={scrollRef}
-        className="flex overflow-x-auto gap-3 px-12 md:px-16 scrollbar-hide scroll-smooth"
-      >
-        {categories.map((cat, index) => (
+      {/* FIRST 4 CATEGORIES — COMPACT */}
+      <div className="flex items-center gap-2 overflow-hidden">
+        {mainCategories.map((cat, index) => (
           <button
             key={index}
             onClick={() => handleCategoryClick(cat)}
-            className="flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-[var(--primary-color-dark)] hover:text-white transition-all duration-300 shadow-sm hover:shadow-md capitalize"
+            className="px-3 py-1 rounded-full text-xs md:text-sm bg-white shadow-sm hover:bg-gray-200 capitalize whitespace-nowrap"
           >
-            <span>{cat}</span>
+            {cat}
           </button>
         ))}
       </div>
 
-      {/* Right Scroll Button */}
-      <button
-        onClick={() => scroll("right")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white border rounded-full shadow w-8 h-8 flex items-center justify-center hover:bg-gray-100 z-10"
-      >
-        <ChevronRight size={18} />
-      </button>
+      {/* MORE BUTTON */}
+      {moreCategories.length > 0 && (
+        <div className="relative">
+          <button
+            onClick={() => setShowMore(!showMore)}
+            className="px-3 py-1 rounded-full text-xs md:text-sm bg-white shadow-sm hover:bg-gray-200 flex items-center gap-1 whitespace-nowrap"
+          >
+            More
+            <ChevronDown size={14} />
+          </button>
+
+          {/* SMALL DROPDOWN — CORNER ONLY */}
+          {showMore && (
+            <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg p-2 w-20 z-20">
+              {moreCategories.map((cat, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleCategoryClick(cat)}
+                  className="w-full text-left px-2 py-1 rounded hover:bg-gray-100 capitalize text-sm"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

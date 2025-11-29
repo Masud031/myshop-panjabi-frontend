@@ -43,12 +43,12 @@ export default function AddProduct() {
   { label: t("select_category"), value: "" },
   { label: t("panjabi"), value: "panjabi" },
   { label: t("kids_panjabi"), value: "kids-panjabi" },
-  { label: t("accessories"), value: "accessories" },
-  { label: t("dress"), value: "dress" },
   { label: t("sheroany"), value: "sheroany" },
-  { label: t("cosmetics"), value: "cosmetics" },
   { label: t("Trending"), value: "trending" },
   { label: t("big_size"), value: "big-size" },
+  { label: t("payjama"), value: "payjama" },
+  { label: t("koti"), value: "koti" },
+  { label: t("kids_sheroany"), value: "kids-sheroany" },
 ];
 
   const initialState = {

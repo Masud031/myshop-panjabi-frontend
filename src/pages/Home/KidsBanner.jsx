@@ -99,7 +99,7 @@ const KidsBanner = () => {
   </div>
 
   {/* 🎈 Balloon Animation Keyframes */}
-  <style jsx>{`
+  <style >{`
     @keyframes float {
       0% {
         transform: translateY(0) rotate(0deg);

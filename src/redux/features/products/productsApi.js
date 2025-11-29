@@ -12,7 +12,7 @@ const productsApi = createApi({
     tagTypes: ["Products"],
     endpoints: (builder) =>({
    getAllProducts: builder.query({
-      query: ({ category, color, minPrice, maxPrice, page, limit, search } = {}) => {
+      query: ({ category, color, minPrice, maxPrice, page, limit, search,size } = {}) => {
         const params = new URLSearchParams();
 
         if (category && category !== "all") params.append("category", category);
@@ -22,6 +22,13 @@ const productsApi = createApi({
         if (page) params.append("page", page);
         if (limit) params.append("limit", limit);
         if (search) params.append("search", search);
+            if (size) {
+      if (Array.isArray(size)) {
+        params.append("size",size.join(","));
+      } else {
+        params.append("size",size);
+      }
+    }
 
         return {
           url: `/?${params.toString()}`, // ✅ must return object
@@ -78,7 +85,7 @@ const productsApi = createApi({
             }),
             invalidatesTags: (result, error, id) => [{type:"Products", id }]
         }),
-         // ✅ add filters endpoint HERE properly
+         // ✅ Releated with
    getAllFilters: builder.query({
   query: (category = 'all') => `/filters/${category}`,
 }),
@@ -92,7 +99,13 @@ getAllFilterProducts: builder.query({
       params.append("category", filters.category);
     }
 
-    if (filters.size?.length) params.append("size", filters.size.join(","));
+        if (filters.size) {
+      if (Array.isArray(filters.size)) {
+        params.append("size", filters.size.join(","));
+      } else {
+        params.append("size", filters.size);
+      }
+    }
     if (filters.color?.length) params.append("color", filters.color.join(","));
     if (filters.style?.length) params.append("style", filters.style.join(","));
 
@@ -106,18 +119,14 @@ getAllFilterProducts: builder.query({
 
     if (filters.page) params.append("page", filters.page);
     if (filters.limit) params.append("limit", filters.limit);
+  
 
     return `/filter?${params.toString()}`;
   },
   providesTags: ["Products"],
 }),
 
-
-
-
-
-
-    })
+ })
 })
 
 export const { 

@@ -97,7 +97,7 @@ const TrandProducts = () => {
       </section>
 
       {/* 💫 Keyframes for subtle floating glow */}
-      <style jsx>{`
+      <style >{`
         @keyframes pulseGlow {
           0%, 100% {
             transform: scale(1);

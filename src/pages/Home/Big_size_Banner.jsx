@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import tallManImg from "../../assets/tallman.jpg"; // 🧍‍♂️ Replace with your actual image
 
-const TallMenBanner = () => {
+const Big_size_Banner = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const TallMenBanner = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center mt-3">
               <a
-                href="/category/tall-panjabi"
+                href="/category/big-size"
                 className="inline-block px-6 py-2.5 rounded-md 
                            bg-gradient-to-r from-[#7f1d1d] via-[#b91c1c] to-[#78350f]
                            text-white font-semibold shadow-md transition-transform 
@@ -79,13 +79,13 @@ const TallMenBanner = () => {
                 Explore Now
               </a>
 
-              <a
+              {/* <a
                 href="/size-guide"
                 className="inline-block px-5 py-2 rounded-md bg-white/60 
                            text-[#7f1d1d] font-medium hover:bg-white/80 transition"
               >
                 View Size Guide
-              </a>
+              </a> */}
             </div>
 
             <ul className="flex gap-3 flex-wrap text-sm text-[#6b2b05] mt-4">
@@ -106,4 +106,4 @@ const TallMenBanner = () => {
   );
 };
 
-export default TallMenBanner;
+export default Big_size_Banner;

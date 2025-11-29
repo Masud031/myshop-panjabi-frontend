@@ -1,8 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useState } from "react";
 import weddingImage from "../../assets/wedding.png"; // replace with your image
-import moonIcon from "../../assets/moon.png"; // optional crescent symbol
-import lanternIcon from "../../assets/lantern.png"; // optional lantern image
 
 const WeddingBanner = () => {
   const [loaded, setLoaded] = useState(false);
@@ -29,19 +27,8 @@ const WeddingBanner = () => {
                    min-h-[450px] md:min-h-[560px] flex flex-col md:flex-row
                    items-center justify-between px-6 md:px-16 py-10 md:py-16"
       >
-        {/* ✨ Background Elements */}
-        <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
-          <img
-            src={moonIcon}
-            alt="crescent"
-            className="absolute w-20 md:w-32 left-12 top-10 animate-float-slow"
-          />
-          <img
-            src={lanternIcon}
-            alt="lantern"
-            className="absolute w-24 md:w-40 right-12 bottom-10 animate-float-medium"
-          />
-        </div>
+        {/* ✨ Background Elements (Removed icons cleanly) */}
+        <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none"></div>
 
         {/* 💍 Left Side - Text */}
         <div
@@ -90,27 +77,6 @@ const WeddingBanner = () => {
             className="w-[260px] sm:w-[340px] md:w-[420px] object-cover rounded-xl shadow-2xl hover:scale-105 transition-transform duration-500"
           />
         </div>
-
-        {/* 🎐 Floating Animation */}
-        <style jsx>{`
-          @keyframes float {
-            0% {
-              transform: translateY(0);
-            }
-            50% {
-              transform: translateY(-20px);
-            }
-            100% {
-              transform: translateY(0);
-            }
-          }
-          .animate-float-slow {
-            animation: float 8s ease-in-out infinite;
-          }
-          .animate-float-medium {
-            animation: float 5s ease-in-out infinite;
-          }
-        `}</style>
       </section>
     </>
   );

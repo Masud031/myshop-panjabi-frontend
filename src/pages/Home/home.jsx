@@ -10,7 +10,7 @@ import Trands from "./trands";
 import KidsBanner from "./KidsBanner";
 import AdultBanner from "./AdultBanner";
 import WeddingBanner from "./WeddingBanner";
-import TallMenBanner from "./46panjabi";
+import Big_size_Banner from "./Big_size_Banner";
 
 
 const Home = () => {
@@ -28,18 +28,11 @@ const Home = () => {
              </section>
 
              <WeddingBanner/>
-             
-        
          <TrandProducts />
           <KidsBanner/>
-          <TallMenBanner/>
+          <Big_size_Banner/>
             <AdultBanner/>
-
-         {/* <div className="mt-20">
-            <CategoriesBar />
-            </div> */}
-
-           
+    
       <section className="px-4 py-6">
         <h2 className="text-2xl font-bold mb-4">{t("trending")}</h2>
         <Trands />

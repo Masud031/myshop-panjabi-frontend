@@ -4,9 +4,10 @@ import Navbar from "./components/Navbar"
 import './App.css';
 import Footer from "./components/Footer";
 import { useEffect } from "react";
-import { initFacebookPixel, trackPageView } from "../../backend/src/lib/facebookPixel";
-import PageViewTracker from "../../backend/src/lib/PageViewTracker";
+
 import { useTranslation } from "react-i18next";
+import { initFacebookPixel, trackPageView } from "./facbook/facebookPixel";
+import PageViewTracker from "./facbook/PageViewTracker";
 
 
 function App() {
