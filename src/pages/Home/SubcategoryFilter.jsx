@@ -103,14 +103,22 @@ export default function SubcategoryFilter({ category, activeFilters, setFilters 
         onClick={() =>
           setOpenMobile((prev) => ({ ...prev, [filterKey]: !prev[filterKey] }))
         }
-        className="w-full flex justify-between items-center text-left font-semibold text-gray-800"
+        className="   w-full flex justify-between items-center 
+    text-left font-semibold 
+    text-white 
+    bg-gradient-to-r from-red-600 via-black-400 to-yellow-500
+    px-4 py-2 
+    rounded-xl
+    shadow-md 
+    hover:opacity-90 
+    transition-all"
       >
         {title}
         <span>{openMobile[filterKey] ? "▲" : "▼"}</span>
       </button>
 
       {openMobile[filterKey] && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2 ">
           {items.map((item, i) => {
             const isActive =
               filterKey === "price"

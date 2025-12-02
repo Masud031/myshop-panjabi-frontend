@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { useEditProfileMutation } from '../../../src/redux/features/auth/authSlice';
 import { setUser } from '../../../src/redux/features/auth/authSlice';
 import { useEditProfileMutation } from '../../redux/features/auth/authapi';
+import { showToast } from '../../utils/showToast';
 
 
 const UserProfile = () => {
@@ -60,10 +61,10 @@ const UserProfile = () => {
             const response = await editProfile({id: user?._id, profileData: updatedUser}).unwrap();
             // console.log(response.data);
             dispatch(setUser(response.data))
-            alert("Profile Update Successfully")
+            showToast("Profile Update Successfully")
         
         } catch (error) {
-            alert('Failed to update profile. Please try again.');
+            showToast('Failed to update profile. Please try again.');
         }
 
     }

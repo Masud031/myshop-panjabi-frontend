@@ -1,18 +1,17 @@
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import category_1 from "../../assets/saro4.png";
 import category_2 from "../../assets/category-2.jpg";
 import category_3 from "../../assets/category-3.jpg";
 import category_4 from "../../assets/category-4.jpg";
 
 const ProductGrid = () => {
-  const { t } = useTranslation();
+ 
 
   const categories = [
-    { id: 1, name: t("accessories"), path: "accessories", image: category_1 },
+    { id: 1, name: "accessories", path: "accessories", image: category_1 },
     { id: 2, name: "Dress Collection", path: "dress", image: category_2 },
     { id: 3, name: "Jewellery", path: "jewellery", image: category_3 },
-    { id: 4, name: t("accessories"), path: "accessories", image: category_4 },
+    { id: 4, name: "accessories", path: "accessories", image: category_4 },
   ];
 
   return (

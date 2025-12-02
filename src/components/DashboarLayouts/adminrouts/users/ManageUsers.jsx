@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDeleteUserMutation, useGetUsersQuery } from '../../../../redux/features/auth/authapi';
 import UpdateUserModal from './UpdateUserModal';
 import Loading from '../../../loading';
+import { showToast } from '../../../../utils/showToast';
 
 const ManageUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +21,7 @@ const ManageUsers = () => {
     try {
       const response = await deleteUser(id).unwrap();
       console.log(response);
-      alert('User deleted successfully!');
+      showToast('User deleted successfully!');
       refetch();
     } catch (error) {
       console.error('Failed to delete user', error);

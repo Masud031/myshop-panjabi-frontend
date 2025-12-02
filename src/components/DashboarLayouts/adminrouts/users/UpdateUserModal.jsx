@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import  { useState } from 'react'
 import { useUpdateUserRoleMutation } from '../../../../redux/features/auth/authapi';
+import { showToast } from '../../../../utils/showToast';
 
 
 
@@ -13,7 +14,7 @@ const UpdateUserModal = ({ user, onClose, onRoleUpdate }) => {
             console.log(role)
 
             await updateUserRole({ userId: user?._id, role }).unwrap();
-            alert("User role updated successfully!");
+            showToast("User role updated successfully!");
             onRoleUpdate()
             onClose()
         } catch (error) {

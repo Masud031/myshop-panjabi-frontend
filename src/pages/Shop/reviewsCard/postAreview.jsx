@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchProductbyIdQuery } from '../../../redux/features/products/productsApi';
 import { usePostAReviewMutation } from '../../../redux/features/reviews/reviewsApi';
+import { showToast } from '../../../utils/showToast';
 
  
 // eslint-disable-next-line react/prop-types
@@ -34,7 +35,7 @@ const PostAReview = ({ isModalOpen, handleClose}) => {
         }
 
         if(!user) {
-            alert("You must be logged in to post a review.");
+            showToast("You must be logged in to post a review.");
             navigate("/login")
             return;
         }
@@ -42,13 +43,13 @@ const PostAReview = ({ isModalOpen, handleClose}) => {
         try {
             const response = await postAReview(newReview).unwrap();
             console.log(response);
-            alert("Review posted successfully!")
+           showToast("Review posted successfully!")
             setRating(0);
             setComment('');
             refetch();
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
-            alert("Error posting review")
+            showToast("Error posting review")
         }
 
         handleClose();

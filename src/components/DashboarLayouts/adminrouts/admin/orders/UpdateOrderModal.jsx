@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { useUpdateOrderStatusMutation } from "../../../../../redux/features/orders/orderApi";
+import { showToast } from "../../../../../utils/showToast";
 
 const UpdateOrderModal = ({ order, isOpen, onClose, isViewMode }) => {
   // ✅ All hooks at top level
@@ -18,7 +19,7 @@ const UpdateOrderModal = ({ order, isOpen, onClose, isViewMode }) => {
   const handleUpdate = async () => {
     try {
       await updateOrderStatus({ id: order._id, status }).unwrap();
-      alert("✅ Order status updated successfully!");
+      showToast("✅ Order status updated successfully!");
       onClose();
     } catch (err) {
       console.error("Failed to update order status:", err);

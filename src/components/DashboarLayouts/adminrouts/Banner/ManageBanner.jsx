@@ -28,7 +28,7 @@ const ManageBanner = () => {
     e.preventDefault();
 
     if (!route || !bannerImage) {
-      alert("Please select a route and upload an image!");
+      showToast("Please select a route and upload an image!");
       return;
     }
 
@@ -41,10 +41,10 @@ const ManageBanner = () => {
     try {
     const result = await uploadBanner(formData).unwrap();
       console.log("✅ Upload successful:", result);
-      alert("✅ Banner updated successfully!");
+      showToast("✅ Banner updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to update banner.");
+      showToast("Failed to update banner.");
     }
   };
 

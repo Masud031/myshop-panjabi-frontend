@@ -5,12 +5,12 @@ import SubcategoryFilter from "../SubcategoryFilter";
 import Loading from "../../../components/loading";
 import ProductCards from "../../Shop/productCards";
 import { useState, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+
 
 
 export default function CategoryPage() {
   const { categoryName } = useParams();
-   const { t } = useTranslation();
+
   
 
   const [filters, setFiltersState] = useState({
@@ -65,7 +65,7 @@ export default function CategoryPage() {
         <h1 className="text-2xl font-semibold capitalize">Shop {categoryName}</h1>
         <button
           onClick={clearAllFilters}
-          className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded-full"
+          className="mt-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-yellow-400 text-white text-sm"
         >
           Clear All
         </button>

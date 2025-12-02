@@ -5,14 +5,13 @@ import './App.css';
 import Footer from "./components/Footer";
 import { useEffect } from "react";
 
-import { useTranslation } from "react-i18next";
+
 import { initFacebookPixel, trackPageView } from "./facbook/facebookPixel";
 import PageViewTracker from "./facbook/PageViewTracker";
 
 
 function App() {
 
-    const { t } = useTranslation();
   const location = useLocation();
 
     useEffect(() => {

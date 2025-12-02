@@ -3,12 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAllFiltersQuery } from "../redux/features/products/productsApi";
 import Loading from "./loading";
-import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 
 export default function CategoriesBar() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+ 
 
   const [showMore, setShowMore] = useState(false);
 

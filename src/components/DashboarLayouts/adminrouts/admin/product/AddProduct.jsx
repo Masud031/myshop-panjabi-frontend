@@ -6,7 +6,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import UploadImage from "./UploadImage";
 import { useAddProductMutation } from "../../../../../redux/features/products/productsApi";
-import { useTranslation } from "react-i18next";
+
 
 
 
@@ -37,7 +37,7 @@ export default function AddProduct() {
   const { user } = useSelector((state) => state.auth);
   const [addProduct, { isLoading }] = useAddProductMutation();
   const uploadRef = useRef(null); // ✅ correct ref hook for UploadImage
-  const { t } = useTranslation();
+
 
   const categories = [
   { label: t("select_category"), value: "" },
@@ -89,7 +89,7 @@ export default function AddProduct() {
 
   const handleAddSizeQty = () => {
     if (!sizeInput || !qtyInput || Number(qtyInput) <= 0) {
-      alert("Please enter valid size and quantity.");
+     showToast ("Please enter valid size and quantity.");
       return;
     }
 
@@ -134,7 +134,7 @@ export default function AddProduct() {
       Object.keys(stock).length === 0 ||
       !image
     ) {
-      alert("Please fill in all fields and add at least one size.");
+      showToast("Please fill in all fields and add at least one size.");
       return;
     }
 
@@ -149,7 +149,7 @@ export default function AddProduct() {
         author: user?._id,
       }).unwrap();
 
-      alert(`✅ Product added successfully! Code: ${finalProductCode}`);
+      showToast(`✅ Product added successfully! Code: ${finalProductCode}`);
       handleClearForm();
     } catch (err) {
       console.error("Failed to add product:", err);

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
+import { showToast } from '../utils/showToast';
 
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({children, role}) => {
@@ -19,11 +20,11 @@ const PrivateRoute = ({children, role}) => {
 
 
     if(!user) {
-        alert("You must be logged in")
+       showToast("You must be logged in")
         return <Navigate to="/login" state={{from: location}}  replace/>
     }
     if(role && user?.role !== role) {
-        alert ("Access denied! You must be an admin");
+        showToast("Access denied! You must be an admin");
         return <Navigate to="/login" state={{from: location}}  replace/>
     }
   return children;

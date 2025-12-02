@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { setUser } from '../redux/features/auth/authSlice';
 import { useRegisterUserMutation } from '../redux/features/auth/authapi';
 import { getAuth, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
 import app from "../pages/Home/firebase/firebase.init";
+import { showToast } from '../utils/showToast';
 
 const Register = () => {
   const [message, setMessage] = useState('');
@@ -14,6 +16,7 @@ const Register = () => {
   const [registerUser, { isLoading }] = useRegisterUserMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const redirectPath = localStorage.getItem("redirectAfterRegister") || "/";
   const location = useLocation();
   const from = location.state?.from || '/';
 
@@ -61,12 +64,18 @@ const Register = () => {
       dispatch(setUser(formattedUser));
 
       reset();
-      alert("🎉 Registration successful!");
-      navigate(from, { replace: true });
+      
+    showToast("success", "Registration successful!");
+
+
+      navigate(redirectPath, { replace: true });
+localStorage.removeItem("redirectAfterRegister");
 
     } catch (error) {
       console.error("Registration Error:", error);
-      setMessage(error?.data?.message || "Registration failed! Please try again.");
+      
+   // Error
+showToast("error", err?.data?.message || "Registration failed!");
     }
   };
 
@@ -99,10 +108,10 @@ const Register = () => {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Google registration failed");
-      }
-
+if (!res.ok) {
+  showToast("error", data.message || "Google registration failed");
+  throw new Error(data.message || "Google registration failed");
+}
       const formattedUser = {
         email: data.user.email,
         username: data.user.username,
@@ -116,66 +125,73 @@ const Register = () => {
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('user', JSON.stringify(formattedUser));
 
-      alert("🎉 Google Sign-Up successful!");
+      showToast("success", "🎉 Google Sign-Up successful!");
       navigate(from, { replace: true });
 
     } catch (error) {
       console.error("Google Signup Error:", error);
-      alert(error.message || "Google Sign-Up failed!");
+      showToast("error", error.message || "Google Sign-Up failed!");
     }
   };
 
   return (
-    <section className='h-screen flex items-center justify-center p-2'>
-      <div className='shadow bg-white p-8 max-w-sm mx-auto'>
-        <h2 className='text-2xl font-semibold pt-5'>Create an Account</h2>
+<section className='min-h-screen flex items-center justify-center bg-gray-50 p-4'>
+  <div className='bg-white shadow-xl rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-lg transition-all duration-300 hover:shadow-2xl'>
+    
+    <h2 className='text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-6'>Create an Account</h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-3 max-w-sm mx-auto pt-6'>
-          <input
-            {...register("username", { required: true })}
-            type="text"
-            placeholder="Username"
-            className="w-full bg-gray-100 focus:outline-none px-5 py-3 rounded-md"
-          />
-          {errors.username && <p className='text-red-500'>Username is required</p>}
+    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+      <input
+        {...register("username", { required: true })}
+        type="text"
+        placeholder="Username"
+        className="w-full bg-gray-100 focus:ring-2 focus:ring-red-500 focus:outline-none px-4 sm:px-5 py-3 rounded-lg transition"
+      />
+      {errors.username && <p className='text-red-500 text-sm'>Username is required</p>}
 
-          <input
-            {...register("emailOrMobile", { required: true })}
-            type="text"
-            placeholder="Email or Mobile number"
-            className="w-full bg-gray-100 focus:outline-none px-5 py-3 rounded-md"
-          />
-          {errors.emailOrMobile && <p className='text-red-500'>Email or Mobile is required</p>}
+      <input
+        {...register("emailOrMobile", { required: true })}
+        type="text"
+        placeholder="Email or Mobile number"
+        className="w-full bg-gray-100 focus:ring-2 focus:ring-red-500 focus:outline-none px-4 sm:px-5 py-3 rounded-lg transition"
+      />
+      {errors.emailOrMobile && <p className='text-red-500 text-sm'>Email or Mobile is required</p>}
 
-          <input
-            {...register("password", { required: true })}
-            type="password"
-            placeholder="Password"
-            className="w-full bg-gray-100 focus:outline-none px-5 py-3 rounded-md"
-          />
-          {errors.password && <p className='text-red-500'>Password is required</p>}
+      <input
+        {...register("password", { required: true })}
+        type="password"
+        placeholder="Password"
+        className="w-full bg-gray-100 focus:ring-2 focus:ring-red-500 focus:outline-none px-4 sm:px-5 py-3 rounded-lg transition"
+      />
+      {errors.password && <p className='text-red-500 text-sm'>Password is required</p>}
 
-          {message && <p className='text-red-500'>{message}</p>}
+      {message && <p className='text-red-500 text-sm'>{message}</p>}
 
-          <button className='w-full mt-5 bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-md'>
-            Register
-          </button>
-        </form>
+      <button
+        className='w-full mt-4 bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white font-semibold py-3 rounded-full shadow-lg transition duration-300'
+      >
+        Register
+      </button>
+    </form>
 
-        <div className='my-5 italic text-sm text-center'>
-          Already have an account?{" "}
-          <Link to="/login" className='text-red-700 px-1 underline cursor-pointer'>Login</Link> here.
-        </div>
+    <div className='my-5 text-center text-sm text-gray-600'>
+      Already have an account?{" "}
+      <Link to="/login" className='text-red-600 font-medium underline hover:text-red-700'>
+        Login
+      </Link>
+    </div>
 
-        {/* Google Sign-Up Button */}
-        <button
-          onClick={handleGoogleSignup}
-          className='w-full mt-3 bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md flex items-center justify-center'
-        >
-          <span className='mr-2'>🔵</span> Sign up with Google
-        </button>
-      </div>
-    </section>
+    {/* Google Sign-Up Button */}
+    <button
+      onClick={handleGoogleSignup}
+      className='w-full mt-3 bg-white border border-red-500 hover:bg-red-50 text-red-600 font-medium py-3 rounded-full flex items-center justify-center shadow transition duration-300'
+    >
+      <span className='mr-2'>🔵</span> Sign up with Google
+    </button>
+  </div>
+</section>
+
+
   );
 };
 

@@ -2,13 +2,14 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard';
 import UserDashboard from './UserDashboard';
+import { showToast } from '../../utils/showToast';
 
 const DashboardLayout = () => {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
 
   if (!user) {
-    alert("You must be logged in");
+   showToast("You must be logged in");
     return <Navigate to="/login" replace />;
   }
 

@@ -11,6 +11,7 @@ import TextInput from '../product/TextInput';
 import SelectInput from '../product/SelectInput';
 import UploadImage from '../product/UploadImage';
 import Loading from '../../../../loading';
+import { showToast } from '../../../../../utils/showToast';
 
 const categories = [
   { label: 'Select Category', value: '' },
@@ -99,7 +100,7 @@ const UpdateProduct = () => {
   // ✅ Add or update size quantity
   const handleAddSizeQty = () => {
     if (!sizeInput || !qtyInput || Number(qtyInput) <= 0) {
-      alert('Please enter valid size and quantity.');
+      showToast('Please enter valid size and quantity.');
       return;
     }
 
@@ -134,7 +135,7 @@ const UpdateProduct = () => {
 
     try {
       await updateProduct({ id, ...updatedProduct }).unwrap();
-      alert('Product updated successfully!');
+      showToast('Product updated successfully!');
       await refetch();
       navigate('/dashboard/manage-products');
     } catch (error) {

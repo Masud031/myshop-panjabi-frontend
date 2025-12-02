@@ -8,6 +8,7 @@ import { setUser } from '../redux/features/auth/authSlice';
 import { useLoginUserMutation } from '../redux/features/auth/authapi';
 import { getAuth, GoogleAuthProvider, sendPasswordResetEmail, signInWithPopup, updateProfile } from "firebase/auth";
 import app from "../pages/Home/firebase/firebase.init";
+import { showToast } from '../utils/showToast';
 
 const Login = () => {
     const [message, setMessage] = useState('');
@@ -76,7 +77,10 @@ else if (
             
            localStorage.setItem('authToken', token);
             dispatch(setUser( formattedUser));
-            alert("Login successful!");
+           
+                
+         // Success toast
+        showToast  ("success", "Login successful!");
               // 👇 Redirect logic
           navigate(from, { replace: true });
 
@@ -87,6 +91,10 @@ else if (
                 setMessage("Invalid email/mobile or password!");
             }
             reset({ emailOrMobile: "", password: "" }); // reset form fields
+
+             
+ // Fail toast
+showToast("error", err?.data?.message || "Invalid email/mobile or password!");
         }
     };
 
@@ -143,12 +151,12 @@ console.log("Google login response:", data);
             dispatch(setUser( formattedUser )); 
             localStorage.setItem('authToken', data.token);
     
-            alert("Google Sign-in successful!");
+            showToast("success", "Google Sign-in successful!");
              navigate(from, { replace: true });
     
         } catch (error) {
             console.error("Google signin error:", error);
-            alert(error.message || "Google Signin failed!");
+            showToast("error", error.message || "Google Signin failed!");
         }
     };
     
@@ -162,10 +170,10 @@ console.log("Google login response:", data);
         if (email) {
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert("Password reset link sent to your email!");
+               showToast("success", "Password reset link sent to your email!");
             } catch (error) {
                 console.error("Error resetting password:", error.message);
-                alert("Failed to send password reset email.");
+               showToast("error", "Failed to send password reset email.");
             }
         }
     };
@@ -173,69 +181,72 @@ console.log("Google login response:", data);
     
 
     return (
-        <section className='h-screen flex items-center justify-center p-2'>
-            <div className='shadow bg-white p-8 max-w-sm mx-auto'>
-                <h2 className='text-2xl font-semibold pt-5'>Please Login!</h2>
+       <section className='min-h-screen flex items-center justify-center bg-gray-50 p-4'>
+  <div className='bg-white shadow-xl rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-lg transition-all duration-300 hover:shadow-2xl'>
 
-                {/* Email or Mobile & Password Login Form */}
-                <form onSubmit={handleSubmit(onSubmit)} className='space-y-3 max-w-sm mx-auto pt-6'>
-                     <input
-            {...register("emailOrMobile", { required: true })}
-            type="text"
-            placeholder="Email or Mobile number"
-            className="w-full bg-gray-100 focus:outline-none px-5 py-3 rounded-md"
-            onChange={() => setMessage("")}
-          />
-                    {errors.email && <p className='text-red-500'>Email or Mobile number is required</p>}
+    <h2 className='text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-6'>Please Login!</h2>
 
-                     
-                    <input
-                        {...register("password", { required: true })}
-                        type="password" placeholder='Password' className='w-full bg-gray-100 focus:outline-none px-5 py-3'
-                        onChange={(e) => {
-                    setMessage(""); // clear previous error
-                         }} />
-                    {errors.password && <p className='text-red-500'>Password is required</p>}
+    {/* Email/Mobile & Password Form */}
+    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+      <input
+        {...register("emailOrMobile", { required: true })}
+        type="text"
+        placeholder="Email or Mobile number"
+        className="w-full bg-gray-100 focus:ring-2 focus:ring-red-500 focus:outline-none px-4 sm:px-5 py-3 rounded-lg transition"
+        onChange={() => setMessage("")}
+      />
+      {errors.emailOrMobile && <p className='text-red-500 text-sm'>Email or Mobile number is required</p>}
 
-                    {message && <p className='text-red-500'>{message}</p>}
+      <input
+        {...register("password", { required: true })}
+        type="password"
+        placeholder='Password'
+        className='w-full bg-gray-100 focus:ring-2 focus:ring-red-500 focus:outline-none px-4 sm:px-5 py-3 rounded-lg transition'
+        onChange={() => setMessage("")}
+      />
+      {errors.password && <p className='text-red-500 text-sm'>Password is required</p>}
 
-                    <button className='w-full mt-5 bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-md'>
-                        Login
-                    </button>
-                </form>
+      {message && <p className='text-red-500 text-sm'>{message}</p>}
 
-                 {/* Forgot Password */}
-                <div className='text-center my-2'>
-                <button
-                 type="button"
-                 onClick={handleForgotPassword}
-                 className='text-blue-600 hover:underline'
-                 >
-                 Forgot Password?
-                 </button>
-                </div>
+      <button className='w-full mt-4 bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white font-semibold py-3 rounded-full shadow-lg transition duration-300'>
+        Login
+      </button>
+    </form>
 
-                {/* Register Link */}
-                <div className='my-5 italic text-sm text-center'>
-                Don't have an account?{' '}
-                <Link 
-                 to="/register" 
-                state={{ from: location.state?.from }} // ✅ Preserve the original route
-                className='text-red-700 px-1 underline cursor-pointer'
-                 >
-                 Register here.
-                 </Link> 
-                </div>
+    {/* Forgot Password */}
+    <div className='text-center my-2'>
+      <button
+        type="button"
+        onClick={handleForgotPassword}
+        className='text-blue-600 hover:underline text-sm'
+      >
+        Forgot Password?
+      </button>
+    </div>
 
-                {/* Google Sign-In Button */}
-                <button
-                    onClick={handleGooglesignin}
-                    className='w-full mt-3 bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-md flex items-center justify-center'
-                >
-                    <span className='mr-2'>🔵</span> Sign in with Google
-                </button>
-            </div>
-        </section>
+    {/* Register Link */}
+    <div className='my-5 text-center text-sm text-gray-600 italic'>
+      Don't have an account?{' '}
+      <Link 
+        to="/register" 
+        state={{ from: location.state?.from }}
+        className='text-red-600 font-medium underline hover:text-red-700'
+      >
+        Register here.
+      </Link>
+    </div>
+
+    {/* Google Sign-In Button */}
+    <button
+      onClick={handleGooglesignin}
+      className='w-full mt-3 bg-white border border-red-500 hover:bg-red-50 text-red-600 font-medium py-3 rounded-full flex items-center justify-center shadow transition duration-300'
+    >
+      <span className='mr-2'>🔵</span> Sign in with Google
+    </button>
+
+  </div>
+</section>
+
     );
 }
 

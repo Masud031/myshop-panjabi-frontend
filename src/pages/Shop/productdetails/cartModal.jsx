@@ -86,7 +86,7 @@ style={{ transition: 'opacity 300ms' }}
                             </button>
                             <span className="px-2 text-center mx-1" >{product?.quantity}</span>
                             <button
-                                onClick={() => handleUpdateQuantity("increament", product?._id)}
+                                onClick={() => handleUpdateQuantity("increment", product?._id)}
                                 className="size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700  hover:bg-primary hover:text-white"
                             >
                                 +

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import  { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { getBaseUrl } from '../../../../../utils/baseurl';
+import { showToast } from '../../../../../utils/showToast';
 
 
 const UploadImage = forwardRef(({ name, setImage, label }, ref) => {
@@ -28,10 +29,10 @@ const UploadImage = forwardRef(({ name, setImage, label }, ref) => {
       const imageUrl = res.data;
       setUrl(imageUrl);
       setImage(imageUrl);
-      alert("✅ Image uploaded successfully!");
+     showToast("✅ Image uploaded successfully!");
     } catch (error) {
       console.error("❌ Failed to upload image:", error);
-      alert("Upload failed. Please try again!");
+     showToast("Upload failed. Please try again!");
     } finally {
       setLoading(false);
     }

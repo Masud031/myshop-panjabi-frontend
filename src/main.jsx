@@ -9,15 +9,14 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import router from './routs/router'
 import { useEffect } from 'react'
-import "./i18n";
 import { initFacebookPixel } from './facbook/facebookPixel'
-// import Authprovider from './provider/Authprovider'
+
 
 
 // Simple wrapper to init the pixel once
 const PageViewTracker = () => {
   useEffect(() => {
-    initFacebookPixel("1312717463506664"); // your Pixel ID
+    initFacebookPixel(import.meta.env.VITE_FACEBOOK_PIXEL_ID); // your Pixel ID
   }, []);
   return null;
 };

@@ -47,7 +47,7 @@ const ManageOrders = () => {
   const handleDeleteClick = async (orderId) => {
     try {
       await deleteOrderbyId(orderId).unwrap();
-      alert(`Deleted order ${orderId}`);
+     showToast(`Deleted order ${orderId}`);
       refetch();
     } catch (err) {
       console.error("Failed to delete order:", err);

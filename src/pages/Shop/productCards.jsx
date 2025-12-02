@@ -4,6 +4,7 @@ import RatingStars from '../../components/RatingStars'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
+import { showToast } from '../../utils/showToast'
 
 // eslint-disable-next-line react/prop-types
 const ProductCards = ({products}) => {
@@ -14,7 +15,7 @@ const ProductCards = ({products}) => {
 
     const handleAddToCart = (product) => {
     if (!user) {
-      alert("You must be logged in to add products to the cart!");
+    showToast("You must be logged in to add products to the cart!");
       navigate('/login');
       return;
     }

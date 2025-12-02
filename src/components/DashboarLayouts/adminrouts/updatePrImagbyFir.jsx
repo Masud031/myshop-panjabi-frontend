@@ -2,6 +2,7 @@
 import { updateProfile } from "firebase/auth";
 import { auth } from "../firebase.config";
 import { useState } from "react";
+import { showToast } from "../../../utils/showToast";
 
 const UpdateProfileImage = () => {
   const [imageUrl, setImageUrl] = useState("");
@@ -11,7 +12,7 @@ const UpdateProfileImage = () => {
       await updateProfile(auth.currentUser, {
         photoURL: imageUrl,
       });
-      alert("Profile image updated successfully!");
+     showToast("Profile image updated successfully!");
       window.location.reload(); // optional: to refresh navbar
     } catch (error) {
       console.error("Error updating profile:", error);

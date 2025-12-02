@@ -7,8 +7,8 @@ import { addToCart } from '../../../redux/features/cart/cartSlice';
 import RatingStars from '../../../components/RatingStars';
 import ReviewsCard from '../reviewsCard/reviewCard';
 import Loading from '../../../components/loading';
-import { useTranslation } from 'react-i18next';
 import ProductZoom from './ProductZoom';
+import { showToast } from '../../../utils/showToast';
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -18,7 +18,7 @@ const SingleProduct = () => {
   const location = useLocation();
   const from = location.state?.from || '/';
   const [selectedSize, setSelectedSize] = useState(null);
-    const { t } = useTranslation(); 
+  
 
   const {
     data: { data: productDetails } = {},
@@ -41,13 +41,14 @@ const SingleProduct = () => {
 
   const handleAddToCart = () => {
     if (!user) {
-      alert('You must register to purchase a product!');
+      localStorage.setItem("redirectAfterRegister", `/shop/${id}`);
+      showToast("warning", "You must register to purchase a product!");
       navigate('/register', { state: { from: `/shop/${id}` } });
       return;
     }
 
     if (!selectedSize) {
-      alert('Please select a size!');
+     showToast("warning", "Please select a size!");
       return;
     }
 
@@ -68,11 +69,11 @@ const SingleProduct = () => {
         <h2 className="section__header">Single Product Page</h2>
         <div className="section__subheader space-x-2">
   <Link to="/" className="hover:text-primary">
-    {t("home")}
+    home
   </Link>
   <i className="ri-arrow-right-s-line" />
   <Link to="/shop" className="hover:text-primary">
-    {t("shop")}
+    shop
   </Link>
   <i className="ri-arrow-right-s-line" />
   {product?.category ? (
@@ -103,7 +104,7 @@ const SingleProduct = () => {
 
             {/* ✅ Product Code */}
             <p className="text-gray-600 mb-4">
-              <strong>{t("product_code")}:</strong> {product?.productCode}
+             <strong>Product Code:</strong> {product?.productCode}
             </p>
 
            {/* ✅ Price section with optional old price & discount */}

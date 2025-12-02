@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDeleteProductMutation, useGetAllProductsQuery,  } from '../../../../../redux/features/products/productsApi';
 import Loading from '../../../../loading';
 import ProductSizesMiniTable from './ProductSizesMiniTable';
+import { showToast } from '../../../../../utils/showToast';
 
 
 const ManageProducts = () => {
@@ -32,7 +33,7 @@ const ManageProducts = () => {
     const handleDelete =  async (id) => {
         try {
             const response = await deleteProduct(id).unwrap();
-            alert("Product deleted successfully!");
+           showToast("Product deleted successfully!");
             await refetch()
         } catch (error) {
             console.error("Failed to delete the product post:", error);

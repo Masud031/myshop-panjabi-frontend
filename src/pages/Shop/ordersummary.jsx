@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../../src/redux/features/cart/cartSlice";
 import { useReduceStockMutation } from "../../../src/redux/features/products/productsApi";
-
+import Swal from "sweetalert2";
 
 const OrderSummary = () => {
     const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const OrderSummary = () => {
         })),
     };
 
-    try {
+     try {
         const response = await fetch("http://localhost:5000/api/order/order", {
             method: "POST",
             headers: {
@@ -69,6 +69,14 @@ const OrderSummary = () => {
 
         if (!response.ok) {
             console.error("Order API error:", result);
+
+            Swal.fire({
+                icon: "error",
+                title: "Order Failed",
+                text: result.message || "Something went wrong!",
+                confirmButtonColor: "#d33",
+            });
+
             throw new Error(result.message || "Failed to place order");
         }
 
@@ -81,14 +89,19 @@ const OrderSummary = () => {
             )
         );
 
-        console.log("Order Response:", result);
-        alert(`Order placed successfully!`);
+        
+        Swal.fire({
+            icon: "success",
+            title: "Order Placed!",
+            text: "Your order has been submitted successfully.",
+            confirmButtonColor: "#5d1964cc",
+        });
         setIsModalOpen(false);
         handleClearCart();
 
     } catch (error) {
         console.error("Error during order submission:", error);
-        alert("Failed to place order. Please try again.");
+       showToast("Failed to place order. Please try again.");
     }
 };
 
@@ -112,11 +125,11 @@ const OrderSummary = () => {
                     <i className="ri-delete-bin-7-line"></i>
                 </button>
                 <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-green-600 px-3 py-1.5 text-white mt-2 rounded-md flex justify-between items-center"
+                onClick={() => setIsModalOpen(true)}
+                className="rounded-full bg-gradient-to-r from-red-700 via-red-600 to-orange-500 text-white px-4 py-2 mt-2 flex items-center gap-2 shadow-lg hover:brightness-110 transition"
                 >
-                    <span className="mr-2">Place Order</span>
-                    <i className="ri-check-line"></i>
+                <span className="text-sm font-medium">Place Order</span>
+                <i className="ri-check-line text-lg"></i>
                 </button>
             </div>
 
@@ -166,15 +179,15 @@ const OrderSummary = () => {
                         />
                        
                         <div className="flex justify-between">
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="bg-red-500 text-white px-3 py-1 rounded-md"
+                           <button
+                            onClick={() => setIsModalOpen(false)}
+                            className="rounded-full bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white px-4 py-2 mt-2 flex items-center gap-2 shadow-lg hover:brightness-110 transition"
                             >
-                                Cancel
+                            Cancel
                             </button>
                             <button
                                 onClick={handleOrder}
-                                className="bg-green-600 text-white px-3 py-1 rounded-md"
+                                className="rounded-full bg-gradient-to-r from-red-700 via-red-600 to-orange-500 text-white px-4 py-2 mt-2 flex items-center gap-2 shadow-lg hover:brightness-110 transition"
                             >
                                 Submit
                             </button>

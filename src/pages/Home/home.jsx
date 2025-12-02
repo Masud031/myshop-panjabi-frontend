@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+
 import CategoriesBar from "../../components/CategoriesBar";
 import Blogs from "../Blog/Blogs";
 import Banner from "./Banner";
@@ -14,7 +14,7 @@ import Big_size_Banner from "./Big_size_Banner";
 
 
 const Home = () => {
-      const { t } = useTranslation();
+ 
     return (
         <> 
             <div className="mt-20">
@@ -22,10 +22,10 @@ const Home = () => {
             </div>
 
             <Banner/>
-             <section className="px-4 py-6">
-            <h2 className="text-2xl font-bold mb-4">{t("categories")}</h2>
-            <Category />
-             </section>
+        <section className="px-4 py-6">
+        <h2 className="text-2xl font-bold mb-4">Categories</h2>
+        <Category />
+      </section>
 
              <WeddingBanner/>
          <TrandProducts />
@@ -34,7 +34,7 @@ const Home = () => {
             <AdultBanner/>
     
       <section className="px-4 py-6">
-        <h2 className="text-2xl font-bold mb-4">{t("trending")}</h2>
+        <h2 className="text-2xl font-bold mb-4">trending</h2>
         <Trands />
        
       </section>

@@ -70,11 +70,12 @@ export const cartSlice = createSlice({
         //     state.totalPrice = totals.totalPrice;
         // },
         updateQuantity: (state, action) => {
-          const { id, size, type } = action.payload;
-          const product = state.products.find(item => item._id === id && item.size === size);
+          const { id, type } = action.payload;
+          const product = state.products.find(item => item._id === id);
+          // const product = state.products.find(item => item._id === id && item.size === size);
 
           if (product) {
-            if (type === "increament") {
+            if (type === "increment") {
               product.quantity += 1;
             } else if (type === "decrement" && product.quantity > 1) {
               product.quantity -= 1;
