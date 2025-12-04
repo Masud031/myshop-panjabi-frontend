@@ -16,7 +16,7 @@ export const showToast = (type, message, duration = 2000) => {
     showConfirmButton: false,
     timer: duration,
     timerProgressBar: true,
-    background: "#f1adadff",
+    background: "#f6f2f2ff",
     iconColor: type === "success" ? "#4CAF50" :
                type === "error" ? "#D33" :
                type === "warning" ? "#FF9800" :

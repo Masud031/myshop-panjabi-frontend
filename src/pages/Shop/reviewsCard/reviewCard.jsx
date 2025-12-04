@@ -1,7 +1,7 @@
 import  { useState } from 'react'
 import RatingStars from '../../../components/RatingStars'
 
-import commentorImg from "../../../assets/avatar.png"
+import commentorImg from "../../../assets/download (2).jpeg"
 import PostAReview from './postAreview';
 // import PostAReview from '../../../redux/features/reviews/postReview';
 

@@ -13,11 +13,15 @@ import WeddingBanner from "./WeddingBanner";
 import Big_size_Banner from "./Big_size_Banner";
 
 
+
+
 const Home = () => {
  
     return (
         <> 
-            <div className="mt-20">
+              
+     
+            <div className="mt-28">
             <CategoriesBar />
             </div>
 

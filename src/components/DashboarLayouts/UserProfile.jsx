@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 
-import avatarImg from "../../../src/assets/avatar.png"
+import avatarImg from "../../../src/assets/download (2).jpeg"
 import { useDispatch, useSelector } from 'react-redux';
 // import { useEditProfileMutation } from '../../../src/redux/features/auth/authSlice';
 import { setUser } from '../../../src/redux/features/auth/authSlice';

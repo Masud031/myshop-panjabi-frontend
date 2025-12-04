@@ -98,11 +98,7 @@ p {
   }
 
   /* 🧭 Navbar Links */
-  nav,
-  .nav__links,
-  .nav__links a {
-    font-family: var(--body-font);
-  }
+  
 
   /* 🖼 Header Section */
   .header__container {
@@ -138,12 +134,7 @@ p {
   pointer-events: none; /* avoids blocking clicks in some layouts; remove if you need clicks inside zoom */
 }
 
-/* center the hint "+" icon */
-.react-image-magnify-hint {
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-}
+
 
 /* sometimes library places the enlarged container inside a parent with overflow hidden;
    ensure parent wrappers allow overflow when needed */
@@ -157,49 +148,9 @@ p {
   height: auto;
   overflow: hidden;
 }
-/* 1. HIDE ALL GOOGLE TRANSLATE UI ELEMENTS */
-/* This single block targets the banner, floating tooltip, menu, and gadget icon */
-.goog-te-banner-frame.skiptranslate {
-    display: none !important;
-    /* ... and other aggressive hiding properties */
-}
-.goog-te-banner-frame,
-iframe.goog-te-banner-frame,
-.goog-te-gadget-icon,
-#goog-gt-tt,
-.goog-tooltip,
-.goog-te-menu-value {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important; /* Prevents interaction */
-}
 
-/* 2. PREVENT BODY SHIFT/TOP OFFSET */
-/* The single most important fix to prevent the bar from pushing content down */
-body {
-    top: 0 !important;
-    margin-top: 0 !important; 
-    padding-top: 0 !important; 
-}
 
-/* 3. DEFENSIVE BODY SHIFT FIX (When Google adds the 'skiptranslate' class) */
-body.skiptranslate {
-    top: 0 !important;
-    margin-top: 0 !important; 
-    padding-top: 0 !important; 
-}
 
-/* 4. Hides the "translating" spinner if it appears */
-.goog-te-spinner-pos {
-    top: 0px !important;
-    display: none !important; 
-}
-.VIpgJd-ZVi9od-ORHb-OEVmcd {
-    display: none !important;
-}
 
 
 

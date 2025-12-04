@@ -169,12 +169,12 @@ const ManageOrders = () => {
                   {order.products && order.products.length > 0 ? (
                     order.products.map((prd) => (
                       <Link
-                        key={prd._id}
-                        to={`/shop/${prd._id}`} // link to product page
+                        key={order._id}
+                        to={`/shop/${order._id}`} // link to product page
                         className="text-blue-500 hover:underline text-xs block"
-                        title={`Quantity: ${prd.quantity}`}
+                        title={`Quantity: ${order.quantity}`}
                       >
-                        {prd.productCode} ({prd.quantity})
+                      
                       </Link>
                     ))
                   ) : (

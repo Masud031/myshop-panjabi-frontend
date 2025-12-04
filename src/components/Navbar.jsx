@@ -9,6 +9,9 @@ import CartModal from "../pages/Shop/productdetails/cartModal";
 import { useSearchProductsQuery } from "../redux/features/products/productsApi";
 import { showToast } from "../utils/showToast";
 import LanguageSwitcher from "./translater/LanguageSwitcher";
+import Swal from "sweetalert2";
+
+// 
 
 const Navbar = () => {
   const products = useSelector((state) => state.cart.products);
@@ -21,7 +24,7 @@ const Navbar = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
@@ -30,10 +33,11 @@ const Navbar = () => {
         setIsDropDownOpen(false);
       }
     };
-
-    document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+    
 
   const [searchFocused, setSearchFocused] = useState(false);
 
@@ -63,11 +67,32 @@ const Navbar = () => {
     try {
       await userLogout().unwrap();
       dispatch(logout());
-      showToast("success", "Logout successful!");
+         await Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Logout successful!",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      background: "#f1adadff",
+      iconColor: "#4CAF50",
+    });
+      
       navigate("/");
     } catch (error) {
       console.error("Error logging out", error);
-      showToast("error", "Failed to logout. Please try again.");
+       await Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "error",
+      title: "Failed to logout. Please try again.",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      background: "#f1adadff",
+      iconColor: "#D33",
+    });
     }
   };
 
@@ -89,22 +114,25 @@ const Navbar = () => {
     user?.role === "admin" ? [...adminDropdownMenus] : [...userDropdownMenus];
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50">
+ <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow">
       {/* Top Line */}
-      <div className="flex items-center justify-between px-4 lg:px-8 py-1 border-b border-gray-100">
+           <div className="w-full px-2 py-2 border-b border-gray-100 mt-8">
+                <div className="flex items-center justify-between gap-1 w-full">
         
         {/* Logo */}
-        <div className="text-lg md:text-xl font-bold text-primary whitespace-nowrap">
+   <div className="text-base lg:text-xl font-bold text-primary whitespace-nowrap mr-1 lg:ml-4 flex-shrink-0">
+
           <Link to="/">
             Lebaba<span className="text-secondary">.</span>
           </Link>
         </div>
 
         {/* Search Bar */}
-        <div className="flex-1 max-w-lg mx-4 relative">
+          <div className="flex-1 max-w-[140px] xs:max-w-[160px] sm:max-w-xs lg:max-w-md mx-1">
+
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center w-full bg-gray-100 rounded-full px-2 py-1"
+            className="flex items-center bg-gray-100 rounded-full px-2 py-[3px]"
           >
             <input
               type="text"
@@ -116,7 +144,7 @@ const Navbar = () => {
               placeholder="Search"
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              className="flex-1 bg-transparent outline-none px-2 text-sm md:text-base"
+              className="w-full bg-transparent outline-none text-xs"
             />
             {searchFocused && (
               <button
@@ -179,11 +207,13 @@ const Navbar = () => {
         <div className="flex items-center gap-3 text-gray-700 pr-2 sm:pr-4 relative">
 
           {/* Langusge swetcher */}
-          <LanguageSwitcher />
-
+            <div className="scale-[0.72] flex-shrink-0 mr-1">
+            <LanguageSwitcher />
+          </div>
+           {/* CART ICON */}
           <button
             onClick={() => navigate("/cart")}
-            className="flex items-center gap-0.5 hover:text-primary text-sm md:text-base"
+            className="flex items-center hover:text-primary text-sm flex-shrink-0"
           >
             <i className="ri-shopping-bag-line"></i>
             <sup className="text-xs px-1 bg-primary text-white rounded-full">
@@ -202,7 +232,7 @@ const Navbar = () => {
                 }
                 alt="User Avatar"
                 referrerPolicy="no-referrer"
-                className="w-6 h-6 rounded-full object-cover cursor-pointer border border-gray-200"
+                className="w-6 h-6 rounded-full ml-1 border border-gray-200 object-cover cursor-pointer flex-shrink-0"
               />
 
               {isDropDownOpen && (
@@ -242,33 +272,40 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      </div>
 
       {/* Navigation Links */}
-      {["/", "/shop", "/pages", "/contact"].includes(location.pathname) && (
-        <div className="border-t border-gray-100">
-          <ul className="flex justify-center gap-5 text-black text-sm font-medium py-1.5">
-            {[
-              { label: "Home", path: "/" },
-              { label: "Shop", path: "/shop" },
-              { label: "Pages", path: "/pages" },
-              { label: "Contact", path: "/contact" },
-            ].map((item, index) => (
-              <li key={index}>
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-primary border-b-2 border-primary pb-1"
-                      : "hover:text-primary hover:border-b-2 hover:border-primary pb-1"
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Navigation Links */}
+{location.pathname === "/" && (
+  <div className="border-t border-gray-100">
+   <ul className="flex justify-center gap-5 text-black text-sm lg:text-base font-medium py-1.5 lg:py-2">
+
+      {[
+        { label: "Home", path: "/" },
+        { label: "Shop", path: "/shop" },
+        { label: "Pages", path: "/pages" },
+        { label: "Contact", path: "/contact" },
+      ].map((item, index) => (
+        <li key={index}>
+          <NavLink
+            to={item.path}
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary border-b-2 border-primary pb-1"
+                : "hover:text-primary hover:border-b-2 hover:border-primary pb-1"
+            }
+          >
+            {item.label}
+          </NavLink>
+        </li>
+      ))}
+        
+
+    </ul>
+     
+  </div>
+)}
+
 
       {isCartOpen && (
         <CartModal

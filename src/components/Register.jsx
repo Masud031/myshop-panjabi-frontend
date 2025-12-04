@@ -56,7 +56,7 @@ const Register = () => {
         username: user.username,
         role: user.role,
         _id: user._id,
-        profileImage: user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png",
+        profileImage: user.profileImage || "https://i.ibb.co.com/TDFh2J1d/download-2.jpg",
       };
 
       localStorage.setItem('authToken', token);
@@ -117,7 +117,7 @@ if (!res.ok) {
         username: data.user.username,
         role: data.user.role,
         _id: data.user._id,
-        profileImage: data.user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png",
+        profileImage: data.user.profileImage || "https://i.ibb.co.com/TDFh2J1d/download-2.jpg",
       };
 
       // ✅ Save to Redux + localStorage

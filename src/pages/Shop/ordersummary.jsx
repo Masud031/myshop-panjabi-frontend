@@ -124,14 +124,20 @@ const OrderSummary = () => {
                     <span className="mr-2">Clear Cart</span>
                     <i className="ri-delete-bin-7-line"></i>
                 </button>
-                <button
+
+            <button
                 onClick={() => setIsModalOpen(true)}
-                className="rounded-full bg-gradient-to-r from-red-700 via-red-600 to-orange-500 text-white px-4 py-2 mt-2 flex items-center gap-2 shadow-lg hover:brightness-110 transition"
-                >
+                className="rounded-full bg-gradient-to-r from-red-700 via-red-600 to-orange-500 text-white px-4 py-2 mt-2 flex items-center gap-2 shadow-lg hover:brightness-110 transition mb-2"
+            >
                 <span className="text-sm font-medium">Place Order</span>
                 <i className="ri-check-line text-lg"></i>
-                </button>
-            </div>
+            </button>
+
+            {/* Professional Note Text */}
+            <p className="text-xl text-gray-600 leading-snug">
+                * On cash on delivery only. Delivery charge will be applied.
+            </p>
+        </div>
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 import { initFacebookPixel, trackPageView } from "./facbook/facebookPixel";
 import PageViewTracker from "./facbook/PageViewTracker";
+import ContactFloating from "./facbook/ContactFloating";
+
 
 
 function App() {
@@ -26,8 +28,13 @@ function App() {
 
   return (
     <>
+     
      <PageViewTracker />
-    <Navbar/>
+       <ContactFloating />
+
+      <Navbar/>
+   
+
    <main className="min-h-screen">
      <Outlet/>
     </main>

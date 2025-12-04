@@ -54,7 +54,7 @@ const Login = () => {
                let profileImage = user.profileImage?.trim();
    
    if (!profileImage || profileImage === "" || profileImage === "undefined") {
-    profileImage = "https://i.ibb.co/2kR9YxW/avatar.png";
+    profileImage = "https://i.ibb.co.com/TDFh2J1d/download-2.jpg";
 } 
 // 2. KEEP the Google suffix logic, as it modifies a *valid* Google URL for better display
 else if (
@@ -143,7 +143,7 @@ console.log("Google login response:", data);
                 username: data.user.username,
                 role: data.user.role,
                 _id: data.user._id,
-                profileImage: data.user.profileImage || "https://i.ibb.co/2kR9YxW/avatar.png",
+                profileImage: data.user.profileImage || "https://i.ibb.co.com/TDFh2J1d/download-2.jpg",
             };
             console.log("Google login response:", data);
 
