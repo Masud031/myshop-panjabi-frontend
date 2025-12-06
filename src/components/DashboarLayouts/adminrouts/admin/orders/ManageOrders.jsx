@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import React, { useState } from "react";
+import  { useState } from "react";
 import UpdateOrderModal from "./UpdateOrderModal";
 import {
   useDeleteOrderbyIdMutation,
@@ -55,6 +55,7 @@ const ManageOrders = () => {
   };
 
   const handleView = (order) => {
+     console.log("Selected order:", order);
     setSelectedOrder(order);
     setIsViewMode(true);
     setIsModalOpen(true);
@@ -86,7 +87,7 @@ const ManageOrders = () => {
   };
 
   return (
-    <section className="section__container p-4 sm:p-6">
+    <section className="section__container p-4 sm:p-6 mt-6">
       {/* 🔹 Header Controls */}
       <div className="flex flex-wrap items-center justify-between mb-4 gap-3">
         <h2 className="text-xl sm:text-2xl font-semibold">Manage Orders</h2>
@@ -165,22 +166,24 @@ const ManageOrders = () => {
                 </td>
 
                 {/* 🔹 Products Column */}
-                <td className="py-1 px-2 border-b">
-                  {order.products && order.products.length > 0 ? (
-                    order.products.map((prd) => (
-                      <Link
-                        key={order._id}
-                        to={`/shop/${order._id}`} // link to product page
-                        className="text-blue-500 hover:underline text-xs block"
-                        title={`Quantity: ${order.quantity}`}
-                      >
-                      
-                      </Link>
-                    ))
-                  ) : (
-                    <span className="text-gray-400 text-xs">No products</span>
-                  )}
-                </td>
+               <td className="py-1 px-2 border-b">
+                    {order.products?.length > 0 ? (
+                      <div className="flex flex-col gap-1">
+                        {order.products.map((prd, i) => (
+                               <Link
+                          key={i}
+                          to={`/shop/${prd.productId?._id}`}
+                          className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 hover:underline"
+                        >
+                          {prd.productId?.productCode}
+                          <span className="text-gray-500 ml-1">(x{prd.quantity})</span>
+                        </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-xs">No products</span>
+                    )}
+                  </td>
 
                 {/* 🔹 Actions */}
                 <td className="py-1 px-2 border-b flex items-center space-x-1 sm:space-x-2">

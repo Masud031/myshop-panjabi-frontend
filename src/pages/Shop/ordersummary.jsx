@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../../src/redux/features/cart/cartSlice";
 import { useReduceStockMutation } from "../../../src/redux/features/products/productsApi";
 import Swal from "sweetalert2";
+import { showToast } from "../../utils/showToast";
 
 const OrderSummary = () => {
     const dispatch = useDispatch();
@@ -43,6 +44,7 @@ const OrderSummary = () => {
         userId: user._id,
         products: products.map((item) => ({
             productId: item._id,
+            productCode:item.productCode,
             quantity: item.quantity,
             size: item.size,
             selectedSize: item.selectedSize, 

@@ -15,4 +15,5 @@ https://github.com/Masud031/myshop-panjabi-backend
 
 ---------------
 1.shopPage releated with shopfiltering,mobileshopfiltering and in backend with "getAllProducts".
-2.categoryBar releated with "categorypage",subcategoryfilter, and in banner category releated with'category.jsx. and backend is "getAllFilters " and "getAllFiltersProducts". 
+2.categoryBar releated with "categorypage",subcategoryfilter, and in banner category releated with'category.jsx. and backend is "getAllFilters " and "getAllFiltersProducts".
+3.Pending >process >shipped are in "UpdateOrderModal.jsx" 

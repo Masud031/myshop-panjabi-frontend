@@ -35,6 +35,19 @@ const UpdateOrderModal = ({ order, isOpen, onClose, isViewMode }) => {
 
         <div className="mb-4 text-sm space-y-1">
           <p><strong>Order ID:</strong> {order.orderId}</p>
+          {/* Show all product codes */}
+      <p>
+            <strong>Product Codes:</strong>{" "}
+            {order.products?.length > 0 ? (
+              order.products.map((item) => (
+                <span key={item?._id} className="inline-block mr-2">
+                  {item?.productId?.productCode || "N/A"}
+                </span>
+              ))
+            ) : (
+              "N/A"
+            )}
+          </p>
           <p><strong>Customer:</strong> {order.email}</p>
           <p><strong>Status:</strong> {order.status}</p>
           <p><strong>Date:</strong> {new Date(order.updatedAt).toLocaleDateString()}</p>

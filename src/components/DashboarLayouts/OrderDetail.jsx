@@ -48,10 +48,19 @@ const OrderDetail = () => {
       const isCurrent = (status) => order.status === status
 
   return (
-    <div className='section__container rounded p-6'>
+    <div className='section__container rounded p-6 mt-20'>
       <h2 className='text-2xl font-semibold mb-4'>Payment {order?.status}</h2>
       <p className='mb-4'>Order Id: {order?.orderId}</p>
       <p className='mb-8'>Status: {order?.status}</p>
+       {/* 👉  PRODUCT CODE HERE */}
+        <div className='mb-6'>
+    <h3 className='font-semibold text-lg mb-2'>Product Code(s):</h3>
+    {order?.products?.map((item, i) => (
+      <p key={i} className='text-gray-800'>
+        {item?.productCode || "No Code"}
+      </p>
+    ))}
+  </div>
 
       <ol className='sm:flex items-center relative'>
         {
