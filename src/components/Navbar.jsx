@@ -75,7 +75,7 @@ const Navbar = () => {
       showConfirmButton: false,
       timer: 2000,
       timerProgressBar: true,
-      background: "#f1adadff",
+      background: "#f6f0f0ff",
       iconColor: "#4CAF50",
     });
       

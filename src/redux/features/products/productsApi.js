@@ -108,6 +108,10 @@ getAllFilterProducts: builder.query({
     }
     if (filters.color?.length) params.append("color", filters.color.join(","));
     if (filters.style?.length) params.append("style", filters.style.join(","));
+    // style category
+        if (filters.styleCategory?.length) {
+      params.append("styleCategory", filters.styleCategory.join(","));
+    }
 
     // ✅ Match backend: priceMin & priceMax
     if (filters.price) {

@@ -6,55 +6,57 @@ import Loading from "../../../components/loading";
 import ProductCards from "../../Shop/productCards";
 import { useState, useMemo } from "react";
 
-
-
 export default function CategoryPage() {
   const { categoryName } = useParams();
-
-  
 
   const [filters, setFiltersState] = useState({
     size: [],
     color: [],
     style: [],
+    styleCategory: [], // <-- added
     price: null,
+    page: 1,
+    limit: 24,
   });
 
-  // 🧮 useMemo ensures query object is stable between renders
+  // build query for backend. Map styleCategory into style param (or send separately if backend supports)
   const filtersQuery = useMemo(
     () => ({
       category: categoryName,
       size: filters.size,
       color: filters.color,
-      style: filters.style,
-      price: filters.price,
-      page: 1,
-      limit: 24,
+      style: filters.style, // existing style filter
+     styleCategory: filters.styleCategory,
+    
+      priceMin: filters.price?.min ?? undefined,
+      priceMax: filters.price?.max ?? undefined,
+      page: filters.page || 1,
+      limit: filters.limit || 24,
     }),
     [categoryName, filters]
   );
 
-  // 🔁 Auto re-fetches whenever filtersQuery changes
+  // ensure hook re-fetches when filtersQuery changes
   const { data, isLoading } = useGetAllFilterProductsQuery(filtersQuery);
 
   const products = data?.data || [];
 
-  // Handle filter selection
+  // you can keep a local handler (optional) or pass setFiltersState directly
   const handleFilterChange = (key, value) => {
     setFiltersState((prev) => {
-      if (key === "price")
-        return { ...prev, price: prev.price?.label === value.label ? null : value };
+      if (key === "price") {
+        return { ...prev, price: prev.price?.label === value.label ? null : value, page: 1 };
+      }
 
-      const current = prev[key];
+      const current = prev[key] || [];
       const exists = current.includes(value);
       const updated = exists ? current.filter((v) => v !== value) : [...current, value];
-      return { ...prev, [key]: updated };
+      return { ...prev, [key]: updated, page: 1 };
     });
   };
 
-  // Reset all filters at once (optional)
   const clearAllFilters = () => {
-    setFiltersState({ size: [], color: [], style: [], price: null });
+    setFiltersState({ size: [], color: [], style: [], styleCategory: [], price: null, page: 1, limit: 24 });
   };
 
   if (isLoading) return <Loading />;
@@ -73,41 +75,36 @@ export default function CategoryPage() {
 
       <SubcategoryFilter
         category={categoryName}
-        onFilterChange={handleFilterChange}
+        // you can either pass setFilters (we use it in SubcategoryFilter) or pass a callback
         activeFilters={filters}
         setFilters={setFiltersState}
+        // if you prefer: onFilterChange={handleFilterChange}
       />
 
-   
-
       <div className="mt-6">
-  {products.length > 0 ? (
-    <>
-      <ProductCards products={products} />
+        {products.length > 0 ? (
+          <>
+            <ProductCards products={products} />
 
-      {data?.data?.hasMore && (
-        <div className="text-center mt-8">
-          <button
-            onClick={() =>
-              setFiltersState((prev) => ({
-                ...prev,
-                page: (prev.page || 1) + 1,
-              }))
-            }
-            className="bg-primary hover:bg-primary-color-dark text-white px-6 py-2 rounded-full transition"
-          >
-            Show More
-          </button>
-        </div>
-      )}
-    </>
-  ) : (
-    <p className="text-center text-gray-500 mt-10">
-      No products found for selected filters.
-    </p>
-  )}
-</div>
-
+            {data?.data?.hasMore && (
+              <div className="text-center mt-8">
+                <button
+                  onClick={() =>
+                    setFiltersState((prev) => ({ ...prev, page: (prev.page || 1) + 1 }))
+                  }
+                  className="bg-primary hover:bg-primary-color-dark text-white px-6 py-2 rounded-full transition"
+                >
+                  Show More
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-center text-gray-500 mt-10">
+            No products found for selected filters.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

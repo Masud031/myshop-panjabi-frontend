@@ -1,7 +1,17 @@
 import Swal from "sweetalert2";
 
-export const showToast = (type, message, duration = 2000) => {
-  const icons = {
+export const showToast = (typeOrMessage, maybeMessage, duration = 2000) => {
+  // If user passed only one arg, treat it as message and default to "info"
+  let type, message;
+  if (typeof maybeMessage === "undefined") {
+    message = String(typeOrMessage || "");
+    type = "info";
+  } else {
+    type = String(typeOrMessage || "info");
+    message = String(maybeMessage || "");
+  }
+
+    const icons = {
     success: "success",
     error: "error",
     warning: "warning",

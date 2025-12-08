@@ -6,6 +6,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import UploadImage from "./UploadImage";
 import { useAddProductMutation } from "../../../../../redux/features/products/productsApi";
+import { showToast } from "../../../../../utils/showToast";
 
 
 
@@ -21,11 +22,16 @@ const colors = [
   { label: "Green", value: "green" },
 ];
 
-const panjabiSubcategories = [
-  { label: "By Size", value: "by-size" },
-  { label: "By Color", value: "by-color" },
-  { label: "By Style", value: "by-style" },
-  { label: "By Price", value: "by-price" },
+
+// category style
+const styleCategories = [
+  { label: "Select Style Category", value: "" },
+  { label: "Simple", value: "simple" },
+  { label: "Gorgeous", value: "gorgeous" },
+  { label: "Premium", value: "premium" },
+  { label: "Casual", value: "casual" },
+  { label: "Embroidered", value: "embroidered" },
+   { label: "Wedding", value: "wedding" },
 ];
 
 const generateProductCode = () => {
@@ -49,13 +55,14 @@ export default function AddProduct() {
   { label: "payjama", value: "payjama" },
   { label: "koti", value: "koti" },
   { label: "kids_sheroany", value: "kids-sheroany" },
+  { label: "fatua", value: "fatua" },
 ];
 
   const initialState = {
     name: "",
     productCode: "",
     category: "",
-    subcategory: "",
+     styleCategory: "",
     description: "",
     price: "",
     oldPrice: "",
@@ -63,6 +70,8 @@ export default function AddProduct() {
     stock: {},
     discountPercent: 0,
   };
+
+  
 
   const [product, setProduct] = useState(initialState);
   const [sizeInput, setSizeInput] = useState("");
@@ -89,7 +98,7 @@ export default function AddProduct() {
 
   const handleAddSizeQty = () => {
     if (!sizeInput || !qtyInput || Number(qtyInput) <= 0) {
-     showToast ("Please enter valid size and quantity.");
+     showToast("error", "Please enter valid size and quantity.");
       return;
     }
 
@@ -123,7 +132,7 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, category, price, color, description, stock } = product;
+    const { name, category, price, color, description, stock,styleCategory } = product;
 
     if (
       !name ||
@@ -132,9 +141,10 @@ export default function AddProduct() {
       !color ||
       !description ||
       Object.keys(stock).length === 0 ||
-      !image
+      !image ||
+      !styleCategory
     ) {
-      showToast("Please fill in all fields and add at least one size.");
+    showToast("error", "Please fill in all fields and add at least one size.");
       return;
     }
 
@@ -149,12 +159,15 @@ export default function AddProduct() {
         author: user?._id,
       }).unwrap();
 
-      showToast(`✅ Product added successfully! Code: ${finalProductCode}`);
+      showToast("success", `Product added successfully! Code: ${finalProductCode}`);
       handleClearForm();
     } catch (err) {
       console.error("Failed to add product:", err);
     }
   };
+
+
+
 
   return (
     <div className="container mx-auto mt-8">
@@ -192,15 +205,14 @@ export default function AddProduct() {
 
         {product.category === "panjabi" && (
           <SelectInput
-            label="Subcategory (Optional)"
-            name="subcategory"
-            value={product.subcategory}
-            onChange={handleChange}
-            options={[
-              { label: "Select Subcategory", value: "" },
-              ...panjabiSubcategories,
-            ]}
-          />
+          label="Subcategory (Optional)"
+          name="subcategory"
+          value={product.subcategory}
+          onChange={handleChange}
+          options={[
+            { label: "Select Subcategory", value: "" },
+          ]}
+        />
         )}
 
         {/* Color */}
@@ -211,6 +223,23 @@ export default function AddProduct() {
           onChange={handleChange}
           options={colors}
         />
+
+        {/* Style Category */}
+      <div>
+        <label className="block font-semibold mb-1">Style Category</label>
+        <select
+          name="styleCategory"
+          value={product.styleCategory}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          {styleCategories.map((sc, i) => (
+            <option key={i} value={sc.value}>
+              {sc.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
         {/* Price Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

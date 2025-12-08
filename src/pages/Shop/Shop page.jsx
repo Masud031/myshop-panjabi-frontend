@@ -52,7 +52,7 @@ export default function ShopPage() {
   // Prepare sizesMap for mobile filtering
   const categorySizeMap = {
     "kids-panjabi": [20, 22, 24, 26, 28, 30, 32, 34, 36],
-    "panjabi": [38, 40, 42, 44, 46, "s","m","L","xl","xxl","xxxl"],
+    "panjabi": [38, 40, 42, 44, 46,],
     "big-size": [46, 48, 50],
     "sheroany": [38,40,42,44,46],
     "trending": [38,40,42,44,46],

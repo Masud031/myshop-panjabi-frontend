@@ -104,9 +104,6 @@ let qrImg = "";
             </html>
             `;
           
-
- 
-
  newWindow.document.write(printHTML);
 
 newWindow.document.close();
@@ -160,6 +157,7 @@ newWindow.document.close();
     <tr>
       <th className="border px-3 py-2">Product</th>
       <th className="border px-3 py-2">Product Code</th>
+      <th className="border px-3 py-2">size</th>
       <th className="border px-3 py-2 text-center">Qty</th>
       <th className="border px-3 py-2 text-right">Price</th>
       <th className="border px-3 py-2 text-right">Total</th>
@@ -171,6 +169,9 @@ newWindow.document.close();
         <td className="border px-3 py-2">{item.name || "N/A"}</td>
         <td className="border px-3 py-2">
           {item.productCode || item.productId?.productCode || "N/A"}
+        </td>
+            <td className="border px-3 py-2 text-center">
+          {item.size || "N/A"}
         </td>
         <td className="border px-3 py-2 text-center">{item.quantity}</td>
         <td className="border px-3 py-2 text-right">৳{item.price.toFixed(2)}</td>
