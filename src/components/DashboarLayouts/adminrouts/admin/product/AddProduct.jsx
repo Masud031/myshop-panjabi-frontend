@@ -62,7 +62,7 @@ export default function AddProduct() {
     name: "",
     productCode: "",
     category: "",
-     styleCategory: "",
+    styleCategory: [],
     description: "",
     price: "",
     oldPrice: "",
@@ -142,7 +142,8 @@ export default function AddProduct() {
       !description ||
       Object.keys(stock).length === 0 ||
       !image ||
-      !styleCategory
+       !styleCategory ||
+  styleCategory.length === 0
     ) {
     showToast("error", "Please fill in all fields and add at least one size.");
       return;
@@ -203,17 +204,6 @@ export default function AddProduct() {
           options={categories}
         />
 
-        {product.category === "panjabi" && (
-          <SelectInput
-          label="Subcategory (Optional)"
-          name="subcategory"
-          value={product.subcategory}
-          onChange={handleChange}
-          options={[
-            { label: "Select Subcategory", value: "" },
-          ]}
-        />
-        )}
 
         {/* Color */}
         <SelectInput
@@ -226,20 +216,35 @@ export default function AddProduct() {
 
         {/* Style Category */}
       <div>
-        <label className="block font-semibold mb-1">Style Category</label>
-        <select
-          name="styleCategory"
-          value={product.styleCategory}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          {styleCategories.map((sc, i) => (
-            <option key={i} value={sc.value}>
-              {sc.label}
-            </option>
-          ))}
-        </select>
-      </div>
+  <label className="block font-semibold mb-2">Style Categories</label>
+
+  <div className="grid grid-cols-2 gap-2 border p-3 rounded">
+    {styleCategories
+      .filter(sc => sc.value !== "") // remove “Select Style Category”
+      .map((sc) => (
+        <label key={sc.value} className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            value={sc.value.toLowerCase()}
+            checked={product.styleCategory?.includes(sc.value.toLowerCase())}
+            onChange={(e) => {
+              const value = e.target.value;
+              setProduct(prev => {
+                const selected = new Set(prev.styleCategory);
+
+                if (selected.has(value)) selected.delete(value);
+                else selected.add(value);
+
+                return { ...prev, styleCategory: Array.from(selected) };
+              });
+            }}
+          />
+          {sc.label}
+        </label>
+      ))}
+  </div>
+</div>
+
 
         {/* Price Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

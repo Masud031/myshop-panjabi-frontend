@@ -99,7 +99,7 @@ getAllFilterProducts: builder.query({
       params.append("category", filters.category);
     }
 
-        if (filters.size) {
+        if (filters.size?.length > 0) {
       if (Array.isArray(filters.size)) {
         params.append("size", filters.size.join(","));
       } else {
@@ -114,17 +114,27 @@ getAllFilterProducts: builder.query({
     }
 
     // ✅ Match backend: priceMin & priceMax
-    if (filters.price) {
-      if (filters.price.min !== undefined && filters.price.min !== null)
-        params.append("priceMin", filters.price.min);
-      if (filters.price.max !== undefined && filters.price.max !== null)
-        params.append("priceMax", filters.price.max);
-    }
+    // if (filters.price) {
+    //   if (filters.price.min !== undefined && filters.price.min !== null)
+    //     params.append("priceMin", filters.price.min);
+    //   if (filters.price.max !== undefined && filters.price.max !== null)
+    //     params.append("priceMax", filters.price.max);
+    // }
+if (filters.price) {
+  if (filters.price.min !== undefined && filters.price.min !== null) {
+    params.append("priceMin", filters.price.min);
+  }
+
+  if (filters.price.max !== undefined && filters.price.max !== null) {
+    params.append("priceMax", filters.price.max);
+  }
+}
 
     if (filters.page) params.append("page", filters.page);
     if (filters.limit) params.append("limit", filters.limit);
   
-
+ console.log("Generated URL params:", params.toString());
+ 
     return `/filter?${params.toString()}`;
   },
   providesTags: ["Products"],

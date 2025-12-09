@@ -20,21 +20,25 @@ export default function CategoryPage() {
   });
 
   // build query for backend. Map styleCategory into style param (or send separately if backend supports)
-  const filtersQuery = useMemo(
-    () => ({
-      category: categoryName,
-      size: filters.size,
-      color: filters.color,
-      style: filters.style, // existing style filter
-     styleCategory: filters.styleCategory,
-    
-      priceMin: filters.price?.min ?? undefined,
-      priceMax: filters.price?.max ?? undefined,
-      page: filters.page || 1,
-      limit: filters.limit || 24,
-    }),
-    [categoryName, filters]
-  );
+ const filtersQuery = useMemo(() => {
+  const q = {
+    category: categoryName,
+    page: filters.page || 1,
+    limit: filters.limit || 24,
+  };
+
+  if (filters.size.length > 0) q.size = filters.size;
+  if (filters.color.length > 0) q.color = filters.color;
+  if (filters.style.length > 0) q.style = filters.style;
+  if (filters.styleCategory.length > 0) q.styleCategory = filters.styleCategory;
+
+  if (filters.price && filters.price.min !== undefined && filters.price.max !== undefined) {
+        q.price = filters.price;
+    }
+
+  return q;
+}, [categoryName, filters]);
+  console.log("Final Filters Query:", filtersQuery);
 
   // ensure hook re-fetches when filtersQuery changes
   const { data, isLoading } = useGetAllFilterProductsQuery(filtersQuery);
@@ -42,18 +46,18 @@ export default function CategoryPage() {
   const products = data?.data || [];
 
   // you can keep a local handler (optional) or pass setFiltersState directly
-  const handleFilterChange = (key, value) => {
-    setFiltersState((prev) => {
-      if (key === "price") {
-        return { ...prev, price: prev.price?.label === value.label ? null : value, page: 1 };
-      }
+const handleFilterChange = (key, value) => {
+  setFiltersState(prev => {
+    if (key === "price") {
+      return { ...prev, price: prev.price?.label === value.label ? null : value, page: 1 };
+    }
+    const current = prev[key] || [];
+    const exists = current.includes(value);
+    const updated = exists ? current.filter(v => v !== value) : [...current, value];
+    return { ...prev, [key]: updated, page: 1 };
+  });
+};
 
-      const current = prev[key] || [];
-      const exists = current.includes(value);
-      const updated = exists ? current.filter((v) => v !== value) : [...current, value];
-      return { ...prev, [key]: updated, page: 1 };
-    });
-  };
 
   const clearAllFilters = () => {
     setFiltersState({ size: [], color: [], style: [], styleCategory: [], price: null, page: 1, limit: 24 });
@@ -75,7 +79,6 @@ export default function CategoryPage() {
 
       <SubcategoryFilter
         category={categoryName}
-        // you can either pass setFilters (we use it in SubcategoryFilter) or pass a callback
         activeFilters={filters}
         setFilters={setFiltersState}
         // if you prefer: onFilterChange={handleFilterChange}
