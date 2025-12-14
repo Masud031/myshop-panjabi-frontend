@@ -123,7 +123,7 @@ const Navbar = () => {
    <div className="text-base lg:text-xl font-bold text-primary whitespace-nowrap mr-1 lg:ml-4 flex-shrink-0">
 
           <Link to="/">
-            Lebaba<span className="text-secondary">.</span>
+            BDhabibi<span className="text-secondary">.</span>
           </Link>
         </div>
 

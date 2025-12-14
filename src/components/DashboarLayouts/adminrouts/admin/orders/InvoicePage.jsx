@@ -55,11 +55,7 @@ let qrImg = "";
  let contentHTML = printContent.innerHTML;
 
 // A simple placeholder div is safer than relying on the specific structure
- // of the <QRCodeCanvas> component's output for replacement.
- // You can put this placeholder inside the ref={qrRef} div in the render.
 
- // 3. The key: Replace the entire QR code container with the <img> tag
- // This targets the 'qr' class div, assuming the entire QR component is inside it.
  const qrRegex = /<div\s+ref="[^"]+"\s+class="qr">([\s\S]*?)<\/div>/i;
 
     // A simpler replacement strategy is to target the entire content of the ref div:
@@ -68,14 +64,6 @@ let qrImg = "";
       <p style="font-size: 10px; margin-top: 4px;">Scan for details</p>
     `;
 
-    // A safer way is to ensure you target the element inside the existing HTML that corresponds to the QR code.
-    // In your case, the entire content of the element with ref={qrRef} needs replacement.
-    // Since you can't easily target a React ref's content in the raw innerHTML string,
-    // the most reliable fix is to modify the *original* element's content before taking innerHTML,
-    // or use a unique ID on the QR code container for better targeting.
-
-    // Let's use your current method but make the replacement logic more targeted if possible:
-    // It seems you're trying to replace the *canvas* tag with an *img* tag inside the raw HTML string.
 
     setTimeout(() => {
         const printContent = document.getElementById("invoice-print");
@@ -129,7 +117,7 @@ newWindow.document.close();
             <QRCodeCanvas
               value={`https://yourdomain.com/track-order/${id}`}
               size={80}
-              includeMargin={true}
+              includeMargin={true}print
             />
             <p style={{ fontSize: "10px", marginTop: "4px" }}>Scan for details</p>
           </div>

@@ -1,9 +1,14 @@
 /* eslint-disable react/prop-types */
-/* MobileShopFiltering.jsx */
 import { useState, useEffect } from "react";
 
 export default function MobileShopFiltering({
-  filters = { categories: [], colors: [], priceRanges: [], sizesMap: {} },
+  filters = {
+    categories: [],
+    colors: [],
+    priceRanges: [],
+    styleCategories: [],
+    sizesMap: {},
+  },
   filtersState,
   setFiltersState,
 }) {
@@ -11,9 +16,11 @@ export default function MobileShopFiltering({
   const [openSize, setOpenSize] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openPrice, setOpenPrice] = useState(false);
+  const [openStyle, setOpenStyle] = useState(false);
 
   const [availableSizes, setAvailableSizes] = useState([]);
 
+  // Update sizes based on selected category
   useEffect(() => {
     if (filtersState.category && filters.sizesMap) {
       const key = filtersState.category.toLowerCase().replace(/\s+/g, "-");
@@ -35,7 +42,7 @@ export default function MobileShopFiltering({
 
   return (
     <div className="md:hidden space-y-3">
-      {/* Categories */}
+      {/* Category */}
       <div>
         <button
           onClick={() => setOpenCategory(!openCategory)}
@@ -49,9 +56,17 @@ export default function MobileShopFiltering({
             {filters.categories?.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setFiltersState({ ...filtersState, category: cat, size: "" })}
+                onClick={() =>
+                  setFiltersState({
+                    ...filtersState,
+                    category: cat,
+                    size: "",
+                  })
+                }
                 className={`w-full text-left px-2 py-1 rounded ${
-                  filtersState.category === cat ? "bg-red-500 text-white" : "bg-white"
+                  filtersState.category === cat
+                    ? "bg-red-500 text-white"
+                    : "bg-white"
                 }`}
               >
                 {cat}
@@ -60,6 +75,42 @@ export default function MobileShopFiltering({
           </div>
         )}
       </div>
+
+      {/* Style Category */}
+      {filters.styleCategories?.length > 0 && (
+        <div>
+          <button
+            onClick={() => setOpenStyle(!openStyle)}
+            className="w-full bg-gradient-to-r from-blue-600 to-green-400 text-white font-semibold py-2 rounded-lg"
+          >
+            Style Category
+          </button>
+
+          {openStyle && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {filters.styleCategories.map((item) => (
+                <button
+                  key={item}
+                  onClick={() =>
+                    setFiltersState((prev) => ({
+                      ...prev,
+                      styleCategory:
+                        prev.styleCategory === item ? "" : item,
+                    }))
+                  }
+                  className={`px-3 py-1 rounded-full font-medium border-2 ${
+                    filtersState.styleCategory === item
+                      ? "bg-blue-600 text-white"
+                      : "bg-white border-gray-300"
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Sizes */}
       {availableSizes.length > 0 && (
@@ -77,10 +128,15 @@ export default function MobileShopFiltering({
                 <button
                   key={sz}
                   onClick={() =>
-                    setFiltersState((prev) => ({ ...prev, size: prev.size === String(sz) ? "" : String(sz) }))
+                    setFiltersState((prev) => ({
+                      ...prev,
+                      size: prev.size === String(sz) ? "" : String(sz),
+                    }))
                   }
                   className={`px-3 py-1 rounded-full font-medium border-2 ${
-                    String(filtersState.size) === String(sz) ? "bg-green-500 text-white" : "bg-white border-gray-300"
+                    String(filtersState.size) === String(sz)
+                      ? "bg-green-500 text-white"
+                      : "bg-white border-gray-300"
                   }`}
                 >
                   {sz}
@@ -107,7 +163,9 @@ export default function MobileShopFiltering({
                 key={color}
                 onClick={() => toggleColor(color)}
                 className={`px-3 py-1 rounded-full font-medium border-2 ${
-                  (filtersState.color || []).includes(color) ? "bg-purple-500 text-white" : "bg-white border-gray-300"
+                  (filtersState.color || []).includes(color)
+                    ? "bg-purple-500 text-white"
+                    : "bg-white border-gray-300"
                 }`}
               >
                 {color}
@@ -134,10 +192,15 @@ export default function MobileShopFiltering({
                 <button
                   key={price.label}
                   onClick={() =>
-                    setFiltersState((prev) => ({ ...prev, priceRange: prev.priceRange === value ? "" : value }))
+                    setFiltersState((prev) => ({
+                      ...prev,
+                      priceRange: prev.priceRange === value ? "" : value,
+                    }))
                   }
                   className={`px-3 py-1 rounded-full font-medium border-2 ${
-                    filtersState.priceRange === value ? "bg-yellow-500 text-white" : "bg-white border-gray-300"
+                    filtersState.priceRange === value
+                      ? "bg-yellow-500 text-white"
+                      : "bg-white border-gray-300"
                   }`}
                 >
                   {price.label}

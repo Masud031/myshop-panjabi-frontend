@@ -12,13 +12,16 @@ const productsApi = createApi({
     tagTypes: ["Products"],
     endpoints: (builder) =>({
    getAllProducts: builder.query({
-      query: ({ category, color, minPrice, maxPrice, page, limit, search,size } = {}) => {
+      query: ({ category, color, priceMin, priceMax, page, limit, search,size,style,
+    styleCategory } = {}) => {
         const params = new URLSearchParams();
 
         if (category && category !== "all") params.append("category", category);
         if (color && color !== "all") params.append("color", color);
-        if (minPrice) params.append("minPrice", minPrice);
-        if (maxPrice) params.append("maxPrice", maxPrice);
+        if (style) params.append("style", style);
+        if (styleCategory) params.append("styleCategory", styleCategory);
+   if (priceMin) params.append("priceMin", priceMin);
+if (priceMax) params.append("priceMax", priceMax);
         if (page) params.append("page", page);
         if (limit) params.append("limit", limit);
         if (search) params.append("search", search);
@@ -113,13 +116,7 @@ getAllFilterProducts: builder.query({
       params.append("styleCategory", filters.styleCategory.join(","));
     }
 
-    // ✅ Match backend: priceMin & priceMax
-    // if (filters.price) {
-    //   if (filters.price.min !== undefined && filters.price.min !== null)
-    //     params.append("priceMin", filters.price.min);
-    //   if (filters.price.max !== undefined && filters.price.max !== null)
-    //     params.append("priceMax", filters.price.max);
-    // }
+  
 if (filters.price) {
   if (filters.price.min !== undefined && filters.price.min !== null) {
     params.append("priceMin", filters.price.min);

@@ -16,17 +16,21 @@ export default function ShopPage() {
     color: "all",
     priceRange: "",
     size: "",
+    style: "",
+  styleCategory: "",
   });
 
-  const { category, color, priceRange, size } = filtersState;
-  const [minPrice, maxPrice] = priceRange.split("-").map(Number);
+  const { category, color, priceRange, size ,style, styleCategory } = filtersState;
+  const [priceMin, priceMax] = priceRange.split("-").map(Number);
 
   const queryParams = {
     category: category !== "all" ? category : "",
     color: color !== "all" ? color : "",
     size: size || "",
-    minPrice: isNaN(minPrice) ? "" : minPrice,
-    maxPrice: isNaN(maxPrice) ? "" : maxPrice,
+    style: style || "",
+    styleCategory: styleCategory || "",
+    priceMin: isNaN(priceMin) ? "" : priceMin,
+    priceMax: isNaN(priceMax) ? "" : priceMax,
     page: currentPage,
     limit: 24,
   };
@@ -41,12 +45,19 @@ export default function ShopPage() {
 
   if (isProductsLoading || isFiltersLoading) return <Loading />;
 
+  console.log("testing query params",queryParams);
+
   const backendFilters = filtersData?.data || {};
+
+  const dynamicFilters = productsData?.data?.filters || {};
+
   const filters = {
     categories: ["all", ...(backendFilters.categories || [])],
     colors: ["all", ...(backendFilters.colors || [])],
-    priceRanges: backendFilters.priceRanges || [],
+   priceRanges: dynamicFilters.priceRanges || backendFilters.priceRanges || [],
     sizes: backendFilters.sizes || [],
+    styles: backendFilters.styles || [],             // NEW
+  styleCategories: dynamicFilters.styleCategories || [],
   };
 
   // Prepare sizesMap for mobile filtering
@@ -65,6 +76,18 @@ export default function ShopPage() {
   const products = productsData?.data?.products || [];
   const totalPages = productsData?.data?.totalPages || 0;
 
+    const clearFilters = () => {
+    setFiltersState({
+      category: "all",
+      color: "all",
+      priceRange: "",
+      size: "",
+      style: "",
+      styleCategory: "",
+    });
+    setCurrentPage(1);
+  };
+
   return (
     <section className="section__container">
       <h2 className="section__header">Shop All Products</h2>
@@ -72,14 +95,21 @@ export default function ShopPage() {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Desktop Filters */}
         <div className="hidden md:flex">
-          <ShopFiltering
-            filters={filters}
-            filtersState={filtersState}
-            setFiltersState={setFiltersState}
-            clearFilters={() =>
-              setFiltersState({ category: "all", color: "all", priceRange: "", size: "" })
-            }
-          />
+  <ShopFiltering
+  filters={{
+    categories: filters.categories || [],
+    colors: filters.colors || [],
+    sizesMap: categorySizeMap || {},
+    styles: filters.styles || [],
+    styleCategories: filters.styleCategories || [],  // <--- use filters, not filtersData
+    priceRanges: filters.priceRanges || []
+  }}
+  filtersState={filtersState}
+  setFiltersState={setFiltersState}
+  clearFilters={clearFilters}
+/>
+
+
         </div>
 
         {/* Mobile Filters */}
