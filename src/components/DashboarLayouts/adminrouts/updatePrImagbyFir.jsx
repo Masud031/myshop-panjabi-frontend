@@ -29,7 +29,7 @@ const UpdateProfileImage = () => {
         className="border p-2"
       />
       <button onClick={handleUpdate} className="bg-blue-500 text-white px-4 py-2 ml-2">
-        Update Profile Image
+        Update Profile Image1f
       </button>
     </div>
   );

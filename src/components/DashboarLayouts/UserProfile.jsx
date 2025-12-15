@@ -1,165 +1,225 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import imageCompression from "browser-image-compression";
+import md5 from "md5";
 
-import avatarImg from "../../../src/assets/download (2).jpeg"
-import { useDispatch, useSelector } from 'react-redux';
-// import { useEditProfileMutation } from '../../../src/redux/features/auth/authSlice';
-import { setUser } from '../../../src/redux/features/auth/authSlice';
-import { useEditProfileMutation } from '../../redux/features/auth/authapi';
-import { showToast } from '../../utils/showToast';
+import avatarImg from "../../../src/assets/download (2).jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../../src/redux/features/auth/authSlice";
+import { useEditProfileMutation } from "../../redux/features/auth/authapi";
+import { showToast } from "../../utils/showToast";
 
+/* ✅ Gravatar helper */
+const getGravatarUrl = (email, size = 200) => {
+  if (!email) return "";
+  const hash = md5(email.trim().toLowerCase());
+  return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=identicon`;
+};
+
+const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
 const UserProfile = () => {
-    const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formData, setFormData] = useState({
-        username: '',
-        profileImage: '',
-        bio: '',
-        profession: '',
-        userId: ''
-    })
+  const [formData, setFormData] = useState({
+    username: "",
+    bio: "",
+  });
 
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                username: user.username || '',
-                profileImage: user?.profileImage || '',
-                bio: user?.bio || '',
-                profession: user?.profession || '',
-                userId: user?._id || ''
-            })
-        }
-    }, [user])
+  const [editProfile, { isLoading }] = useEditProfileMutation();
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
+  /* ✅ Load user data */
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        username: user.username || "",
+        bio: user.bio || "",
+      });
 
-        })
+      setImagePreview(user.profileImage || "");
+    }
+  }, [user]);
+
+  /* ✅ Cleanup blob URL */
+  useEffect(() => {
+    return () => {
+      if (imagePreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
+  /* ✅ Input handler */
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  /* ✅ Image select + validation + compression */
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Only image files are allowed");
+      return;
     }
 
-    const [editProfile, {isLoading, isError, error}] = useEditProfileMutation();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const updatedUser =  {
-            username: formData.username, 
-            profileImage: formData.profileImage, 
-            bio: formData.bio, 
-            profession: formData.profession,
-            userId: formData.userId
-        }
-        console.log(updatedUser );
-
-        try {
-            const response = await editProfile({id: user?._id, profileData: updatedUser}).unwrap();
-            // console.log(response.data);
-            dispatch(setUser(response.data))
-            showToast("Profile Update Successfully")
-        
-        } catch (error) {
-            showToast('Failed to update profile. Please try again.');
-        }
-
+    if (file.size > MAX_SIZE) {
+      showToast("Image must be under 2MB");
+      return;
     }
-    return (
-        <div className='container mx-auto p-6'>
-            <div>
-                <div className='flex items-center mb-4'>
-                    {/* <img src={formData.profileImage || avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" /> */}
-                    <img src={formData.profileImage !== '' ? formData.profileImage : avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" />
-                    {/* <img src={formData.profileImage?.trim() ? formData.profileImage : avatarImg} alt="" className="w-32 h-32 object-cover rounded-full ring" /> */}
 
+    try {
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 0.5, // target size
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      });
 
-                    <div className='ml-6 space-y-1'>
-                        <h2 className='text-2xl font-bold'>Username: {formData.username || "N/A"} </h2>
-                        <p className="text-gray-700">User Bio: {formData?.bio || "N/A"} </p>
-                        <p className="text-gray-700">Profession:  {formData.profession || "N/A"}</p>
-                    </div>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className='ml-auto text-blue-500 hover:text-blue-700'>
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3H4a1 1 0 00-1 1v14a1 1 0 001 1h7m2 0h7a1 1 0 001-1V4a1 1 0 00-1-1h-7m-2 0v14"></path>
-                        </svg>
-                    </button>
-                </div>
+      setImageFile(compressedFile);
+      setImagePreview(URL.createObjectURL(compressedFile));
+    } catch (error) {
+      showToast("Image compression failed");
+    }
+  };
 
+  /* ✅ Submit */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = new FormData();
+    form.append("username", formData.username);
+    form.append("bio", formData.bio);
+
+    if (imageFile) {
+      form.append("profileImage", imageFile);
+    }
+
+    try {
+      const response = await editProfile({
+        id: user._id,
+        profileData: form,
+      }).unwrap();
+
+      dispatch(setUser(response.data));
+      showToast("Profile updated successfully");
+      setIsModalOpen(false);
+    } catch (err) {
+      showToast("Failed to update profile");
+    }
+  };
+
+  const profileImageSrc =
+    imagePreview ||
+    user?.profileImage ||
+    getGravatarUrl(user?.email) ||
+    avatarImg;
+
+  return (
+    <div className="container mx-auto p-6 mt-5">
+      {/* Profile Display */}
+      <div className="flex items-center mb-6">
+        <div className="relative w-32 h-32">
+          <img
+            src={profileImageSrc}
+            alt="profile"
+            className="w-32 h-32 object-cover rounded-full ring"
+          />
+
+          {isLoading && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full">
+              <span className="text-white text-sm animate-pulse">
+                Uploading...
+              </span>
             </div>
-
-            {
-                isModalOpen && (
-                    <div className='fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50'>
-
-                        <div className='bg-white p-6 rounded-lg md:w-96 max-w-xl mx-auto relative'>
-                            <button
-                                className='absolute top-2 right-2 text-gray-500 hover:text-gray-700'
-                                onClick={() => setIsModalOpen(false)}><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg></button>
-
-                            <h2 className='text-2xl font-semibold mb-4'>Edit Profile</h2>
-
-                            {/* forms to collect data */}
-
-                            <form onSubmit={handleSubmit}>
-                                <div className='mb-4'>
-                                    <label htmlFor="username" className='block text-sm font-medium text-gray-700'>Username</label>
-
-                                    <input type="text" name="username" id="username"
-                                        value={formData.username}
-                                        onChange={handleChange}
-                                        className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm'
-                                        required
-                                    />
-                                </div>
-                                <div className='mb-4'>
-                                    <label htmlFor="profileImage" className='block text-sm font-medium text-gray-700'>Profile Image URL</label>
-
-                                    <input type="text" name="profileImage" id="profileImage"
-                                        value={formData.profileImage}
-                                        onChange={handleChange}
-                                        className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm'
-                                        required
-                                    />
-                                </div>
-                                <div className='mb-4'>
-                                    <label htmlFor="bio" className='block text-sm font-medium text-gray-700'>Write Bio</label>
-
-                                    <textarea type="text" name="bio" id="bio"
-                                        value={formData.bio}
-                                        rows="3"
-                                        onChange={handleChange}
-                                        className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm'
-                                        required
-                                    />
-                                </div>
-
-                                <div className='mb-4'>
-                                    <label htmlFor="profession" className='block text-sm font-medium text-gray-700'>Profession</label>
-
-                                    <input type="text" name="profession" id="profession"
-                                        value={formData.profession}
-                                        onChange={handleChange}
-                                        className='mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm'
-                                        required
-                                    />
-                                </div>
-
-                                <button type='submit' className={`mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-md`}>Update Profile</button>
-                            </form>
-                        </div>
-                    </div>
-                )
-            }
+          )}
         </div>
-    )
-}
 
-export default UserProfile
+        <div className="ml-6 space-y-1">
+          <h2 className="text-2xl font-bold">
+            Username: {formData.username || "N/A"}
+          </h2>
+          <p className="text-gray-700">Bio: {formData.bio || "N/A"}</p>
+        </div>
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto text-blue-500 hover:text-blue-700"
+        >
+          ✏️
+        </button>
+      </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500"
+              onClick={() => setIsModalOpen(false)}
+            >
+              ✕
+            </button>
+
+            <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
+
+            <form onSubmit={handleSubmit}>
+              {/* Username */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium">Username</label>
+                <input
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+
+              {/* Image */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium">
+                  Profile Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full text-sm"
+                />
+              </div>
+
+              {/* Bio */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Bio</label>
+                <textarea
+                  name="bio"
+                  rows="3"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-blue-500 text-white py-2 rounded"
+              >
+                {isLoading ? "Updating..." : "Update Profile"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UserProfile;

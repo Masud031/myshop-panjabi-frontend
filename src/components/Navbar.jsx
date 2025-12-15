@@ -128,12 +128,11 @@ const Navbar = () => {
         </div>
 
         {/* Search Bar */}
-          <div className="flex-1 max-w-[140px] xs:max-w-[160px] sm:max-w-xs lg:max-w-md mx-1">
-
-          <form
-            onSubmit={handleSearchSubmit}
-            className="flex items-center bg-gray-100 rounded-full px-2 py-[3px]"
-          >
+   <div className="flex-1 max-w-[140px] xs:max-w-[160px] sm:max-w-xs lg:max-w-md mx-1">
+  <form
+    onSubmit={handleSearchSubmit}
+    className="flex items-center bg-gray-100 rounded-full border border-red-600 px-2 py-[3px]"
+  >
             <input
               type="text"
               value={query}

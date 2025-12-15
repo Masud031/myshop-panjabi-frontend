@@ -32,12 +32,13 @@ const authApi = createApi({
             })
         }),
         editProfile: builder.mutation({
-            query: ({id, profileData}) => ({
-                url: `/edit-profile/${id}`,
-                method: "PATCH",
-                body: profileData
-            })
-        }),
+      query: ({ id, profileData }) => ({
+        url: `/edit-profile/${id}`,
+        method: "PATCH",
+        body: profileData, // FormData
+      }),
+      invalidatesTags: ["User"], // 👈 important
+    }),
         getUsers: builder.query({
             query: () => ({
                 url: "/users",
