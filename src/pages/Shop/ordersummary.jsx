@@ -58,7 +58,7 @@ const OrderSummary = () => {
     };
 
      try {
-        const response = await fetch("http://localhost:5000/api/order/order", {
+        const response = await fetch("/api/order/order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

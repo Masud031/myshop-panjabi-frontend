@@ -120,7 +120,7 @@ showToast("error", err?.data?.message || "Invalid email/mobile or password!");
            
         
                // login response
-   const res = await fetch("http://localhost:5000/api/auth/google-login", {
+   const res = await fetch("/api/auth/google-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

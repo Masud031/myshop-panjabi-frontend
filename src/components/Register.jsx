@@ -99,7 +99,7 @@ showToast("error", err?.data?.message || "Registration failed!");
 
       console.log("➡️ Sending Google Signup:", userData);
 
-      const res = await fetch("http://localhost:5000/api/auth/google-login", {
+      const res = await fetch("/api/auth/google-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

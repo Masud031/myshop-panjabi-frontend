@@ -15,10 +15,15 @@ const CartModal = ({ products,isOpen, onClose }) => {
         dispatch(updateQuantity(payload))
     }
 
-    const handleRemoveFromCart = (e, id) => {
-        e.preventDefault()
-        dispatch(removeFromCart({id}))
-    }
+  const handleRemoveFromCart = (e, product) => {
+  e.preventDefault();
+  dispatch(
+    removeFromCart({
+      id: product._id,
+      size: product.size, // ✅ REQUIRED
+    })
+  );
+};
 
       const handleClose = () => {
     // close modal (if used as modal)
@@ -93,8 +98,11 @@ style={{ transition: 'opacity 300ms' }}
                             </button>
                             <div className='ml-5'>
                                 <button
-                                    onClick={(e) => handleRemoveFromCart(e, product?._id)}
-                                    className="text-red-500 hover:text-red-700 mr-4">Remove</button>
+                            onClick={(e) => handleRemoveFromCart(e, product)}
+                            className="text-red-500 hover:text-red-700 mr-4"
+                            >
+                            Remove
+                            </button>
                             </div>
                         </div>
                       
